@@ -1,9 +1,12 @@
+@import "../theme";
+
 .bg-sdc {
   background-color: #3b4256;
+  font-family: $font-inter;
 
   .navbar-brand {
     color: #fff;
-    font-weight: bolder;
+    font-weight: 800;
   }
 
   .navbar-brand:hover {
@@ -11,6 +14,8 @@
   }
 
   .navbar-nav {
+    font-weight: 400;
+
     .nav-link {
       color: #abb5be;
     }
@@ -20,10 +25,7 @@
     }
 
     .nav-link.active {
-      color: #fff;
-    }
-
-    .nav-link.active {
+      font-weight: 500;
       color: #fff;
     }
   }
