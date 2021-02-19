@@ -19,7 +19,7 @@ class App extends React.Component {
                 <Col></Col>
               </SDCSection>
             </Col>
-            <Col md={3}>jeloo</Col>
+            <Col md={3}>world</Col>
           </Row>
         </Col>
       </div>
