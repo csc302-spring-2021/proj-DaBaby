@@ -1,0 +1,30 @@
+.bg-sdc {
+  background-color: #3b4256;
+
+  .navbar-brand {
+    color: #fff;
+    font-weight: bolder;
+  }
+
+  .navbar-brand:hover {
+    color: #fff;
+  }
+
+  .navbar-nav {
+    .nav-link {
+      color: #abb5be;
+    }
+
+    .nav-link:hover {
+      color: #fff;
+    }
+
+    .nav-link.active {
+      color: #fff;
+    }
+
+    .nav-link.active {
+      color: #fff;
+    }
+  }
+}
