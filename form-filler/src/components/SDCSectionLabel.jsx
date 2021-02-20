@@ -20,7 +20,7 @@ class SDCSectionLabel extends React.Component {
     const { name, state } = this.props;
 
     return (
-      <div className={`sdc-btn ${state} container`}>
+      <div className={`sdc-btn ${state} sdc-container`}>
         <span>{name}</span>
       </div>
     );

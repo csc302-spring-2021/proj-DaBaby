@@ -20,7 +20,7 @@
   }
 }
 
-.container.active::after {
+.sdc-container.active::after {
   content: "";
   position: absolute;
   width: 20px;
@@ -32,7 +32,7 @@
   z-index: 1;
 }
 
-.container::after {
+.sdc-container::after {
   content: "";
   position: absolute;
   width: 20px;

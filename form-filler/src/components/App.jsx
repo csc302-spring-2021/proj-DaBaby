@@ -16,9 +16,7 @@ class App extends React.Component {
         <Col>
           <Row>
             <Col md={8}>
-              <SDCSection>
-                <Col></Col>
-              </SDCSection>
+              <SDCSection />
             </Col>
             <Col md={4}>
               <SDCSidebar />
