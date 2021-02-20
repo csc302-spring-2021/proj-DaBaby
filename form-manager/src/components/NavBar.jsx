@@ -1,7 +1,9 @@
-import "./NavBar.scss";
-
 import React from "react";
+import "./NavBar.scss";
+import Home from "./Home";
+import Forms from "./Forms";
 import { Navbar, Nav } from "react-bootstrap";
+import { Switch, Route, Link } from 'react-router-dom';
 
 class NavigationBar extends React.Component {
 	constructor(props) {
@@ -10,13 +12,20 @@ class NavigationBar extends React.Component {
 
 	render() {
 		return (
-			<Navbar bg="sdc" fixed="top">
-				<Navbar.Brand href="#home">SDCManager</Navbar.Brand>
-				<Nav>
-					<Nav.Link href="#home">Home</Nav.Link>
-					<Nav.Link href="#all-forms">View All Forms</Nav.Link>
-				</Nav>
-			</Navbar>
+			<div>
+				<Navbar bg="sdc" fixed="top">
+					<Navbar.Brand>SDCManager</Navbar.Brand>
+					<Nav>
+						<Nav.Link as={Link} to={"/"}>Home</Nav.Link>
+						<Nav.Link as={Link} to ={"/forms"}>View&nbsp;All&nbsp;Forms</Nav.Link>
+					</Nav>
+				</Navbar>
+				<Switch>
+					<Route exact path='/' component={Home} />
+					<Route exact path='/forms' component={Forms} />
+				</Switch>
+			</div>
+
 		);
 	}
 }
