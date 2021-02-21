@@ -1,6 +1,10 @@
+/* hard-coded form id */
+let id = 2;
 /* hard-coded forms */
 let forms = [
 	{
+		formId: 1,
+		formName: "COVID19 V1",
 		procedureId: "COVID19",
 		lastUpdated: "2021-02-21T00:41:01.626Z"
 	}
@@ -14,6 +18,8 @@ export const getAllForms = (page) => {
 /* POST a new form */
 export const uploadForm = (page, data) => {
 	forms.push({
+		formId: id++,
+		formName: data.procedureId+" V1",
 		procedureId: data.procedureId,
 		lastUpdated: data.lastUpdated
 	})
@@ -25,6 +31,15 @@ export const deleteForm = (page, data) => {
 	const index = forms.indexOf(data);
 	if (index > -1) {
 		forms.splice(index, 1);
+	}
+	getAllForms(page)
+};
+
+/* PUT a form */
+export const updateForm = (page, data) => {
+	const index = forms.indexOf(data);
+	if (index > -1) {
+		forms[index] = data
 	}
 	getAllForms(page)
 };

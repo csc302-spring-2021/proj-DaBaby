@@ -8,7 +8,7 @@ import {NavItem, NavLink} from "react-bootstrap";
 import {Dropdown} from "react-bootstrap";
 import 'react-dropzone-uploader/dist/styles.css'
 import Dropzone from 'react-dropzone-uploader'
-import {getAllForms, uploadForm, deleteForm} from "../actions/Actions";
+import {getAllForms, uploadForm, deleteForm, updateForm} from "../actions/Actions";
 import {Link} from "react-router-dom";
 
 const FileSaver = require('file-saver');
@@ -64,6 +64,10 @@ class Home extends React.Component {
 		deleteForm(this,form)
 	}
 
+	onUpdateForm = (form) => {
+		updateForm(this,form)
+	}
+
 	render() {
 		// receives array of files that are done uploading when submit button is clicked
 		const onDropzoneSubmit = (files, allFiles) => {
@@ -84,6 +88,8 @@ class Home extends React.Component {
 					<Table striped bordered={false} hover>
 						<thead>
 						<tr>
+							<th>Form&nbsp;ID</th>
+							<th>Form Name</th>
 							<th>Procedure&nbsp;ID</th>
 							<th>Last Updated</th>
 							<th/>
@@ -93,6 +99,8 @@ class Home extends React.Component {
 						<tbody>
 						{this.state.forms.map(form => (
 							<tr>
+								<td>{form.formId}</td>
+								<td>{form.formName}</td>
 								<td>{form.procedureId}</td>
 								<td>{form.lastUpdated}</td>
 								<td>
