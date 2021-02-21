@@ -14,8 +14,31 @@ import {
 } from "react-bootstrap";
 
 import { Form, Field } from "react-final-form";
+import Question from "./Question";
 
 class SDCSection extends React.Component {
+  // Questions will be saved into the state of the current section gathered from the backend
+  state = {
+    questions: [
+      {
+        question_id: 37326,
+        question_type: "free-text",
+        order: 42,
+        controller_id: null,
+        controller_answer: null,
+        question_text: "Unique Case Identifier (used in country)",
+      },
+      {
+        question_id: 35932,
+        question_type: "free-text",
+        order: 76,
+        controller_id: null,
+        controller_answer: null,
+
+        question_text: "Place Where the Case Was Diagnosed (Country)",
+      },
+    ],
+  };
   onSubmit = async (values) => {
     console.log(JSON.stringify(values));
   };
@@ -28,6 +51,7 @@ class SDCSection extends React.Component {
   };
 
   render() {
+    const { questions } = this.state;
     return (
       <Container className="sdc-form">
         <Row>
@@ -42,24 +66,13 @@ class SDCSection extends React.Component {
                 values,
               }) => (
                 <>
-                  <Field name="uniqueCaseId" validate={this.required}>
-                    {({ input, meta }) => (
-                      <FormGroup controlId="uniqueCaseId">
-                        <FormLabel>Unique Case Identifier</FormLabel>
-                        <FormControl
-                          {...input}
-                          type="text"
-                          placeholder="H123FA456"
-                          isInvalid={meta.error && meta.touched}
-                        />
-                        <FormText data-testid="caseIdValidation">
-                          {meta.error && meta.touched && (
-                            <span>{meta.error}</span>
-                          )}
-                        </FormText>
-                      </FormGroup>
-                    )}
-                  </Field>
+                  {/* Where the questions will be rendered */}
+                  {questions.map((question) => (
+                    <Question
+                      question_type={question.question_type}
+                      question_text={question.question_text}
+                    />
+                  ))}
                   <Button
                     type="submit"
                     onClick={handleSubmit}
