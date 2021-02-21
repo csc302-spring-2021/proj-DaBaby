@@ -4,6 +4,8 @@ import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form"
+import {NavItem, NavLink} from "react-bootstrap";
+import {Dropdown} from "react-bootstrap";
 import 'react-dropzone-uploader/dist/styles.css'
 import Dropzone from 'react-dropzone-uploader'
 import {getAllForms, uploadForm} from "../actions/Actions";
@@ -90,9 +92,17 @@ class Home extends React.Component {
 								<td>{form.procedureId}</td>
 								<td>{form.lastUpdated}</td>
 								<td>
-									<Link style={{color: "#267bf7", textDecoration: "underline"}} to={"/forms"}>View&nbsp;Rendered&nbsp;Form</Link>
+									<Link style={{color: "#267bf7", textDecoration: "underline"}} to={"/forms"}>View</Link>
 								</td>
-								<td>edit</td>
+								<td>
+									<Dropdown as={NavItem}>
+										<Dropdown.Toggle as={NavLink}>Edit</Dropdown.Toggle>
+										<Dropdown.Menu>
+											<Dropdown.Item>Delete</Dropdown.Item>
+											<Dropdown.Item>Update</Dropdown.Item>
+										</Dropdown.Menu>
+									</Dropdown>
+								</td>
 							</tr>
 						))}
 						</tbody>
