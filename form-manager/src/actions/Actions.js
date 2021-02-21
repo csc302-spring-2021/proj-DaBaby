@@ -6,7 +6,8 @@ let forms = [
 		formId: 1,
 		formName: "COVID19 V1",
 		procedureId: "COVID19",
-		lastUpdated: "2021-02-21T00:41:01.626Z"
+		lastUpdated: "2021-02-21T00:41:01.626Z",
+		file: null
 	}
 ]
 
@@ -19,9 +20,10 @@ export const getAllForms = (page) => {
 export const uploadForm = (page, data) => {
 	forms.push({
 		formId: id++,
-		formName: data.procedureId+" V1",
+		formName: data.formName,
 		procedureId: data.procedureId,
-		lastUpdated: data.lastUpdated
+		lastUpdated: data.lastUpdated,
+		file: data.file
 	})
 	getAllForms(page)
 };
@@ -37,9 +39,11 @@ export const deleteForm = (page, data) => {
 
 /* PUT a form */
 export const updateForm = (page, data) => {
-	const index = forms.indexOf(data);
+	const index = forms.indexOf(data.updateForm);
 	if (index > -1) {
-		forms[index] = data
+		forms[index].formName = data.formName
+		forms[index].lastUpdated = data.lastUpdated
+		forms[index].file = data.file
 	}
 	getAllForms(page)
 };
