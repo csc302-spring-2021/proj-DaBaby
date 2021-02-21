@@ -1,0 +1,45 @@
+@import "../theme";
+
+.sdc-btn {
+  width: 100%;
+  padding: 1rem;
+  color: $btn-text-color;
+  border-radius: 4px;
+
+  font-family: $font-ibm;
+  font-weight: 500;
+  margin-bottom: 2rem;
+
+  border: 1px solid #979797;
+
+  &.active {
+    font-style: italic;
+
+    background-color: #3b4256;
+    color: white;
+  }
+}
+
+.sdc-container.active::after {
+  content: "";
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  right: -2.5rem;
+  background-color: #f6f6f6;
+  border: 4px solid #3b4256;
+  border-radius: 50%;
+  z-index: 1;
+}
+
+.sdc-container::after {
+  content: "";
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  right: -2.5rem;
+  background-color: #f6f6f6;
+  border: 4px solid #d8d8d8;
+  border-radius: 50%;
+  z-index: 1;
+}
