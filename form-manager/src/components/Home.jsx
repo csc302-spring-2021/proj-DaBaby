@@ -8,7 +8,7 @@ import {NavItem, NavLink} from "react-bootstrap";
 import {Dropdown} from "react-bootstrap";
 import 'react-dropzone-uploader/dist/styles.css'
 import Dropzone from 'react-dropzone-uploader'
-import {getAllForms, uploadForm} from "../actions/Actions";
+import {getAllForms, uploadForm, deleteForm} from "../actions/Actions";
 import {Link} from "react-router-dom";
 
 const FileSaver = require('file-saver');
@@ -60,6 +60,10 @@ class Home extends React.Component {
 		this.setState({newId: e.target.value})
 	}
 
+	onDeleteForm = (form) => {
+		deleteForm(this,form)
+	}
+
 	render() {
 		// receives array of files that are done uploading when submit button is clicked
 		const onDropzoneSubmit = (files, allFiles) => {
@@ -98,7 +102,7 @@ class Home extends React.Component {
 									<Dropdown as={NavItem}>
 										<Dropdown.Toggle as={NavLink}>Edit</Dropdown.Toggle>
 										<Dropdown.Menu>
-											<Dropdown.Item>Delete</Dropdown.Item>
+											<Dropdown.Item onClick={this.onDeleteForm.bind(this, form)}>Delete</Dropdown.Item>
 											<Dropdown.Item>Update</Dropdown.Item>
 										</Dropdown.Menu>
 									</Dropdown>

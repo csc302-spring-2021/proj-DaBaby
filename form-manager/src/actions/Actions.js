@@ -19,3 +19,12 @@ export const uploadForm = (page, data) => {
 	})
 	getAllForms(page)
 };
+
+/* DELETE a form */
+export const deleteForm = (page, data) => {
+	const index = forms.indexOf(data);
+	if (index > -1) {
+		forms.splice(index, 1);
+	}
+	getAllForms(page)
+};
