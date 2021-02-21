@@ -8,8 +8,8 @@
     color: #fff;
     font-weight: 800;
     margin-left: 1.25%;
-    margin-top: 0.625%;
-    margin-bottom: 0.625%;
+    margin-top: 0.5%;
+    margin-bottom: 0.5%;
   }
 
   .navbar-brand:hover {
@@ -18,8 +18,8 @@
 
   .navbar-nav {
     font-weight: 400;
-    margin-top: 0.625%;
-    margin-bottom: 0.625%;
+    margin-top: 0.5%;
+    margin-bottom: 0.5%;
     margin-left: 5%;
     display: flex;
     align-items: center;
@@ -35,7 +35,7 @@
 
     .nav-link.active {
       font-weight: 500;
-      color: #fff;
+      color: #ffffff;
     }
   }
 }
