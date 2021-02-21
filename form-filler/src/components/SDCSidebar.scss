@@ -1,0 +1,10 @@
+.section-navigation::after {
+  content: "";
+  position: absolute;
+  width: 6px;
+  background-color: #d8d8d8;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  margin-right: -2.1rem;
+}
