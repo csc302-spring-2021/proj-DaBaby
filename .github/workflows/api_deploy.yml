@@ -1,0 +1,84 @@
+name: sdc form backend api deployment
+env:
+  EB_PACKAGE_S3_BUCKET_NAME: "sdcapi"
+  EB_APPLICATION_NAME: "DaBabySDCAPI"
+  EB_ENVIRONMENT_NAME: "Dababysdcapi-env"
+  DEPLOY_PACKAGE_NAME: "sdcapi_production_${{ github.sha }}.zip"
+  AWS_REGION_NAME: "ca-central-1"
+    
+on:
+  pull_request:
+    branches: [ dev ]
+  push:
+    branches: [ dev ]
+
+jobs:
+  build-pytest:
+    defaults:
+      run:
+        working-directory: sdctools-service
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [ 3.7 ]
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    - name: Run Tests
+      run: |
+        python manage.py test
+  build-to-s3:
+    defaults:
+      run:
+        working-directory: backend
+    runs-on: ubuntu-latest
+    needs: [ build-pytest ]
+
+    steps:
+      - name: Git clone repo
+        uses: actions/checkout@v1
+      - name: create zip deploy package
+        run: zip -r -D ${{  env.DEPLOY_PACKAGE_NAME }} * -x *.git*
+
+      - name: AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{  secrets.AWS_ACCESS }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET }}
+          aws-region: ${{ env.AWS_REGION_NAME }}
+
+      - name: Copy dev package to S3 bucket
+        run: aws s3 cp ${{ env.DEPLOY_PACKAGE_NAME }}  s3://${{ env.EB_PACKAGE_S3_BUCKET_NAME }}/
+
+  deploy-to-elasticbeanstalk:
+    runs-on: ubuntu-latest
+    needs: [ build-to-s3 ]
+
+    steps:
+      - name: AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{  secrets.AWS_ACCESS }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET }}
+          aws-region: ${{ env.AWS_REGION_NAME }}
+
+      - name: create ElasticBeanstalk App
+        run: |
+          aws elasticbeanstalk create-application-version \
+          --application-name ${{ env.EB_APPLICATION_NAME }} \
+          --source-bundle S3Bucket="${{ env.EB_PACKAGE_S3_BUCKET_NAME }}",S3Key="${{ env.DEPLOY_PACKAGE_NAME }}" \
+          --version-label "Ver-${{ github.sha }}" \
+          --description "CommitSHA-${{ github.sha }}"
+      - name: deploy ElasticBeanstalk App
+        run: |
+          aws elasticbeanstalk update-environment \
+          --environment-name ${{ env.EB_ENVIRONMENT_NAME }} \
+          --version-label "Ver-${{ github.sha }}"
