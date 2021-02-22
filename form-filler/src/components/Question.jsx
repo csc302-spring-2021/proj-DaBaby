@@ -22,7 +22,27 @@ class Question extends Component {
     switch (question.question_type) {
       // Single Choice Option
       case "single-choice":
-        return <h1>single-choice</h1>;
+        return (
+          <div>
+            <FormLabel>{question.question_text}</FormLabel>
+            <div>
+              {/* Dynamically rendering all options the question has */}
+              {question.options.map((option) => (
+                <div>
+                  <FormLabel>
+                    <Field
+                      name={question.question_text}
+                      component="input"
+                      type="radio"
+                      value={option.text}
+                    />{" "}
+                    {option.text}
+                  </FormLabel>
+                </div>
+              ))}
+            </div>
+          </div>
+        );
         break;
 
       // Multiple Choice Option

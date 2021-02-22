@@ -56,6 +56,20 @@ class SDCSection extends React.Component {
           { text: "Others (specify): ", input_type: "string" },
         ],
       },
+      {
+        question_id: 35978,
+        question_type: "single-choice",
+        order: 72,
+        controller_id: null,
+        controller_answer: null,
+
+        question_text: "Sex at Birth",
+        options: [
+          { text: "Male" },
+          { text: "Female" },
+          { text: "Other (please specify):", input_type: "string" },
+        ],
+      },
     ],
   };
   onSubmit = async (values) => {
@@ -87,10 +101,7 @@ class SDCSection extends React.Component {
                 <form onSubmit={handleSubmit}>
                   {/* Where the questions will be rendered */}
                   {questions.map((question) => (
-                    <Question
-                      question={question}
-                      key={question.question_id}
-                    />
+                    <Question question={question} key={question.question_id} />
                   ))}
                   <Button
                     type="submit"
