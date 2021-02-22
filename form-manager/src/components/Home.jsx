@@ -24,7 +24,9 @@ class Home extends React.Component {
 			newId: "",
 			newName: "",
 			completeUpload: true,
-			forms: []
+			forms: [],
+			displayedForms: [],
+			filter: ""
 		}
 	}
 
@@ -82,6 +84,16 @@ class Home extends React.Component {
 		this.setState({newName: e.target.value})
 	}
 
+	onInputFilter= (e) => {
+		this.setState({filter: e.target.value}, () => {
+			this.setState({displayedForms: this.state.forms.filter(
+					form => form.formId.toString().toUpperCase().indexOf(this.state.filter.toUpperCase()) > -1 ||
+						form.formName.toUpperCase().indexOf(this.state.filter.toUpperCase()) > -1 ||
+						form.procedureId.toUpperCase().indexOf(this.state.filter.toUpperCase()) > -1
+				)})
+		})
+	}
+
 	onDeleteForm = (form) => {
 		deleteForm(this,form)
 	}
@@ -102,7 +114,14 @@ class Home extends React.Component {
 					        onClick={this.onOpenUploadModal.bind(this)}>+&nbsp;Upload&nbsp;New&nbsp;Form</Button>{' '}
 				</div>
 				<div id="manager-panel-body">
-					<p>Displaying {this.state.forms.length} of {this.state.forms.length}</p>
+					<div id="manager-panel-body-head">
+						<p>Displaying {this.state.displayedForms.length} of {this.state.forms.length}</p>
+						<Form style={{marginLeft: "auto"}}>
+							<Form.Group controlId="formId">
+								<Form.Control value={this.state.filter} type="name" placeholder="Filter..." onChange={this.onInputFilter.bind(this)}/>
+							</Form.Group>
+						</Form>
+					</div>
 					<Table striped bordered={false} hover>
 						<thead>
 						<tr>
@@ -115,7 +134,7 @@ class Home extends React.Component {
 						</tr>
 						</thead>
 						<tbody>
-						{this.state.forms.map(form => (
+						{this.state.displayedForms.map(form => (
 							<tr>
 								<td>{form.formId}</td>
 								<td>{form.formName}</td>

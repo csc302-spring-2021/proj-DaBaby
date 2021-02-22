@@ -13,7 +13,7 @@ let forms = [
 
 /* GET all forms */
 export const getAllForms = (page) => {
-	page.setState({forms: forms})
+	page.setState({forms: forms, displayedForms: forms, filter: ""})
 };
 
 /* POST a new form */

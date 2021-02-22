@@ -24,6 +24,11 @@
   #manager-panel-body {
     margin-top: 3%;
     font-family: "Inter", sans-serif;
+
+    #manager-panel-body-head {
+      display: flex;
+      align-items: center;
+    }
   }
 }
 
