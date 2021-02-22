@@ -1,0 +1,74 @@
+name: formfiller frontend deployment
+env:
+  EB_PACKAGE_S3_BUCKET_NAME: "sdcformfiller"
+  EB_APPLICATION_NAME: "DaBabySDCFormFiller"
+  EB_ENVIRONMENT_NAME: "Dababysdcformfiller-env"
+  LOCAL_DEPLOY_PACKAGE_NAME: "formfiller_package.zip"
+  S3_DEPLOY_PACKAGE_NAME: "formfiller_${{ github.sha }}.zip"
+  AWS_REGION_NAME: "ca-central-1"
+  AWS_ACCESS: "AKIAJS2OLLB5HCQT3YNQ"
+  AWS_SECRET: "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"
+
+on:
+  pull_request:
+    branches: [ dev ]
+  push:
+    branches: [ dev ]
+
+jobs:
+  build-to-s3:
+    defaults:
+      run:
+        working-directory: form-filler
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v2
+      - name: Use Node.js 12.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+      - name: Install dependencies
+        run: npm install
+      - name: npm audit fix
+        run: npm audit fix
+      - name: Gulp build
+        run: gulp
+      - name: rename package
+        run: mv prod-build/${{ env.LOCAL_DEPLOY_PACKAGE_NAME }} ${{ env.S3_DEPLOY_PACKAGE_NAME }}
+
+      - name: AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{  env.AWS_ACCESS }}
+          aws-secret-access-key: ${{ env.AWS_SECRET }}
+          aws-region: ${{ env.AWS_REGION_NAME }}
+
+      - name: Copy dev package to S3 bucket
+        run: aws s3 cp ${{ env.S3_DEPLOY_PACKAGE_NAME }}  s3://${{ env.EB_PACKAGE_S3_BUCKET_NAME }}/
+
+  deploy-to-elasticbeanstalk:
+    runs-on: ubuntu-latest
+    needs: [ build-to-s3 ]
+
+    steps:
+      - name: AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{  env.AWS_ACCESS }}
+          aws-secret-access-key: ${{ env.AWS_SECRET }}
+          aws-region: ${{ env.AWS_REGION_NAME }}
+
+      - name: create ElasticBeanstalk App
+        run: |
+          aws elasticbeanstalk create-application-version \
+          --application-name ${{ env.EB_APPLICATION_NAME }} \
+          --source-bundle S3Bucket="${{ env.EB_PACKAGE_S3_BUCKET_NAME }}",S3Key="${{ env.S3_DEPLOY_PACKAGE_NAME }}" \
+          --version-label "Ver-${{ github.sha }}" \
+          --description "CommitSHA-${{ github.sha }}"
+      - name: deploy ElasticBeanstalk App
+        run: |
+          aws elasticbeanstalk update-environment \
+          --environment-name ${{ env.EB_ENVIRONMENT_NAME }} \
+          --version-label "Ver-${{ github.sha }}"
