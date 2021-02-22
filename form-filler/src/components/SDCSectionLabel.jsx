@@ -13,7 +13,7 @@ class SDCSectionLabel extends React.Component {
     super(props);
 
     this.name = props.name;
-    this.state = props.state;
+    this.state = null;
   }
 
   render() {
