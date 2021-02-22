@@ -16,7 +16,7 @@ jobs:
   build-pytest:
     defaults:
       run:
-        working-directory: backend
+        working-directory: sdctools-service
     runs-on: ubuntu-latest
     strategy:
       matrix:
