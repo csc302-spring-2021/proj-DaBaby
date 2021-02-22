@@ -24,8 +24,8 @@ class SDCQuestion(models.Model):
     text = models.TextField()
     controller = models.ForeignKey('self', on_delete=models.CASCADE,
                                    default=None, blank=True, null=True)
-    controller_answer_enabler = models.Field(default=None, blank=True,
-                                             null=True)
+    controller_answer_enabler = models.TextField(default=None, blank=True,
+                                                 null=True)
     section = models.ForeignKey(Section, related_name="questions",
                                 on_delete=models.CASCADE)
 
