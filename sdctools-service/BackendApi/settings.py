@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'setup',
     'BackendApi',
     'sdcform',
-    'sdcformresponse'
+    'sdcformresponse',
+    'rest_framework'
 ]
 
 MIDDLEWARE = [
