@@ -1,4 +1,4 @@
-const {src, dest, series} = require('gulp');
+const {src, dest, series, parallel} = require('gulp');
 const del = require('del');
 const fs = require('fs');
 const zip = require('gulp-zip');
@@ -44,6 +44,13 @@ function copyReactCodeTask() {
         .pipe(dest(`${paths.react_dist}`));
 }
 
+
+function copyProcFileTask() {
+    log('Copy Procfile into the directory')
+    return src(['Procfile'])
+        .pipe(dest(`${paths.prod_build}`))
+}
+
 function zippingTask() {
     log('zipping the code ')
     return src(`${paths.prod_build}/**`)
@@ -55,6 +62,6 @@ exports.default = series(
     clean,
     createProdBuildFolder,
     buildReactCodeTask,
-    copyReactCodeTask,
+    parallel(copyProcFileTask, copyReactCodeTask),
     zippingTask
 );
