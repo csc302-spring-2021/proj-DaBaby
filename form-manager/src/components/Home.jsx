@@ -50,8 +50,9 @@ class Home extends React.Component {
 		reader.onload = () => {
 			// able to pass file content
 			const binaryStr = reader.result
+			console.log(binaryStr)
 		}
-		reader.readAsArrayBuffer(this.state.newForm.file)
+		reader.readAsBinaryString(this.state.newForm.file)
 		// able to download File using the File object
 		FileSaver.saveAs(this.state.newForm.file);
 		this.setState({showUpload: false, completeUpload: true})
