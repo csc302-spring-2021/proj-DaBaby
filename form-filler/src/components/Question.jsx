@@ -25,7 +25,7 @@ class Question extends Component {
         return (
           <div>
             <FormLabel>{question.question_text}</FormLabel>
-            <div>
+            <div class="radio">
               {/* Dynamically rendering all options the question has */}
               {question.options.map((option) => (
                 <div>
@@ -94,7 +94,22 @@ class Question extends Component {
 
       // Integer Option
       case "integer":
-        return <h1>integer</h1>;
+        return (
+          <div>
+            <FormLabel>{question.question_text}</FormLabel>
+            <div class="integer">
+              <FormLabel>
+                <Field
+                  name={question.question_text}
+                  component="input"
+                  type="number"
+                  value={question.text}
+                />{" "}
+                {question.text}
+              </FormLabel>
+            </div>
+          </div>
+        );
         break;
 
       // True/false option

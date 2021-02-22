@@ -70,6 +70,15 @@ class SDCSection extends React.Component {
           { text: "Other (please specify):", input_type: "string" },
         ],
       },
+      {
+        question_id: 45938,
+        question_type: "integer",
+        order: 76,
+        controller_id: null,
+        controller_answer: null,
+
+        question_text: "Age",
+      },
     ],
   };
   onSubmit = async (values) => {
