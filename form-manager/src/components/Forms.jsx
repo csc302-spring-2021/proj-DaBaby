@@ -7,7 +7,7 @@ class Forms extends React.Component {
 
 	render() {
 		return (
-			<p>forms</p>
+			<p>TO BE IMPLEMENTED</p>
 		);
 	}
 }
