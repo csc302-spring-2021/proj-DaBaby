@@ -79,6 +79,15 @@ class SDCSection extends React.Component {
 
         question_text: "Age",
       },
+      {
+        question_id: 36015,
+        question_type: "true-false",
+        order: 144,
+        controller_id: null,
+        controller_answer: null,
+
+        question_text: "Admission to Hospital",
+      },
     ],
   };
   onSubmit = async (values) => {

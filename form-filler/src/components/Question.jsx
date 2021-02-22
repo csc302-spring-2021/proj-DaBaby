@@ -25,10 +25,10 @@ class Question extends Component {
         return (
           <div>
             <FormLabel>{question.question_text}</FormLabel>
-            <div class="radio">
+            <div className="radio">
               {/* Dynamically rendering all options the question has */}
-              {question.options.map((option) => (
-                <div>
+              {question.options.map((option, index) => (
+                <div key={index}>
                   <FormLabel>
                     <Field
                       name={question.question_text}
@@ -50,10 +50,10 @@ class Question extends Component {
         return (
           <div>
             <FormLabel>{question.question_text}</FormLabel>
-            <div class="checkbox">
+            <div className="checkbox">
               {/* Dynamically rendering all options the question has */}
-              {question.options.map((option) => (
-                <div>
+              {question.options.map((option, index) => (
+                <div key={index}>
                   <FormLabel>
                     <Field
                       name={question.question_text}
@@ -97,13 +97,14 @@ class Question extends Component {
         return (
           <div>
             <FormLabel>{question.question_text}</FormLabel>
-            <div class="integer">
+            <div className="integer">
               <FormLabel>
                 <Field
                   name={question.question_text}
                   component="input"
                   type="number"
                   value={question.text}
+                  min="0"
                 />{" "}
                 {question.text}
               </FormLabel>
@@ -113,8 +114,23 @@ class Question extends Component {
         break;
 
       // True/false option
-      case "true/false":
-        return <h1>true/false</h1>;
+      case "true-false":
+        return (
+          <div>
+            <FormLabel>{question.question_text}</FormLabel>
+            <div className="checkbox">
+              <FormLabel>
+                <Field
+                  name={question.question_text}
+                  component="input"
+                  type="checkbox"
+                  value={question.text}
+                />{" "}
+                {question.text}
+              </FormLabel>
+            </div>
+          </div>
+        );
         break;
     }
   }
