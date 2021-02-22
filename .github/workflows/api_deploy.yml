@@ -1,8 +1,8 @@
 name: sdc form backend api deployment
 env:
   EB_PACKAGE_S3_BUCKET_NAME: "sdcapi"
-  EB_APPLICATION_NAME: "DaBabySDCAPI"
-  EB_ENVIRONMENT_NAME: "Dababysdcapi-env"
+  EB_APPLICATION_NAME: "DaBabySDCBackendAPI"
+  EB_ENVIRONMENT_NAME: "Dababysdcbackendapi-env-2"
   DEPLOY_PACKAGE_NAME: "sdcapi_production_${{ github.sha }}.zip"
   AWS_REGION_NAME: "ca-central-1"
   AWS_ACCESS: "AKIAJS2OLLB5HCQT3YNQ"
