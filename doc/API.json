@@ -180,6 +180,33 @@
             }
         },
         "/api/sdcformresponse": {
+            "post": {
+                "summary": "Saving a new “partially complete” response",
+                "operationId": "savePartialSDCFormResponse",
+                "requestBody": {
+                    "description": "The partially completed response object.",
+                    "required": true,
+                    "content":{
+                        "application/json":{
+                            "schema":{
+                                "$ref": "#/components/schemas/SDCPartialFormResponseObject"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "The partial SDCForm response is saved successfully. Response contains the SDCFormResponse object containing the partial response object.",
+                        "content": {
+                            "application/json":{
+                                "schema":{
+                                    "$ref": "#/components/schemas/SDCFormResponseUpdateResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
             "get": {
                 "parameters": [
                     {
@@ -415,6 +442,33 @@
                         "format": "int32",
                         "example": 1
                     },
+                    "patientID": {
+                        "type": "integer",
+                        "format": "int32",
+                        "example": 1
+                    },
+                    "sdcFormID": {
+                        "type": "integer",
+                        "format": "int32",
+                        "example": 1
+                    },
+                    "timestamp": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2021-02-01T00:00:00"
+                    },
+                    "answers": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/SDCFormAnswerObject"
+                        }
+                    }
+                }
+            },
+            "SDCPartialFormResponseObject": {
+                "type": "object",
+                "required": ["patientID", "sdcFormID", "timestamp", "answers"],
+                "properties":{
                     "patientID": {
                         "type": "integer",
                         "format": "int32",
