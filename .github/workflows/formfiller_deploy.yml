@@ -2,7 +2,7 @@ name: formfiller frontend deployment
 env:
   EB_PACKAGE_S3_BUCKET_NAME: "sdcformfiller"
   EB_APPLICATION_NAME: "DaBabySDCFormFiller"
-  EB_ENVIRONMENT_NAME: "Dababysdcformfiller-env"
+  EB_ENVIRONMENT_NAME: "Dababysdcformfiller-env-1"
   LOCAL_DEPLOY_PACKAGE_NAME: "formfiller_package.zip"
   S3_DEPLOY_PACKAGE_NAME: "formfiller_${{ github.sha }}.zip"
   AWS_REGION_NAME: "ca-central-1"
