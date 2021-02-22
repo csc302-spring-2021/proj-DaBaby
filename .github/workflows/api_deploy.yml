@@ -5,6 +5,8 @@ env:
   EB_ENVIRONMENT_NAME: "Dababysdcapi-env"
   DEPLOY_PACKAGE_NAME: "sdcapi_production_${{ github.sha }}.zip"
   AWS_REGION_NAME: "ca-central-1"
+  AWS_ACCESS: "AKIAJS2OLLB5HCQT3YNQ"
+  AWS_SECRET: "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"
     
 on:
   pull_request:
@@ -51,8 +53,8 @@ jobs:
       - name: AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          aws-access-key-id: ${{  secrets.AWS_ACCESS }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET }}
+          aws-access-key-id: ${{  env.AWS_ACCESS }}
+          aws-secret-access-key: ${{ env.AWS_SECRET }}
           aws-region: ${{ env.AWS_REGION_NAME }}
 
       - name: Copy dev package to S3 bucket
@@ -66,8 +68,8 @@ jobs:
       - name: AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          aws-access-key-id: ${{  secrets.AWS_ACCESS }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET }}
+          aws-access-key-id: ${{  env.AWS_ACCESS }}
+          aws-secret-access-key: ${{ env.AWS_SECRET }}
           aws-region: ${{ env.AWS_REGION_NAME }}
 
       - name: create ElasticBeanstalk App
