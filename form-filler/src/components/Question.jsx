@@ -17,8 +17,9 @@ class Question extends Component {
     return value ? undefined : "Required";
   };
   render() {
+    const { question } = this.props;
     // Depending on type of question render different ways
-    switch (this.props.question_type) {
+    switch (question.question_type) {
       // Single Choice Option
       case "single-choice":
         return <h1>single-choice</h1>;
@@ -28,52 +29,22 @@ class Question extends Component {
       case "multiple-choice":
         return (
           <div>
-            <FormLabel>Sauces</FormLabel>
+            <FormLabel>{question.question_text}</FormLabel>
             <div class="checkbox">
-              <div>
-                <FormLabel>
-                  <Field
-                    name="sauces"
-                    component="input"
-                    type="checkbox"
-                    value="ketchup"
-                  />{" "}
-                  Ketchup
-                </FormLabel>
-              </div>
-              <div>
-                <FormLabel>
-                  <Field
-                    name="sauces"
-                    component="input"
-                    type="checkbox"
-                    value="weed"
-                  />{" "}
-                  Weed
-                </FormLabel>
-              </div>
-              <div>
-                <FormLabel>
-                  <Field
-                    name="sauces"
-                    component="input"
-                    type="checkbox"
-                    value="weed"
-                  />{" "}
-                  Weed
-                </FormLabel>
-              </div>
-              <div>
-                <FormLabel>
-                  <Field
-                    name="sauces"
-                    component="input"
-                    type="checkbox"
-                    value="weed"
-                  />{" "}
-                  Weed
-                </FormLabel>
-              </div>
+              {/* Dynamically rendering all options the question has */}
+              {question.options.map((option) => (
+                <div>
+                  <FormLabel>
+                    <Field
+                      name={question.question_text}
+                      component="input"
+                      type="checkbox"
+                      value={option.text}
+                    />{" "}
+                    {option.text}
+                  </FormLabel>
+                </div>
+              ))}
             </div>
           </div>
         );
@@ -82,10 +53,10 @@ class Question extends Component {
       // Free text option
       case "free-text":
         return (
-          <Field name={this.props.question_text} validate={this.required}>
+          <Field name={question.question_text} validate={this.required}>
             {({ input, meta }) => (
               <FormGroup controlId={this.key}>
-                <FormLabel>{this.props.question_text}</FormLabel>
+                <FormLabel>{question.question_text}</FormLabel>
                 <FormControl
                   {...input}
                   type="text"

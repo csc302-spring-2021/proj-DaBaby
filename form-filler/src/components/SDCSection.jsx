@@ -88,8 +88,7 @@ class SDCSection extends React.Component {
                   {/* Where the questions will be rendered */}
                   {questions.map((question) => (
                     <Question
-                      question_type={question.question_type}
-                      question_text={question.question_text}
+                      question={question}
                       key={question.question_id}
                     />
                   ))}
