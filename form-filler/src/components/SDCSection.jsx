@@ -37,6 +37,25 @@ class SDCSection extends React.Component {
 
         question_text: "Place Where the Case Was Diagnosed (Country)",
       },
+      {
+        question_id: 35960,
+        question_type: "multiple-choice",
+        order: 115,
+        controller_id: 38610,
+        controller_answer: "Present",
+
+        question_text: "Underlying Conditions (select all that apply)",
+        options: [
+          { text: "Pregnancy" },
+          { text: "Cardiovascular disease" },
+          { text: "Liver disease" },
+          { text: "Diabetes" },
+          { text: "Renal disease" },
+          { text: "Immunodeficiency, including HIV" },
+          { text: "Chronic lung disease" },
+          { text: "Others (specify): ", input_type: "string" },
+        ],
+      },
     ],
   };
   onSubmit = async (values) => {
@@ -65,12 +84,13 @@ class SDCSection extends React.Component {
                 pristine,
                 values,
               }) => (
-                <>
+                <form onSubmit={handleSubmit}>
                   {/* Where the questions will be rendered */}
                   {questions.map((question) => (
                     <Question
                       question_type={question.question_type}
                       question_text={question.question_text}
+                      key={question.question_id}
                     />
                   ))}
                   <Button
@@ -80,7 +100,7 @@ class SDCSection extends React.Component {
                   >
                     Submit
                   </Button>
-                </>
+                </form>
               )}
             ></Form>
           </Col>
