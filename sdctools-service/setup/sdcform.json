@@ -64,7 +64,7 @@
                     "controllerID": 35932,
                     "controllerAnswerEnabler": "*",
 
-                    "text": "Admin Level 1 (Province)"
+                    "questionText": "Admin Level 1 (Province)"
                 }
             ]
 
@@ -102,7 +102,7 @@
                     "controllerID": 35995,
                     "controllerAnswerEnabler": "Present",
 
-                    "text": "Specify Date of Onset of Symptoms (DD / MM / YYYY)"
+                    "questionText": "Specify Date of Onset of Symptoms (DD / MM / YYYY)"
                 },
                 {
                     "id": 38610,
