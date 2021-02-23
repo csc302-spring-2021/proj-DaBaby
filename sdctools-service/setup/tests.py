@@ -14,7 +14,7 @@ class IndexViewTests(TestCase):
         response = self.client.get("/api/test/sdcform/covid19/")
         self.assertEqual(response.status_code, 200)
         self.assertTrue('sdcFormObject' in json.loads(response.content))
-        self.assertContains(response, 'sdcFormObject')
+
 
     def test_invalid_form(self):
 
@@ -22,6 +22,15 @@ class IndexViewTests(TestCase):
         self.assertEqual(response.status_code, 404)
 
     
-    # def test_upload_xml(self):
-    #     response = self.client.post("api/test/sdcform/", data={}, content_type="application/json")
-    #     self.assertEqual(response.status_code, 201)
+    def test_upload_xml_valid(self):
+        self.client = Client()
+        data = { "diagnosticProcedureID" : "covid19"}
+        response = self.client.post("/api/test/sdcform/", data)
+        self.assertEqual(response.status_code, 201)
+        self.assertTrue('sdcFormObject' in json.loads(response.content))
+
+    def test_upload_xml_invalid(self):
+        self.client = Client()
+        data = {}
+        response = self.client.post("/api/test/sdcform/", data)
+        self.assertEqual(response.status_code, 400)
