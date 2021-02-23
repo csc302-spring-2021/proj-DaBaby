@@ -10,7 +10,8 @@
     "react-bootstrap": "^1.5.0",
     "react-dom": "^17.0.1",
     "react-scripts": "4.0.2",
-    "web-vitals": "^1.0.1"
+    "web-vitals": "^1.0.1",
+    "axios": "^0.21.1"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -42,5 +43,6 @@
     "react-dropzone-uploader": "^2.11.0",
     "file-saver": "^2.0.5",
     "bootstrap": "^4.6.0"
-  }
+  },
+  "proxy": "http://dababysdcbackendapi-env-2.eba-ybqn7as3.ca-central-1.elasticbeanstalk.com"
 }
