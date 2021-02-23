@@ -12,6 +12,7 @@ except ImportError as exc:
 
 execute_from_command_line(['manage.py', 'makemigrations'])
 execute_from_command_line(['manage.py', 'migrate'])
+execute_from_command_line(['manage.py', 'collectstatic'])
 # execute_from_command_line(['manage.py', 'runserver'])
 
 from BackendApi import application
