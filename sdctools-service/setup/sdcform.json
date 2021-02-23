@@ -42,7 +42,7 @@
                     "controllerID": null,
                     "controllerAnswerEnabler": null,
 
-                    "text": "Sex at Birth",
+                    "questionText": "Sex at Birth",
                     "choices": [
                         { "text": "Male" },
                         { "text": "Female" },
@@ -56,7 +56,7 @@
                     "controllerID": null,
                     "controllerAnswerEnabler": null,
 
-                    "text": "Place Where the Case Was Diagnosed (Country)"
+                    "questionText": "Place Where the Case Was Diagnosed (Country)"
                 },
                 {
                     "id": 35935,
@@ -79,7 +79,7 @@
                     "controllerID": null,
                     "controllerAnswerEnabler": null,
 
-                    "text": "Date of First Laboratory Confirmation Test (DD / MM / YYYY)"
+                    "questionText": "Date of First Laboratory Confirmation Test (DD / MM / YYYY)"
                 },
 
                 {
@@ -88,7 +88,7 @@
                     "controllerID": null,
                     "controllerAnswerEnabler": null,
 
-                    "text": "Symptoms or Signs at Time of Specimen Collection that Resulted in First Laboratory Confirmation",
+                    "questionText": "Symptoms or Signs at Time of Specimen Collection that Resulted in First Laboratory Confirmation",
                     "choices": [
                         { "text": "None (i.e. asymptotic" },
                         { "text": "Present" },
@@ -110,7 +110,7 @@
                     "controllerID": null,
                     "controllerAnswerEnabler": null,
 
-                    "text": "Underlying Conditions and Comorbidity",
+                    "questionText": "Underlying Conditions and Comorbidity",
                     "choices": [
                         { "text": "None" },
                         { "text": "Present" },
@@ -123,7 +123,7 @@
                     "controllerID": 38610,
                     "controllerAnswerEnabler": "Present",
 
-                    "text": "Underlying Conditions (select all that apply)",
+                    "questionText": "Underlying Conditions (select all that apply)",
                     "choices": [
                         { "text": "Pregnancy" },
                         { "text": "Cardiovascular disease" },
@@ -141,7 +141,7 @@
                     "controllerID": null,
                     "controllerAnswerEnabler": null,
 
-                    "text": "Admission to Hospital"
+                    "questionText": "Admission to Hospital"
                 },
                 {
                     "id": 39750,
@@ -149,7 +149,7 @@
                     "controllerID": 36015,
                     "controllerAnswerEnabler": true,
 
-                    "text": "Specify Date of First Admission (DD / MM / YYYY)"
+                    "questionText": "Specify Date of First Admission (DD / MM / YYYY)"
                 }
 
             ]
