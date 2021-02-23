@@ -15,6 +15,7 @@ export const uploadForm = async (page, data) => {
 		.post(`/api/sdcform/`, data )
 		.then((res) => {
 			if (res.data) {
+				console.log(res)
 				forms.push({
 					formId: res.data.sdcFormObject.id,
 					formName: res.data.sdcFormObject.name,
