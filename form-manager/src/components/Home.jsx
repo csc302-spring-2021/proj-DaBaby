@@ -51,29 +51,29 @@ class Home extends React.Component {
 		reader.onerror = () => console.log('file reading has failed')
 		reader.onload = () => {
 			// able to pass file content
-			const binaryStr = reader.result
-			console.log(binaryStr)
+			let binaryStr = reader.result
+			binaryStr = binaryStr.replace(/"/g, "'").replace(/(\r\n|\n|\r)/gm, "")
+			this.setState({showUpload: false, completeUpload: true})
+			if (this.state.isUpdate) {
+				updateForm(this, {
+					updateForm: this.state.updateForm,
+					lastUpdated: new Date().toISOString(),
+					formName: this.state.newName,
+					file: this.state.newForm.file
+				})
+			} else {
+				uploadForm(this, {
+					diagnosticProcedureID: this.state.newId,
+					lastUpdated: new Date().toISOString(),
+					name: this.state.newName,
+					xmlString: binaryStr
+				})
+			}
+			this.setState({newForm: null, newId: "", newName: "", updateForm: null, isUpdate: false})
 		}
 		reader.readAsBinaryString(this.state.newForm.file)
 		// able to download File using the File object
 		FileSaver.saveAs(this.state.newForm.file);
-		this.setState({showUpload: false, completeUpload: true})
-		if (this.state.isUpdate) {
-			updateForm(this, {
-				updateForm: this.state.updateForm,
-				lastUpdated: new Date().toISOString(),
-				formName: this.state.newName,
-				file: this.state.newForm.file
-			})
-		} else {
-			uploadForm(this, {
-				procedureId: this.state.newId,
-				lastUpdated: new Date().toISOString(),
-				formName: this.state.newName,
-				file: this.state.newForm.file
-			})
-		}
-		this.setState({newForm: null, newId: "", newName: "", updateForm: null, isUpdate: false})
 	}
 
 	onInputId(e) {
