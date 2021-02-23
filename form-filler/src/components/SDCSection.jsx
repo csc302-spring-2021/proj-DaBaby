@@ -102,7 +102,8 @@ class SDCSection extends React.Component {
   };
 
   render() {
-    const { questions } = this.state;
+    const { section } = this.props;
+    const { questions } = section;
     return (
       <Container className="sdc-form">
         <Row>
