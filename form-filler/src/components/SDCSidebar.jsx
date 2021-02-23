@@ -16,7 +16,7 @@ class SDCSidebar extends React.Component {
   };
 
   render() {
-    const { sections } = this.props;
+    const { sections, curr_section } = this.props; 
     return (
       <Container fluid>
         <Row>
@@ -24,7 +24,7 @@ class SDCSidebar extends React.Component {
             {sections.map((section, index) => (
               <Button
                 className={`sdc-btn ${
-                  index == 0 ? "active" : ""
+                  curr_section == index ? "active" : ""
                 } sdc-container`}
                 variant="outline-dark"
                 key={section.section_id}

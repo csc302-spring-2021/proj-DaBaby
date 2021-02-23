@@ -199,6 +199,7 @@ class App extends React.Component {
               <SDCSidebar
                 sections={sections}
                 onSelection={this.handleSelection}
+                curr_section={curr_section}
               />
             </Col>
           </Row>
