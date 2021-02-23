@@ -1,30 +1,36 @@
-/* hard-coded form id */
-let id = 2;
+import axios from "axios";
 /* hard-coded forms */
 let forms = [
-	{
-		formId: 1,
-		formName: "COVID19 V1",
-		procedureId: "COVID19",
-		lastUpdated: "2021-02-21T00:41:01.626Z",
-		file: null
-	}
+
 ]
 
 /* GET all forms */
 export const getAllForms = (page) => {
-	page.setState({forms: forms, displayedForms: forms, filter: ""})
+	page.setState({ forms: forms, displayedForms: forms, filter: "" });
 };
 
 /* POST a new form */
-export const uploadForm = (page, data) => {
-	forms.push({
-		formId: id++,
-		formName: data.formName,
-		procedureId: data.procedureId,
-		lastUpdated: data.lastUpdated,
-		file: data.file
-	})
+export const uploadForm = async (page, data) => {
+	axios
+		.post(`/api/sdcform/`, data )
+		.then((res) => {
+			console.log(res.data)
+			if (res.data) {
+				forms.push({
+					formId: res.data.sdcFormObject.id,
+					formName: res.data.sdcFormObject.name,
+					procedureId: res.data.sdcFormObject.diagnosticProcedureID,
+					lastUpdated: data.lastUpdated,
+					sdcFormObject: res.data.sdcFormObject
+				})
+				getAllForms(page)
+			} else {
+				alert("NO ITEMS DATA");
+			}
+		})
+		.catch((err) => {
+			alert(err.response.data.message);
+		});
 	getAllForms(page)
 };
 
