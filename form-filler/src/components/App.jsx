@@ -186,14 +186,14 @@ class App extends React.Component {
   };
 
   render() {
-    const { sections, curr_section } = this.state;
+    const { sections, curr_section, name } = this.state;
     return (
       <Container fluid className="App">
         <NavigationBar />
         <Col>
           <Row>
             <Col md={8}>
-              <SDCSection section={sections[curr_section]} />
+              <SDCSection section={sections[curr_section]} name={name} section_name={sections[curr_section].title}/>
             </Col>
             <Col md={4}>
               <SDCSidebar
