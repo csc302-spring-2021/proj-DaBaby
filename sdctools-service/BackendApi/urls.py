@@ -23,5 +23,5 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/", views.open_api, name="open-api"),
     path("api/sdcform/", include("sdcform.urls")),
-    path('api/test/', index),
+    path('api/test/', include("setup.urls")),
 ]
