@@ -10,12 +10,16 @@ import SDCSidebar from "./SDCSidebar";
 
 class App extends React.Component {
   // Backend call
-  async componentDidMount() {
-    const response = await fetch("/api/test/sdcform/covid19");
-
-    const responseData = await response.json();
-
-    this.setState({ isLoaded: true, sdcForm: responseData.sdcFormObject });
+  componentDidMount() {
+    fetch("/api/test/sdcform/covid19")
+      .then((response) => response.json())
+      .then((data) =>
+        this.setState({ isLoaded: true, sdcForm: data.sdcFormObject })
+      )
+      .catch((error) => {
+        this.setState({ errorMessage: error.toString() });
+        console.log(error);
+      });
   }
 
   // This is where we will pass the SDCForm json
@@ -29,7 +33,11 @@ class App extends React.Component {
   };
 
   render() {
-    const { curr_section, isLoaded } = this.state;
+    const { curr_section, isLoaded, errorMessage } = this.state;
+    // If there i
+    if (errorMessage) {
+      return <div>Error Occured: {errorMessage}</div>
+    }
     // If the data hasn't loaded yet display this
     if (!isLoaded) {
       return <div>Loading...</div>;
