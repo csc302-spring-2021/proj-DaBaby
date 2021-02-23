@@ -24,7 +24,9 @@ class Home extends React.Component {
 			newId: "",
 			newName: "",
 			completeUpload: true,
-			forms: []
+			forms: [],
+			displayedForms: [],
+			filter: ""
 		}
 	}
 
@@ -32,26 +34,27 @@ class Home extends React.Component {
 		getAllForms(this);
 	}
 
-	onOpenUploadModal = (form, e) => {
+	onOpenUploadModal(form, e) {
 		this.setState({showUpload: true})
 		if (form && e) {
 			this.setState({updateForm: form, isUpdate: true})
 		}
 	}
 
-	onCloseUploadModal = (e) => {
+	onCloseUploadModal() {
 		this.setState({showUpload: false, completeUpload: true, isUpdate: false, newForm: null, newId: "", newName: "", updateForm: null})
 	}
 
-	onCompleteUploadModal = (e) => {
+	onCompleteUploadModal() {
 		const reader = new FileReader()
 		reader.onabort = () => console.log('file reading was aborted')
 		reader.onerror = () => console.log('file reading has failed')
 		reader.onload = () => {
 			// able to pass file content
 			const binaryStr = reader.result
+			console.log(binaryStr)
 		}
-		reader.readAsArrayBuffer(this.state.newForm.file)
+		reader.readAsBinaryString(this.state.newForm.file)
 		// able to download File using the File object
 		FileSaver.saveAs(this.state.newForm.file);
 		this.setState({showUpload: false, completeUpload: true})
@@ -73,15 +76,25 @@ class Home extends React.Component {
 		this.setState({newForm: null, newId: "", newName: "", updateForm: null, isUpdate: false})
 	}
 
-	onInputId = (e) => {
+	onInputId(e) {
 		this.setState({newId: e.target.value})
 	}
 
-	onInputName = (e) => {
+	onInputName(e) {
 		this.setState({newName: e.target.value})
 	}
 
-	onDeleteForm = (form) => {
+	onInputFilter(e) {
+		this.setState({filter: e.target.value}, () => {
+			this.setState({displayedForms: this.state.forms.filter(
+					form => form.formId.toString().toUpperCase().indexOf(this.state.filter.toUpperCase()) > -1 ||
+						form.formName.toUpperCase().indexOf(this.state.filter.toUpperCase()) > -1 ||
+						form.procedureId.toUpperCase().indexOf(this.state.filter.toUpperCase()) > -1
+				)})
+		})
+	}
+
+	onDeleteForm(form) {
 		deleteForm(this,form)
 	}
 
@@ -101,7 +114,14 @@ class Home extends React.Component {
 					        onClick={this.onOpenUploadModal.bind(this)}>+&nbsp;Upload&nbsp;New&nbsp;Form</Button>{' '}
 				</div>
 				<div id="manager-panel-body">
-					<p>Displaying {this.state.forms.length} of {this.state.forms.length}</p>
+					<div id="manager-panel-body-head">
+						<p>Displaying {this.state.displayedForms.length} of {this.state.forms.length}</p>
+						<Form style={{marginLeft: "auto"}}>
+							<Form.Group controlId="formId">
+								<Form.Control value={this.state.filter} type="name" placeholder="Filter..." onChange={this.onInputFilter.bind(this)}/>
+							</Form.Group>
+						</Form>
+					</div>
 					<Table striped bordered={false} hover>
 						<thead>
 						<tr>
@@ -114,7 +134,7 @@ class Home extends React.Component {
 						</tr>
 						</thead>
 						<tbody>
-						{this.state.forms.map(form => (
+						{this.state.displayedForms.map(form => (
 							<tr>
 								<td>{form.formId}</td>
 								<td>{form.formName}</td>
@@ -136,7 +156,7 @@ class Home extends React.Component {
 						))}
 						</tbody>
 					</Table>
-					<Modal show={this.state.showUpload} onHide={this.onCloseUploadModal}>
+					<Modal show={this.state.showUpload} onHide={this.onCloseUploadModal.bind(this)}>
 						<Modal.Header closeButton>
 							<Modal.Title>Upload&nbsp;New&nbsp;Form</Modal.Title>
 						</Modal.Header>
@@ -166,10 +186,10 @@ class Home extends React.Component {
 							</Form>
 						</Modal.Body>
 						<Modal.Footer>
-							<Button variant="secondary" onClick={this.onCloseUploadModal}>
+							<Button variant="secondary" onClick={this.onCloseUploadModal.bind(this)}>
 								Cancel
 							</Button>
-							<Button variant="primary" onClick={this.onCompleteUploadModal}
+							<Button variant="primary" onClick={this.onCompleteUploadModal.bind(this)}
 							        disabled={this.state.completeUpload}>
 								Upload
 							</Button>
