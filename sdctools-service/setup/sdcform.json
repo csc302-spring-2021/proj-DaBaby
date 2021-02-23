@@ -46,7 +46,7 @@
                     "choices": [
                         { "text": "Male" },
                         { "text": "Female" },
-                        { "text": "Other (please specify):", "input_type": "string" }
+                        { "text": "Other (please specify):", "optionalFieldInputType": "string" }
                     ]
 
                 },
@@ -132,7 +132,7 @@
                         { "text": "Renal disease" },
                         { "text": "Immunodeficiency, including HIV" },
                         { "text": "Chronic lung disease" },
-                        { "text": "Others (specify): ", "input_type": "string" }
+                        { "text": "Others (specify): ", "optionalFieldInputType": "string" }
                     ]
                 },
                 {
