@@ -24,10 +24,7 @@ SECRET_KEY = '$q4l(8!)(5nw9)j%oyzu86p267mb0w@n465h$d-p9f%b2maiqb'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['dababysdcbackendapi-env-2.eba-ybqn7as3.ca-central-1.elasticbeanstalk.com',
-                 'dababysdcformfiller-env-1.eba-mq2saay2.ca-central-1.elasticbeanstalk.com',
-                 'dababysdcformmanager-env.eba-kd29msmd.ca-central-1.elasticbeanstalk.com',
-                 '127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
