@@ -11,6 +11,7 @@ import SDCSidebar from "./SDCSidebar";
 class App extends React.Component {
   // This is where we will pass the SDCForm json
   state = {
+    curr_section: 0,
     form_id: 1234,
     procedure_id: "COVID-19.393_1.000.000.CTP1_sdcFDF",
     name: "WORLD HEALTH ORGANIZATION (WHO) COVID-19 CASE REPORT",
@@ -179,18 +180,26 @@ class App extends React.Component {
     ],
   };
 
+  // This function will change the current section to be displayed
+  handleSelection = (index) => {
+    this.setState({ curr_section: index });
+  };
+
   render() {
-    const { sections } = this.state;
+    const { sections, curr_section } = this.state;
     return (
       <Container fluid className="App">
         <NavigationBar />
         <Col>
           <Row>
             <Col md={8}>
-              <SDCSection section={sections[0]}/>
+              <SDCSection section={sections[curr_section]} />
             </Col>
             <Col md={4}>
-              <SDCSidebar />
+              <SDCSidebar
+                sections={sections}
+                onSelection={this.handleSelection}
+              />
             </Col>
           </Row>
         </Col>
