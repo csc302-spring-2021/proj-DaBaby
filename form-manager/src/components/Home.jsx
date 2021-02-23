@@ -34,18 +34,18 @@ class Home extends React.Component {
 		getAllForms(this);
 	}
 
-	onOpenUploadModal = (form, e) => {
+	onOpenUploadModal(form, e) {
 		this.setState({showUpload: true})
 		if (form && e) {
 			this.setState({updateForm: form, isUpdate: true})
 		}
 	}
 
-	onCloseUploadModal = (e) => {
+	onCloseUploadModal() {
 		this.setState({showUpload: false, completeUpload: true, isUpdate: false, newForm: null, newId: "", newName: "", updateForm: null})
 	}
 
-	onCompleteUploadModal = (e) => {
+	onCompleteUploadModal() {
 		const reader = new FileReader()
 		reader.onabort = () => console.log('file reading was aborted')
 		reader.onerror = () => console.log('file reading has failed')
@@ -76,15 +76,15 @@ class Home extends React.Component {
 		this.setState({newForm: null, newId: "", newName: "", updateForm: null, isUpdate: false})
 	}
 
-	onInputId = (e) => {
+	onInputId(e) {
 		this.setState({newId: e.target.value})
 	}
 
-	onInputName = (e) => {
+	onInputName(e) {
 		this.setState({newName: e.target.value})
 	}
 
-	onInputFilter= (e) => {
+	onInputFilter(e) {
 		this.setState({filter: e.target.value}, () => {
 			this.setState({displayedForms: this.state.forms.filter(
 					form => form.formId.toString().toUpperCase().indexOf(this.state.filter.toUpperCase()) > -1 ||
@@ -94,7 +94,7 @@ class Home extends React.Component {
 		})
 	}
 
-	onDeleteForm = (form) => {
+	onDeleteForm(form) {
 		deleteForm(this,form)
 	}
 
@@ -156,7 +156,7 @@ class Home extends React.Component {
 						))}
 						</tbody>
 					</Table>
-					<Modal show={this.state.showUpload} onHide={this.onCloseUploadModal}>
+					<Modal show={this.state.showUpload} onHide={this.onCloseUploadModal.bind(this)}>
 						<Modal.Header closeButton>
 							<Modal.Title>Upload&nbsp;New&nbsp;Form</Modal.Title>
 						</Modal.Header>
@@ -186,10 +186,10 @@ class Home extends React.Component {
 							</Form>
 						</Modal.Body>
 						<Modal.Footer>
-							<Button variant="secondary" onClick={this.onCloseUploadModal}>
+							<Button variant="secondary" onClick={this.onCloseUploadModal.bind(this)}>
 								Cancel
 							</Button>
-							<Button variant="primary" onClick={this.onCompleteUploadModal}
+							<Button variant="primary" onClick={this.onCompleteUploadModal.bind(this)}
 							        disabled={this.state.completeUpload}>
 								Upload
 							</Button>
