@@ -12,24 +12,26 @@ class ChoiceSerializer(serializers.ModelSerializer):
 
 
 class SDCQuestionSerializer(serializers.ModelSerializer):
-    questionText = serializers.IntegerField(
+    questionText = serializers.CharField(
         source="text", read_only=True)
     controllerID = serializers.IntegerField(
-        source="controller.id", read_only=True)
-    controllerAnswerEnabler = serializers.Field(
-        source="controller_answer_enabler")
-    choices = ChoiceSerializer(many=True, read_only=True)
+        source="controller.id", read_only=True, allow_null=True)
+    controllerAnswerEnabler = serializers.CharField(
+        source="controller_answer_enabler", read_only=True)
+    choices = ChoiceSerializer(many=True, read_only=True, allow_null=True)
 
     class Meta:
         model = SDCQuestion
         fields = ["id", "type", "questionText", "controllerID",
                   "controllerAnswerEnabler", "choices"]
 
-    def __init__(self, *args, **kwargs):
-        if len(self.fields["choices"].get_initial()) == 0:
-            del self.fields["choices"]
+    def to_representation(self, obj):
+        r = super().to_representation(obj)
 
-        super().__init__(*args, **kwargs)
+        if getattr(obj, "type") not in {"single-choice", "multiple-choice"}:
+            r.pop("choices")
+
+        return r
 
 
 class SectionSerializer(serializers.ModelSerializer):

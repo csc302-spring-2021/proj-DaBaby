@@ -48,7 +48,7 @@ class Choice(models.Model):
 
     def save(self, *args, **kwargs):
         input_types = ["int", "str"]
-        if self.input_type in input_types:
+        if self.input_type in input_types or self.input_type is None:
             super().save(*args, **kwargs)
         else:
             raise ValueError('The input_type field can only be one of the '

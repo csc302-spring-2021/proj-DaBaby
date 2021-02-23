@@ -1,103 +1,95 @@
 {
-    "form_id": 1234,
-    "procedure_id": "COVID-19.393_1.000.000.CTP1_sdcFDF",
+    "id": 1234,
     "name": "WORLD HEALTH ORGANIZATION (WHO) COVID-19 CASE REPORT",
     "sections": [
         {
-            "section_id": 35866,
-            "title": "Section 1: Patient Information", 
+            "id": 35866,
+            "name": "Section 1: Patient Information", 
             "questions": [
                 {
-                    "question_id": 37326,
-                    "question_type": "free-text",
-                    "order": 42,
-                    "controller_id": null,
-                    "controller_answer": null,
-                    "question_text": "Unique Case Identifier (used in country)"
+                    "id": 37326,
+                    "type": "free-text",
+                    "controllerID": null,
+                    "controllerAnswerEnabler": null,
+                    "questionText": "Unique Case Identifier (used in country)"
                 },
                 {
-                    "question_id": 35972,
-                    "question_type": "single-choice",
-                    "order": 47,
-                    "controller_id": null,
-                    "controller_answer": null,
+                    "id": 35972,
+                    "type": "single-choice",
+                    "controllerID": null,
+                    "controllerAnswerEnabler": null,
 
-                    "question_text": "Age",
-                    "options": [
+                    "questionText": "Age",
+                    "choices": [
                         {
                             "text": "Greater than 1 year old (specify years)",
-                            "input_type": "int"
+                            "optionalFieldInputType": "int"
                         },
                         {
                             "text": "Less than 1 year old (specify months)",
-                            "input_type": "int"
+                            "optionalFieldInputType": "int"
                         },
                         {
                             "text": "Less than 1 month old (specify days)",
-                            "input_type": "int"
+                            "optionalFieldInputType": "int"
                         }
                     ]
 
                 },
                 {
-                    "question_id": 35978,
-                    "question_type": "single-choice",
-                    "order": 72,
-                    "controller_id": null,
-                    "controller_answer": null,
+                    "id": 35978,
+                    "type": "single-choice",
+                    "controllerID": null,
+                    "controllerAnswerEnabler": null,
 
-                    "question_text": "Sex at Birth",
-                    "options": [
+                    "questionText": "Sex at Birth",
+                    "choices": [
                         { "text": "Male" },
                         { "text": "Female" },
-                        { "text": "Other (please specify):", "input_type": "string" }
+                        { "text": "Other (please specify):", "optionalFieldInputType": "string" }
                     ]
 
                 },
                 {
-                    "question_id": 35932,
-                    "question_type": "free-text",
-                    "order": 76,
-                    "controller_id": null,
-                    "controller_answer": null,
+                    "id": 35932,
+                    "type": "free-text",
+                    "controllerID": null,
+                    "controllerAnswerEnabler": null,
 
-                    "question_text": "Place Where the Case Was Diagnosed (Country)"
+                    "questionText": "Place Where the Case Was Diagnosed (Country)"
                 },
                 {
-                    "question_id": 35935,
-                    "question_type": "free-text",
-                    "order": 81,
-                    "controller_id": 35932,
-                    "controller_answer": "*",
+                    "id": 35935,
+                    "type": "free-text",
+                    "controllerID": 35932,
+                    "controllerAnswerEnabler": "*",
 
-                    "question_text": "Admin Level 1 (Province)"
+                    "questionText": "Admin Level 1 (Province)"
                 }
             ]
 
         },
         {
-            "section_id": 35835,
-            "title": "Section 2: Clinical Status",
+            "id": 35835,
+            "name": "Section 2: Clinical Status",
             "questions": [
                 {
-                    "question_id": 35943,
-                    "question_type": "free-text",
-                    "order": 90,
-                    "controller_id": null,
-                    "controller_answer": null,
+                    "id": 35943,
+                    "type": "free-text",
+                    "controllerID": null,
+                    "controllerAnswerEnabler": null,
 
-                    "question_text": "Date of First Laboratory Confirmation Test (DD / MM / YYYY)"
+                    "questionText": "Date of First Laboratory Confirmation Test (DD / MM / YYYY)"
                 },
 
                 {
-                    "question_id": 35995,
-                    "question_type": "single-choice",
-                    "order": 96,
-                    "controller_id": null,
-                    "controller_answer": null,
+                    "id": 35995,
+                    "type": "single-choice",
+                    "controllerID": null,
+                    "controllerAnswerEnabler": null,
 
-                    "question_text": "Symptoms or Signs at Time of Specimen Collection that Resulted in First Laboratory Confirmation",
-                    "options": [
+                    "questionText": "Symptoms or Signs at Time of Specimen Collection that Resulted in First Laboratory Confirmation",
+                    "choices": [
                         { "text": "None (i.e. asymptotic" },
                         { "text": "Present" },
                         { "text": "Unknown" }
@@ -105,37 +97,34 @@
 
                 },
                 {
-                    "question_id": 37429,
-                    "question_type": "free-text",
-                    "order": 102,
-                    "controller_id": 35995,
-                    "controller_answer": "Present",
+                    "id": 37429,
+                    "type": "free-text",
+                    "controllerID": 35995,
+                    "controllerAnswerEnabler": "Present",
 
-                    "question_text": "Specify Date of Onset of Symptoms (DD / MM / YYYY)"
+                    "questionText": "Specify Date of Onset of Symptoms (DD / MM / YYYY)"
                 },
                 {
-                    "question_id": 38610,
-                    "question_type": "single-choice",
-                    "order": 102,
-                    "controller_id": null,
-                    "controller_answer": null,
+                    "id": 38610,
+                    "type": "single-choice",
+                    "controllerID": null,
+                    "controllerAnswerEnabler": null,
 
-                    "question_text": "Underlying Conditions and Comorbidity",
-                    "options": [
+                    "questionText": "Underlying Conditions and Comorbidity",
+                    "choices": [
                         { "text": "None" },
                         { "text": "Present" },
                         { "text": "Unknown" }
                     ]
                 },
                 {
-                    "question_id": 35960,
-                    "question_type": "multiple-choice",
-                    "order": 115,
-                    "controller_id": 38610,
-                    "controller_answer": "Present",
+                    "id": 35960,
+                    "type": "multiple-choice",
+                    "controllerID": 38610,
+                    "controllerAnswerEnabler": "Present",
 
-                    "question_text": "Underlying Conditions (select all that apply)",
-                    "options": [
+                    "questionText": "Underlying Conditions (select all that apply)",
+                    "choices": [
                         { "text": "Pregnancy" },
                         { "text": "Cardiovascular disease" },
                         { "text": "Liver disease" },
@@ -143,26 +132,24 @@
                         { "text": "Renal disease" },
                         { "text": "Immunodeficiency, including HIV" },
                         { "text": "Chronic lung disease" },
-                        { "text": "Others (specify): ", "input_type": "string" }
+                        { "text": "Others (specify): ", "optionalFieldInputType": "string" }
                     ]
                 },
                 {
-                    "question_id": 36015,
-                    "question_type": "true-false",
-                    "order": 144,
-                    "controller_id": null,
-                    "controller_answer": null,
+                    "id": 36015,
+                    "type": "true-false",
+                    "controllerID": null,
+                    "controllerAnswerEnabler": null,
 
-                    "question_text": "Admission to Hospital"
+                    "questionText": "Admission to Hospital"
                 },
                 {
-                    "question_id": 39750,
-                    "question_type": "free-text",
-                    "order": 150,
-                    "controller_id": 36015,
-                    "controller_answer": true,
+                    "id": 39750,
+                    "type": "free-text",
+                    "controllerID": 36015,
+                    "controllerAnswerEnabler": true,
 
-                    "question_text": "Specify Date of First Admission (DD / MM / YYYY)"
+                    "questionText": "Specify Date of First Admission (DD / MM / YYYY)"
                 }
 
             ]
