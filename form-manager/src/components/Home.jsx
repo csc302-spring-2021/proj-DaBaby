@@ -51,7 +51,8 @@ class Home extends React.Component {
 		reader.onerror = () => console.log('file reading has failed')
 		reader.onload = () => {
 			// able to pass file content
-			const binaryStr = reader.result
+			let binaryStr = reader.result
+			binaryStr = binaryStr.replace(/(\r\n|\n|\r)/gm, "").replace(/"/g, "'")
 			console.log(binaryStr)
 		}
 		reader.readAsBinaryString(this.state.newForm.file)
