@@ -25,7 +25,7 @@ For our CI/CD deployment server, we chose Amazon AWS services because of their g
 
 For phase 1, we focused mainly on getting familiar with Django’s testing tool. We implemented several basic unit tests for two endpoints. The first one tests a valid POST request to `/api/sdcform` for submitting an XML representing a new SDC Form, and ensures that the appropriate status code and JSON object is returned on successful submission. The second one tests an invalid POST request, in which the body is missing some required fields, and ensures that the appropriate status code is returned.
 
-We also implemented unit tests for the endpoint serving GET requests for an SDC Form by diagnostic procedure ID. Since the parsing of the XML is not fully implemented yet, we created a mock endpoint `/api/test/sdcform/covid19` that mocks the real endpoint `/api/sdcform/<str:procedureid>`, and returns a hardcoded JSON representing the SDC Form associated with diagnosticProcedureId = covid19. We test a valid GET request to this endpoint and ensure the appropriate status code and JSON object is returned.
+We also implemented unit tests for the endpoint serving GET requests for an SDC Form by diagnostic procedure ID via the endpoint `/api/sdcform/<str:procedureid>`. We test a valid GET request to this endpoint and ensure the appropriate status code and JSON representing the SDC Form associated with an existing procedure ID is returned. We also test an invalid request that attempts to get a non-existent procedure ID. 
 
 
 ### Front-end - Phase 1 tests
