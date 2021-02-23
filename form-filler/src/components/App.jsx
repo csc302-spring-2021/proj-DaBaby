@@ -30,9 +30,11 @@ class App extends React.Component {
 
   render() {
     const { curr_section, isLoaded } = this.state;
+    // If the data hasn't loaded yet display this
     if (!isLoaded) {
       return <div>Loading...</div>;
     }
+    // Once data has been loaded it is okay to then gather from the sdcForm object
     const { sections, name } = this.state.sdcForm;
     return (
       <Container fluid className="App">
