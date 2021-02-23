@@ -27,10 +27,10 @@ class SDCSidebar extends React.Component {
                   curr_section == index ? "active" : ""
                 } sdc-container`}
                 variant="outline-dark"
-                key={section.section_id}
+                key={section.id}
                 onClick={() => this.handleSection(index)}
               >
-                {section.title}
+                {section.name}
               </Button>
             ))}
           </Col>
