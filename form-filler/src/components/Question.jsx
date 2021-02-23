@@ -11,6 +11,7 @@ import {
   FormText,
 } from "react-bootstrap";
 import "./SDCSection.scss";
+import "./Question.scss";
 
 class Question extends Component {
   required = (value) => {
@@ -24,7 +25,7 @@ class Question extends Component {
       case "single-choice":
         return (
           <div>
-            <FormLabel>{question.question_text}</FormLabel>
+            <FormLabel className="title">{question.question_text}</FormLabel>
             <div className="radio">
               {/* Dynamically rendering all options the question has */}
               {question.options.map((option, index) => (
@@ -49,7 +50,7 @@ class Question extends Component {
       case "multiple-choice":
         return (
           <div>
-            <FormLabel>{question.question_text}</FormLabel>
+            <FormLabel className="title">{question.question_text}</FormLabel>
             <div className="checkbox">
               {/* Dynamically rendering all options the question has */}
               {question.options.map((option, index) => (
@@ -76,7 +77,7 @@ class Question extends Component {
           <Field name={question.question_text} validate={this.required}>
             {({ input, meta }) => (
               <FormGroup controlId={this.key}>
-                <FormLabel>{question.question_text}</FormLabel>
+                <FormLabel className="title">{question.question_text}</FormLabel>
                 <FormControl
                   {...input}
                   type="text"
@@ -96,7 +97,7 @@ class Question extends Component {
       case "integer":
         return (
           <div>
-            <FormLabel>{question.question_text}</FormLabel>
+            <FormLabel className="title">{question.question_text}</FormLabel>
             <div className="integer">
               <FormLabel>
                 <Field
@@ -117,7 +118,7 @@ class Question extends Component {
       case "true-false":
         return (
           <div>
-            <FormLabel>{question.question_text}</FormLabel>
+            <FormLabel className="title">{question.question_text}</FormLabel>
             <div className="checkbox">
               <FormLabel>
                 <Field

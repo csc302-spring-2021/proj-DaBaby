@@ -102,11 +102,15 @@ class SDCSection extends React.Component {
   };
 
   render() {
-    const { questions } = this.state;
+    const { section, name, section_name } = this.props;
+    const { questions } = section;
     return (
       <Container className="sdc-form">
         <Row>
           <Col>
+            <h1 className="formTitle">{name}</h1>
+            <h2 className="sectionTitle">{section_name}</h2>
+            <hr className="divider"></hr>
             <Form
               onSubmit={this.onSubmit}
               render={({

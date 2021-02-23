@@ -1,7 +1,7 @@
 import "./SDCSidebar.scss";
 
 import React from "react";
-import { Row, Col, Container } from "react-bootstrap";
+import { Row, Col, Container, Button } from "react-bootstrap";
 
 import SDCSectionLabel from "./SDCSectionLabel";
 
@@ -10,18 +10,29 @@ class SDCSidebar extends React.Component {
     super(props);
   }
 
+  // This button function will handle which section will be rendered
+  handleSection = (index) => {
+    this.props.onSelection(index);
+  };
+
   render() {
+    const { sections, curr_section } = this.props; 
     return (
       <Container fluid>
         <Row>
           <Col sm={12} className="section-navigation">
-            <SDCSectionLabel
-              name={"Section 1: Patient Information"}
-              state="active"
-            />
-            <SDCSectionLabel name={"Section 2: Clinical Status"} />
-            <SDCSectionLabel name={"Section 3: Exposure Risk Prior to Onset"} />
-            <SDCSectionLabel name={"Review"} />
+            {sections.map((section, index) => (
+              <Button
+                className={`sdc-btn ${
+                  curr_section == index ? "active" : ""
+                } sdc-container`}
+                variant="outline-dark"
+                key={section.section_id}
+                onClick={() => this.handleSection(index)}
+              >
+                {section.title}
+              </Button>
+            ))}
           </Col>
         </Row>
       </Container>
