@@ -27,7 +27,7 @@ DEBUG = True
 ALLOWED_HOSTS = ['dababysdcbackendapi-env-2.eba-ybqn7as3.ca-central-1.elasticbeanstalk.com',
                  'dababysdcformfiller-env-1.eba-mq2saay2.ca-central-1.elasticbeanstalk.com',
                  'dababysdcformmanager-env.eba-kd29msmd.ca-central-1.elasticbeanstalk.com',
-                 '127.0.0.1']
+                 '127.0.0.1', 'localhost']
 
 # Application definition
 

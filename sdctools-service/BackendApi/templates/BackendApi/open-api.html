@@ -1400,7 +1400,7 @@ public class DefaultApiExample {
     public static void main(String[] args) {
         
         DefaultApi apiInstance = new DefaultApi();
-        Integer responseId = 56; // Integer | The id of the SDCFormResponse to be deleted.
+        Integer responseId = 56; // Integer | The id of the SDCFormResponse to be updated/deleted.
         try {
             ServerMessage result = apiInstance.deleteSDCFormResponse(responseId);
             System.out.println(result);
@@ -1419,7 +1419,7 @@ public class DefaultApiExample {
 
     public static void main(String[] args) {
         DefaultApi apiInstance = new DefaultApi();
-        Integer responseId = 56; // Integer | The id of the SDCFormResponse to be deleted.
+        Integer responseId = 56; // Integer | The id of the SDCFormResponse to be updated/deleted.
         try {
             ServerMessage result = apiInstance.deleteSDCFormResponse(responseId);
             System.out.println(result);
@@ -1435,7 +1435,7 @@ public class DefaultApiExample {
   <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
   </div> -->
                             <div class="tab-pane" id="examples-Default-deleteSDCFormResponse-0-objc">
-                              <pre class="prettyprint"><code class="language-cpp">Integer *responseId = 56; // The id of the SDCFormResponse to be deleted.
+                              <pre class="prettyprint"><code class="language-cpp">Integer *responseId = 56; // The id of the SDCFormResponse to be updated/deleted.
 
 DefaultApi *apiInstance = [[DefaultApi alloc] init];
 
@@ -1456,7 +1456,7 @@ DefaultApi *apiInstance = [[DefaultApi alloc] init];
                               <pre class="prettyprint"><code class="language-js">var SdcFormBackendApiTeamDaBaby = require('sdc_form_backend_api___team_da_baby');
 
 var api = new SdcFormBackendApiTeamDaBaby.DefaultApi()
-var responseId = 56; // {{Integer}} The id of the SDCFormResponse to be deleted.
+var responseId = 56; // {{Integer}} The id of the SDCFormResponse to be updated/deleted.
 
 var callback = function(error, data, response) {
   if (error) {
@@ -1487,7 +1487,7 @@ namespace Example
         {
 
             var apiInstance = new DefaultApi();
-            var responseId = 56;  // Integer | The id of the SDCFormResponse to be deleted.
+            var responseId = 56;  // Integer | The id of the SDCFormResponse to be updated/deleted.
 
             try
             {
@@ -1510,7 +1510,7 @@ namespace Example
 require_once(__DIR__ . '/vendor/autoload.php');
 
 $api_instance = new Swagger\Client\ApiDefaultApi();
-$responseId = 56; // Integer | The id of the SDCFormResponse to be deleted.
+$responseId = 56; // Integer | The id of the SDCFormResponse to be updated/deleted.
 
 try {
     $result = $api_instance->deleteSDCFormResponse($responseId);
@@ -1527,7 +1527,7 @@ use WWW::SwaggerClient::Configuration;
 use WWW::SwaggerClient::DefaultApi;
 
 my $api_instance = WWW::SwaggerClient::DefaultApi->new();
-my $responseId = 56; # Integer | The id of the SDCFormResponse to be deleted.
+my $responseId = 56; # Integer | The id of the SDCFormResponse to be updated/deleted.
 
 eval { 
     my $result = $api_instance->deleteSDCFormResponse(responseId => $responseId);
@@ -1547,7 +1547,7 @@ from pprint import pprint
 
 # create an instance of the API class
 api_instance = swagger_client.DefaultApi()
-responseId = 56 # Integer | The id of the SDCFormResponse to be deleted.
+responseId = 56 # Integer | The id of the SDCFormResponse to be updated/deleted.
 
 try: 
     # Delete the SDCFormResponse with the provided id.
@@ -1581,7 +1581,7 @@ except ApiException as e:
                                                       </span>
                                   
                                                       <div class="inner description">
-                                                          The id of the SDCFormResponse to be deleted.
+                                                          The id of the SDCFormResponse to be updated/deleted.
                                                       </div>
                                               </div>
                                                   <div class="inner required">
@@ -3128,7 +3128,7 @@ except ApiException as e:
                         <p class="marked"></p>
                         <p></p>
                         <br />
-                        <pre class="prettyprint language-html prettyprinted" data-type="put"><code><span class="pln">/api/sdcformresponse</span></code></pre>
+                        <pre class="prettyprint language-html prettyprinted" data-type="put"><code><span class="pln">/api/sdcformresponse/{response-id}</span></code></pre>
                         <p>
                           <h3>Usage and SDK Samples</h3>
                         </p>
@@ -3151,7 +3151,7 @@ except ApiException as e:
                            <pre class="prettyprint"><code class="language-bsh">curl -X PUT\
 -H "Accept: application/json"\
 -H "Content-Type: application/json"\
-"http://127.0.0.1/api/sdcformresponse"</code></pre>
+"http://127.0.0.1/api/sdcformresponse/{response-id}"</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-Default-updateSDCFormResponse-0-java">
                             <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
@@ -3168,8 +3168,9 @@ public class DefaultApiExample {
         
         DefaultApi apiInstance = new DefaultApi();
         SDCFormResponseObject body = ; // SDCFormResponseObject | The updated response object.
+        Integer responseId = 56; // Integer | The id of the SDCFormResponse to be updated/deleted.
         try {
-            SDCFormResponseUpdateResponse result = apiInstance.updateSDCFormResponse(body);
+            SDCFormResponseUpdateResponse result = apiInstance.updateSDCFormResponse(body, responseId);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling DefaultApi#updateSDCFormResponse");
@@ -3187,8 +3188,9 @@ public class DefaultApiExample {
     public static void main(String[] args) {
         DefaultApi apiInstance = new DefaultApi();
         SDCFormResponseObject body = ; // SDCFormResponseObject | The updated response object.
+        Integer responseId = 56; // Integer | The id of the SDCFormResponse to be updated/deleted.
         try {
-            SDCFormResponseUpdateResponse result = apiInstance.updateSDCFormResponse(body);
+            SDCFormResponseUpdateResponse result = apiInstance.updateSDCFormResponse(body, responseId);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling DefaultApi#updateSDCFormResponse");
@@ -3203,11 +3205,13 @@ public class DefaultApiExample {
   </div> -->
                             <div class="tab-pane" id="examples-Default-updateSDCFormResponse-0-objc">
                               <pre class="prettyprint"><code class="language-cpp">SDCFormResponseObject *body = ; // The updated response object.
+Integer *responseId = 56; // The id of the SDCFormResponse to be updated/deleted.
 
 DefaultApi *apiInstance = [[DefaultApi alloc] init];
 
 // Update a saved response.
 [apiInstance updateSDCFormResponseWith:body
+    responseId:responseId
               completionHandler: ^(SDCFormResponseUpdateResponse output, NSError* error) {
                             if (output) {
                                 NSLog(@"%@", output);
@@ -3224,6 +3228,7 @@ DefaultApi *apiInstance = [[DefaultApi alloc] init];
 
 var api = new SdcFormBackendApiTeamDaBaby.DefaultApi()
 var body = ; // {{SDCFormResponseObject}} The updated response object.
+var responseId = 56; // {{Integer}} The id of the SDCFormResponse to be updated/deleted.
 
 var callback = function(error, data, response) {
   if (error) {
@@ -3232,7 +3237,7 @@ var callback = function(error, data, response) {
     console.log('API called successfully. Returned data: ' + data);
   }
 };
-api.updateSDCFormResponse(body, callback);
+api.updateSDCFormResponse(bodyresponseId, callback);
 </code></pre>
                             </div>
 
@@ -3255,11 +3260,12 @@ namespace Example
 
             var apiInstance = new DefaultApi();
             var body = new SDCFormResponseObject(); // SDCFormResponseObject | The updated response object.
+            var responseId = 56;  // Integer | The id of the SDCFormResponse to be updated/deleted.
 
             try
             {
                 // Update a saved response.
-                SDCFormResponseUpdateResponse result = apiInstance.updateSDCFormResponse(body);
+                SDCFormResponseUpdateResponse result = apiInstance.updateSDCFormResponse(body, responseId);
                 Debug.WriteLine(result);
             }
             catch (Exception e)
@@ -3278,9 +3284,10 @@ require_once(__DIR__ . '/vendor/autoload.php');
 
 $api_instance = new Swagger\Client\ApiDefaultApi();
 $body = ; // SDCFormResponseObject | The updated response object.
+$responseId = 56; // Integer | The id of the SDCFormResponse to be updated/deleted.
 
 try {
-    $result = $api_instance->updateSDCFormResponse($body);
+    $result = $api_instance->updateSDCFormResponse($body, $responseId);
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling DefaultApi->updateSDCFormResponse: ', $e->getMessage(), PHP_EOL;
@@ -3295,9 +3302,10 @@ use WWW::SwaggerClient::DefaultApi;
 
 my $api_instance = WWW::SwaggerClient::DefaultApi->new();
 my $body = WWW::SwaggerClient::Object::SDCFormResponseObject->new(); # SDCFormResponseObject | The updated response object.
+my $responseId = 56; # Integer | The id of the SDCFormResponse to be updated/deleted.
 
 eval { 
-    my $result = $api_instance->updateSDCFormResponse(body => $body);
+    my $result = $api_instance->updateSDCFormResponse(body => $body, responseId => $responseId);
     print Dumper($result);
 };
 if ($@) {
@@ -3315,10 +3323,11 @@ from pprint import pprint
 # create an instance of the API class
 api_instance = swagger_client.DefaultApi()
 body =  # SDCFormResponseObject | The updated response object.
+responseId = 56 # Integer | The id of the SDCFormResponse to be updated/deleted.
 
 try: 
     # Update a saved response.
-    api_response = api_instance.update_sdc_form_response(body)
+    api_response = api_instance.update_sdc_form_response(body, responseId)
     pprint(api_response)
 except ApiException as e:
     print("Exception when calling DefaultApi->updateSDCFormResponse: %s\n" % e)</code></pre>
@@ -3327,6 +3336,38 @@ except ApiException as e:
 
                           <h2>Parameters</h2>
 
+                            <div class="methodsubtabletitle">Path parameters</div>
+                            <table id="methodsubtable">
+                                <tr>
+                                  <th width="150px">Name</th>
+                                  <th>Description</th>
+                                </tr>
+                                  <tr><td style="width:150px;">response-id*</td>
+                                  <td>
+                                  
+                                  
+                                      <div id="d2e199_updateSDCFormResponse_responseId">
+                                          <div class="json-schema-view">
+                                              <div class="primitive">
+                                                  <span class="type">
+                                                      Integer
+                                                  </span>
+                                                      <span class="format">
+                                                          (int32)
+                                                      </span>
+                                  
+                                                      <div class="inner description">
+                                                          The id of the SDCFormResponse to be updated/deleted.
+                                                      </div>
+                                              </div>
+                                                  <div class="inner required">
+                                                      Required
+                                                  </div>
+                                          </div>
+                                      </div>
+                                  </td>
+                                  </tr>
+                            </table>
 
 
                             <div class="methodsubtabletitle">Body parameters</div>
