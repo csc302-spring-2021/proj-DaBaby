@@ -14,6 +14,7 @@ import {
 } from "react-bootstrap";
 
 import { Form, Field } from "react-final-form";
+import Question from "./Question";
 
 class SDCSection extends React.Component {
   onSubmit = async (values) => {
@@ -28,10 +29,15 @@ class SDCSection extends React.Component {
   };
 
   render() {
+    const { section, name, section_name } = this.props;
+    const { questions } = section;
     return (
       <Container className="sdc-form">
         <Row>
           <Col>
+            <h1 className="formTitle">{name}</h1>
+            <h2 className="sectionTitle">{section_name}</h2>
+            <hr className="divider"></hr>
             <Form
               onSubmit={this.onSubmit}
               render={({
@@ -41,25 +47,11 @@ class SDCSection extends React.Component {
                 pristine,
                 values,
               }) => (
-                <>
-                  <Field name="uniqueCaseId" validate={this.required}>
-                    {({ input, meta }) => (
-                      <FormGroup controlId="uniqueCaseId">
-                        <FormLabel>Unique Case Identifier</FormLabel>
-                        <FormControl
-                          {...input}
-                          type="text"
-                          placeholder="H123FA456"
-                          isInvalid={meta.error && meta.touched}
-                        />
-                        <FormText data-testid="caseIdValidation">
-                          {meta.error && meta.touched && (
-                            <span>{meta.error}</span>
-                          )}
-                        </FormText>
-                      </FormGroup>
-                    )}
-                  </Field>
+                <form onSubmit={handleSubmit}>
+                  {/* Where the questions will be rendered */}
+                  {questions.map((question) => (
+                    <Question question={question} key={question.id} />
+                  ))}
                   <Button
                     type="submit"
                     onClick={handleSubmit}
@@ -67,7 +59,7 @@ class SDCSection extends React.Component {
                   >
                     Submit
                   </Button>
-                </>
+                </form>
               )}
             ></Form>
           </Col>
