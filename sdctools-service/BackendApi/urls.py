@@ -15,13 +15,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from setup.views import index
+from django.conf import settings
+from django.conf.urls.static import static
 from . import views
 
 urlpatterns = [
-    path("", views.home, name="home"),
-    path("admin/", admin.site.urls),
-    path("api/", views.open_api, name="open-api"),
-    path("api/sdcform/", include("sdcform.urls")),
-    path('api/test/', include("setup.urls")),
-]
+                  path("", views.home, name="home"),
+                  path("admin/", admin.site.urls),
+                  path("api/", views.open_api, name="open-api"),
+                  path("api/sdcform/", include("sdcform.urls")),
+                  path('api/test/', include("setup.urls")),
+              ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
