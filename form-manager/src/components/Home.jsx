@@ -32,18 +32,18 @@ class Home extends React.Component {
 		getAllForms(this);
 	}
 
-	onOpenUploadModal = (form, e) => {
+	onOpenUploadModal(form, e) {
 		this.setState({showUpload: true})
 		if (form && e) {
 			this.setState({updateForm: form, isUpdate: true})
 		}
 	}
 
-	onCloseUploadModal = (e) => {
+	onCloseUploadModal(e) {
 		this.setState({showUpload: false, completeUpload: true, isUpdate: false, newForm: null, newId: "", newName: "", updateForm: null})
 	}
 
-	onCompleteUploadModal = (e) => {
+	onCompleteUploadModal(e) {
 		const reader = new FileReader()
 		reader.onabort = () => console.log('file reading was aborted')
 		reader.onerror = () => console.log('file reading has failed')
@@ -73,15 +73,15 @@ class Home extends React.Component {
 		this.setState({newForm: null, newId: "", newName: "", updateForm: null, isUpdate: false})
 	}
 
-	onInputId = (e) => {
+	onInputId(e) {
 		this.setState({newId: e.target.value})
 	}
 
-	onInputName = (e) => {
+	onInputName(e) {
 		this.setState({newName: e.target.value})
 	}
 
-	onDeleteForm = (form) => {
+	onDeleteForm(form) {
 		deleteForm(this,form)
 	}
 
