@@ -257,7 +257,21 @@
                         }
                     }
                 }
-            },
+            }
+        },
+        "/api/sdcformresponse/{response-id}": {
+            "parameters": [
+                {
+                    "name": "response-id",
+                    "in": "path",
+                    "required": true,
+                    "description": "The id of the SDCFormResponse to be updated/deleted.",
+                    "schema": {
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                }
+            ],
             "put": {
                 "summary": "Update a saved response.",
                 "operationId": "updateSDCFormResponse",
@@ -294,21 +308,7 @@
                         }
                     }
                 }
-            }
-        },
-        "/api/sdcformresponse/{response-id}": {
-            "parameters": [
-                {
-                    "name": "response-id",
-                    "in": "path",
-                    "required": true,
-                    "description": "The id of the SDCFormResponse to be deleted.",
-                    "schema": {
-                        "type": "integer",
-                        "format": "int32"
-                    }
-                }
-            ],
+            },
             "delete": {
                 "summary": "Delete the SDCFormResponse with the provided id.",
                 "operationId": "deleteSDCFormResponse",
