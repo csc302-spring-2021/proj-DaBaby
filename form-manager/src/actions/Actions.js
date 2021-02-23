@@ -14,7 +14,6 @@ export const uploadForm = async (page, data) => {
 	axios
 		.post(`/api/sdcform/`, data )
 		.then((res) => {
-			console.log(res.data)
 			if (res.data) {
 				forms.push({
 					formId: res.data.sdcFormObject.id,
@@ -29,7 +28,7 @@ export const uploadForm = async (page, data) => {
 			}
 		})
 		.catch((err) => {
-			alert(err.response.data.message);
+			alert(err);
 		});
 	getAllForms(page)
 };
