@@ -1,5 +1,4 @@
 import "./App.scss";
-
 import React from "react";
 
 import NavigationBar from "./NavigationBar";
@@ -8,10 +7,12 @@ import SDCSection from "./SDCSection";
 import { Col, Row, Container } from "react-bootstrap";
 import SDCSidebar from "./SDCSidebar";
 
+const SERVER_URL = "http://dababysdcbackendapi-env-2.eba-ybqn7as3.ca-central-1.elasticbeanstalk.com";
+
 class App extends React.Component {
   // Backend call
   componentDidMount() {
-    fetch("/api/test/sdcform/covid19")
+    axios.get(`${SERVER_URL}/api/test/sdcform/covid19`)
       .then((response) => response.json())
       .then((data) =>
         this.setState({ isLoaded: true, sdcForm: data.sdcFormObject })

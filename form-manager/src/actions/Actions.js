@@ -4,6 +4,8 @@ let forms = [
 
 ]
 
+const SERVER_URL = "http://dababysdcbackendapi-env-2.eba-ybqn7as3.ca-central-1.elasticbeanstalk.com";
+
 /* GET all forms */
 export const getAllForms = (page) => {
 	page.setState({ forms: forms, displayedForms: forms, filter: "" });
@@ -12,7 +14,7 @@ export const getAllForms = (page) => {
 /* POST a new form */
 export const uploadForm = async (page, data) => {
 	axios
-		.post(`/api/sdcform/`, data )
+		.post(`${SERVER_URL}/api/sdcform/`, data )
 		.then((res) => {
 			if (res.data) {
 				console.log(res)
