@@ -14,14 +14,13 @@ export const uploadForm = async (page, data) => {
 	axios
 		.post(`/api/sdcform/`, data )
 		.then((res) => {
-			console.log(res.data)
 			if (res.data) {
 				forms.push({
 					formId: res.data.sdcFormObject.id,
 					formName: res.data.sdcFormObject.name,
 					procedureId: res.data.sdcFormObject.diagnosticProcedureID,
 					lastUpdated: data.lastUpdated,
-					sdcFormObject: res.data.sdcFormObject
+					sections: res.data.sdcFormObject.sections
 				})
 				getAllForms(page)
 			} else {

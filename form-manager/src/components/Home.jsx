@@ -73,7 +73,7 @@ class Home extends React.Component {
 		}
 		reader.readAsBinaryString(this.state.newForm.file)
 		// able to download File using the File object
-		FileSaver.saveAs(this.state.newForm.file);
+		//FileSaver.saveAs(this.state.newForm.file);
 	}
 
 	onInputId(e) {
@@ -101,7 +101,6 @@ class Home extends React.Component {
 	render() {
 		// receives array of files that are done uploading when submit button is clicked
 		const onDropzoneSubmit = (files, allFiles) => {
-			console.log(files.map(f => f.meta))
 			this.setState({completeUpload: false})
 			allFiles.forEach(f => this.setState({newForm: f}))
 		}
@@ -141,7 +140,10 @@ class Home extends React.Component {
 								<td>{form.procedureId}</td>
 								<td>{form.lastUpdated}</td>
 								<td>
-									<Link style={{color: "#267bf7", textDecoration: "underline"}} to={"/forms"}>View</Link>
+									<Link style={{color: "#267bf7", textDecoration: "underline"}} to={{
+										pathname: `/forms/${form.procedureId}`,
+										data: form
+									}}>View</Link>
 								</td>
 								<td>
 									<Dropdown as={NavItem}>

@@ -17,12 +17,11 @@ class NavigationBar extends React.Component {
 					<Navbar.Brand>SDCManager</Navbar.Brand>
 					<Nav>
 						<Nav.Link as={Link} to={"/"}>Home</Nav.Link>
-						<Nav.Link as={Link} to ={"/forms"}>View&nbsp;All&nbsp;Forms</Nav.Link>
 					</Nav>
 				</Navbar>
 				<Switch>
 					<Route exact path='/' component={Home} />
-					<Route exact path='/forms' component={Forms} />
+					<Route exact path='/forms/:procedureId' component={Forms} />
 				</Switch>
 			</div>
 
