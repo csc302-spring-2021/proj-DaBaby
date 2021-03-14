@@ -30,8 +30,8 @@ class SDCQuestion(models.Model):
                                 on_delete=models.CASCADE)
 
     def save(self, *args, **kwargs):
-        types = ["single-choice", "multiple-choice", "free text", "integer",
-                 "true/false"]
+        types = {"single-choice", "multiple-choice", "free-text", "integer",
+                 "true-false"}
         if self.type in types:
             super().save(*args, **kwargs)
         else:
@@ -47,7 +47,7 @@ class Choice(models.Model):
                                     on_delete=models.CASCADE)
 
     def save(self, *args, **kwargs):
-        input_types = ["int", "str"]
+        input_types = {"int", "str"}
         if self.input_type in input_types or self.input_type is None:
             super().save(*args, **kwargs)
         else:

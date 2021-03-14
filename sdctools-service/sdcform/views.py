@@ -13,15 +13,13 @@ from .serializers import *
 # Create your views here.
 
 
-# === FORM MANAGER ROUTES ===
-
 @api_view(['GET', 'POST'])
 def sdcforms(request):
     if request.method == "GET":
         lst = SDCForm.objects.all()
         serializer = SDCFormSerializer(lst, many=True)
         return Response(serializer.data)
-    else:
+    else:  # FORM MANAGER
         diagnostic_procedure_id = DiagnosticProcedureID(
             code=request.data["diagnosticProcedureID"])
         # will save without error always b/c only one model field, i.e., the PK:
@@ -68,7 +66,7 @@ def sdcforms(request):
                         del type_key_lst[0]
                     assert len(type_key_lst) == 1
                     if ["string"] == type_key_lst:
-                        q_type = "free text"
+                        q_type = "free-text"
                     elif ["decimal"] == type_key_lst:
                         # might change this later
                         q_type = "integer"
@@ -121,7 +119,10 @@ def sdcforms(request):
                         else:
                             input_type = None
 
-                        text = choice_dict["@title"]
+                        if "@title" in choice_dict:
+                            text = choice_dict["@title"]
+                        else:
+                            text = ""
                         choice = Choice(text=text, input_type=input_type,
                                         sdcquestion=sdc_question)
                         choice.save()
@@ -134,35 +135,33 @@ def sdcforms(request):
 
 
 @api_view(['GET', 'PUT', 'DELETE'])
-def sdcform(request, sdc_id):
-    pass
+def sdcform(request, procedure_id):
+    if request.method == "GET":  # FORM FILLER
+        try:
+            diagnostic_procedure_id = DiagnosticProcedureID.objects.get(
+                code=procedure_id)
+        except DiagnosticProcedureID.DoesNotExist:
+            content = {
+                'message':
+                    'This procedureID does not exist.'
+            }
+            return Response(content, status=status.HTTP_404_NOT_FOUND)
 
-
-# === FORM FILLER ROUTES ===
-
-@api_view(['GET'])
-def sdcform_by_proc_id(request, procedure_id):
-    try:
-        diagnostic_procedure_id = DiagnosticProcedureID.objects.get(
-            code=procedure_id)
-    except DiagnosticProcedureID.DoesNotExist:
-        content = {
-            'message':
-                'This procedureID does not exist.'
-        }
-        return Response(content, status=status.HTTP_404_NOT_FOUND)
-
-    try:
-        sdc_form = diagnostic_procedure_id.sdcform
-        serializer = SDCFormSerializer(instance=sdc_form)
-        json = {
-            "message": "Success",
-            "sdcFormObject": serializer.data
-        }
-        return Response(json)
-    except ObjectDoesNotExist:
-        content = {
-            'message':
-                'There is no SDCForm associated with the provided procedureID.'
-        }
-        return Response(content, status=status.HTTP_404_NOT_FOUND)
+        try:
+            sdc_form = diagnostic_procedure_id.sdcform
+            serializer = SDCFormSerializer(instance=sdc_form)
+            json = {
+                "message": "Success",
+                "sdcFormObject": serializer.data
+            }
+            return Response(json)
+        except ObjectDoesNotExist:
+            content = {
+                'message':
+                    'There is no SDCForm associated with the provided procedureID.'
+            }
+            return Response(content, status=status.HTTP_404_NOT_FOUND)
+    elif request.method == "PUT":  # FORM MANAGER
+        pass
+    else:  # FORM MANAGER
+        pass
