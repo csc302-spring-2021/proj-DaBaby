@@ -1,0 +1,41 @@
+.bg-sdc {
+  background-color: #3b4256;
+  font-family: "Inter", sans-serif;
+  display: flex;
+  align-items: center;
+
+  .navbar-brand {
+    color: #fff;
+    font-weight: 800;
+    margin-left: 1.25%;
+    margin-top: 0.5%;
+    margin-bottom: 0.5%;
+  }
+
+  .navbar-brand:hover {
+    color: #fff;
+  }
+
+  .navbar-nav {
+    font-weight: 400;
+    margin-top: 0.5%;
+    margin-bottom: 0.5%;
+    margin-left: 5%;
+    display: flex;
+    align-items: center;
+
+    .nav-link {
+      color: #abb5be;
+      margin-right: 50%;
+    }
+
+    .nav-link:hover {
+      color: #fff;
+    }
+
+    .nav-link.active {
+      font-weight: 500;
+      color: #ffffff;
+    }
+  }
+}

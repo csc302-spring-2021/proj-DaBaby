@@ -1,0 +1,47 @@
+#manager-panel {
+  margin-top: 3%;
+  margin-left: 10%;
+  width: 80%;
+  display: block;
+  align-items: center;
+
+  #manager-panel-head {
+    display: flex;
+    align-items: center;
+
+    .h1 {
+      font-family: "Inter", sans-serif;
+    }
+
+    .btn-primary {
+      background-color: #023b69;
+      font-family: "IBM Plex Sans", sans-serif;
+      font-weight: 500;
+      margin-left: auto;
+    }
+  }
+
+  #manager-panel-body {
+    margin-top: 3%;
+    font-family: "Inter", sans-serif;
+
+    #manager-panel-body-head {
+      display: flex;
+      align-items: center;
+    }
+  }
+}
+
+.btn-primary {
+  background-color: #023b69;
+  font-family: "IBM Plex Sans", sans-serif;
+  font-weight: 500;
+  margin-left: auto;
+}
+
+.table > tbody > tr > td {
+  vertical-align: middle;
+}
+
+
+

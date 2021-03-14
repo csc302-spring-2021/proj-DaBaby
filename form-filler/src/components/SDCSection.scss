@@ -1,0 +1,59 @@
+.sdc-form {
+  height: 100%;
+  width: 100%;
+
+  background-color: #fff;
+  padding: 1rem;
+}
+
+.checkbox {
+  column-count: 2;
+  padding-bottom: 1rem;
+}
+
+.radio {
+  padding-bottom: 1rem;
+}
+
+.integer {
+  padding-bottom: 1rem;
+}
+
+.formTitle {
+  /* Heading */
+
+  font-family: Inter;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 36px;
+  line-height: 150%;
+  /* identical to box height, or 54px */
+
+  display: flex;
+  align-items: center;
+  letter-spacing: 0.01em;
+  padding-bottom: 1rem;
+
+  color: #3b4256;
+}
+
+.sectionTitle {
+  font-family: Inter;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 150%;
+  /* identical to box height, or 30px */
+
+  display: flex;
+  align-items: center;
+  letter-spacing: 0.01em;
+
+  /* Gray 3 */
+
+  color: #828282;
+}
+
+.divider {
+  padding-bottom: 1rem;
+}
