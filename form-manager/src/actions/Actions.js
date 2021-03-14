@@ -21,7 +21,7 @@ export const uploadForm = async (page, data) => {
 					formName: res.data.sdcFormObject.name,
 					procedureId: res.data.sdcFormObject.diagnosticProcedureID,
 					lastUpdated: data.lastUpdated,
-					sdcFormObject: res.data.sdcFormObject
+					sections: res.data.sdcFormObject.sections
 				})
 				getAllForms(page)
 			} else {
