@@ -10,7 +10,8 @@ class DiagnosticProcedureID(models.Model):
 class SDCForm(models.Model):
     name = models.CharField(max_length=100)
     diagnostic_procedure_id = models.OneToOneField(DiagnosticProcedureID,
-                                                   on_delete=models.CASCADE)
+                                                   on_delete=models.CASCADE,
+                                                   blank=True, null=True)
 
 
 class Section(models.Model):
