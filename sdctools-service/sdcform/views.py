@@ -19,36 +19,33 @@ from .serializers import *
 def sdcforms(request):
     if request.method == "GET":
         metadata = request.GET.get("metadata", "")
-
         history_id = request.GET.get("historyID", "")
+
         if history_id != "":
             try:
                 history_id = int(history_id)
             except ValueError:
-                return Response({"message": "Not a valid sdcform id, needs to be an integer"})
+                return Response({"message": "Not a valid sdcform id, needs to be an integer"},
+                                status=status.HTTP_404_NOT_FOUND)
 
             try:
                 sdc_form = SDCForm.objects.get(id=history_id)
             except SDCForm.DoesNotExist:
-                return Response({"message": "This sdcformID does not exist."})
+                return Response({"message": "This sdcformID does not exist."},
+                                status=status.HTTP_404_NOT_FOUND)
 
             serializer = SDCFormSerializer(instance=sdc_form)
-            sdc_form = serializer.data
-
-            if metadata == "true":
-                del sdc_form["sections"]
-
-            return Response(sdc_form)
-
-        lst = SDCForm.objects.all()
-        serializer = SDCFormSerializer(lst, many=True)
-        d = serializer.data
+            d = [serializer.data]
+        else:
+            lst = SDCForm.objects.all()
+            serializer = SDCFormSerializer(lst, many=True)
+            d = serializer.data
 
         if metadata == "true":
             for sdc_form in d:
                 del sdc_form["sections"]
 
-        return Response(d)
+        return Response({"message": "Success", "sdcFormObjects": d})
     else:  # FORM MANAGER
         diagnostic_procedure_id = DiagnosticProcedureID(
             code=request.data["diagnosticProcedureID"])
