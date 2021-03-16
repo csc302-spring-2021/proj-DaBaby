@@ -18,9 +18,11 @@ def upload_initial_form():
 # Create your tests here.
 class FormsTests(TestCase):
     def test_get_empty_list_of_forms(self):
+        self.client = Client()
         response = self.client.get('/api/sdcform/')
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, '[]')
+        self.assertTrue('sdcFormObjects' in json.loads(response.content))
+        self.assertEqual(json.loads(response.content)['sdcFormObjects'], [])
 
     def test_upload_xml_valid(self):
         self.client = Client()
@@ -48,6 +50,34 @@ class FormsTests(TestCase):
 
         response = self.client.get("api/sdcform/foo/")
         self.assertEqual(response.status_code, 404)
+
+    def test_get_all_forms(self):
+        self.client = Client()
+        upload_initial_form()
+        response = self.client.get('/api/sdcform/')
+        self.assertEqual(response.status_code, 200)
+        # There should be one form
+        forms = json.loads(response.content)['sdcFormObjects']
+        self.assertEquals(len(forms), 1)
+        self.assertTrue('id' in forms[0])
+        self.assertTrue('diagnosticProcedureID' in forms[0])
+        self.assertTrue('timestamp' in forms[0])
+        self.assertTrue('sections' in forms[0])
+
+    
+    def test_get_all_form_metadata(self):
+        self.client = Client()
+        upload_initial_form()
+        response = self.client.get('/api/sdcform/', { 'metadata': 'true' })
+        self.assertEqual(response.status_code, 200)
+
+        forms = json.loads(response.content)['sdcFormObjects']
+        self.assertEquals(len(forms), 1)
+        self.assertFalse('sections' in forms[0])
+        self.assertTrue('id' in forms[0])
+        self.assertTrue('diagnosticProcedureID' in forms[0])
+        self.assertTrue('timestamp' in forms[0])
+
 
 class ModifyFormsTests(TestCase):
 
@@ -121,4 +151,20 @@ class ModifyFormsTests(TestCase):
         form2 = json.loads(get_response.content)['sdcFormObject']
         # form id should have changed with new upload
         self.assertNotEqual(form1['id'], form2['id'])
+
+
+def HistoricalFormTests(TestCase):
+
+    def test_get_non_hist_form(self):
+        upload_initial_form() 
+        self.client = Client()
+        response = self.client.get('/api/sdcform/', { 'historyID': '1234' })
+        self.assertEqual(response.status_code, 404)
+
+    def test_get_hist_form(self):
+        upload_initial_form() 
+        self.client = Client()
+        self.client.delete("/api/sdcform/test123/")
+        response = self.client.get('/api/sdcform/', { 'historyID': '1234' })
+        self.assertEqual(response.status_code, 200)
 
