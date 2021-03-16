@@ -19,11 +19,32 @@ from .serializers import *
 def sdcforms(request):
     if request.method == "GET":
         metadata = request.GET.get("metadata", "")
+
+        history_id = request.GET.get("historyID", "")
+        if history_id != "":
+            try:
+                history_id = int(history_id)
+            except ValueError:
+                return Response({"message": "Not a valid sdcform id, needs to be an integer"})
+
+            try:
+                sdc_form = SDCForm.objects.get(id=history_id)
+            except SDCForm.DoesNotExist:
+                return Response({"message": "This sdcformID does not exist."})
+
+            serializer = SDCFormSerializer(instance=sdc_form)
+            sdc_form = serializer.data
+
+            if metadata == "true":
+                del sdc_form["sections"]
+
+            return Response(sdc_form)
+
         lst = SDCForm.objects.all()
         serializer = SDCFormSerializer(lst, many=True)
         d = serializer.data
 
-        if metadata == "true" or (metadata[:-1] == "true" and metadata[-1] == "/"):
+        if metadata == "true":
             for sdc_form in d:
                 del sdc_form["sections"]
 
