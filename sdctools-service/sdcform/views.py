@@ -1,4 +1,6 @@
-from django.shortcuts import render
+from django.http import HttpResponse
+
+from django.shortcuts import render, redirect
 from django.core.exceptions import ObjectDoesNotExist
 
 from rest_framework.decorators import api_view
@@ -16,9 +18,16 @@ from .serializers import *
 @api_view(['GET', 'POST'])
 def sdcforms(request):
     if request.method == "GET":
+        metadata = request.GET.get("metadata", "")
         lst = SDCForm.objects.all()
         serializer = SDCFormSerializer(lst, many=True)
-        return Response(serializer.data)
+        d = serializer.data
+
+        if metadata == "true" or (metadata[:-1] == "true" and metadata[-1] == "/"):
+            for sdc_form in d:
+                del sdc_form["sections"]
+
+        return Response(d)
     else:  # FORM MANAGER
         diagnostic_procedure_id = DiagnosticProcedureID(
             code=request.data["diagnosticProcedureID"])
