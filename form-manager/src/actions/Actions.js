@@ -13,7 +13,7 @@ export const getAllForms = async (page) => {
 				forms = res.data.sdcFormObjects.filter(form => form.diagnosticProcedureID)
 				page.setState({ forms: forms, displayedForms: forms, filter: "" });
 			} else {
-				alert("NO ITEMS DATA");
+				alert("GET ALL FORMS FAILED");
 			}
 		})
 		.catch((err) => {
@@ -27,17 +27,9 @@ export const uploadForm = async (page, data) => {
 		.post(`/api/sdcform/`, data )
 		.then((res) => {
 			if (res.data) {
-				console.log(res)
-				forms.push({
-					formId: res.data.sdcFormObject.id,
-					formName: res.data.sdcFormObject.name,
-					procedureId: res.data.sdcFormObject.diagnosticProcedureID,
-					lastUpdated: res.data.sdcFormObject.timestamp,
-					sections: res.data.sdcFormObject.sections
-				})
 				getAllForms(page)
 			} else {
-				alert("NO ITEMS DATA");
+				alert("UPLOAD FORM FAILED");
 			}
 		})
 		.catch((err) => {
@@ -46,12 +38,19 @@ export const uploadForm = async (page, data) => {
 };
 
 /* DELETE a form */
-export const deleteForm = (page, data) => {
-	const index = forms.indexOf(data);
-	if (index > -1) {
-		forms.splice(index, 1);
-	}
-	getAllForms(page)
+export const deleteForm = async (page, id) => {
+	axios
+		.delete(`/api/sdcform/${id}/`)
+		.then((res) => {
+			if (res.data) {
+				getAllForms(page)
+			} else {
+				alert("DELETE FORM FAILED");
+			}
+		})
+		.catch((err) => {
+			alert(err);
+		});
 };
 
 /* PUT a form */

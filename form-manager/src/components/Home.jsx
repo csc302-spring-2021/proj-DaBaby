@@ -71,12 +71,12 @@ class Home extends React.Component {
 			} else {
 				uploadForm(this, {
 					diagnosticProcedureID: this.state.newId,
-					lastUpdated: new Date().toISOString(),
 					name: this.state.newName,
 					xmlString: binaryStr
-				})
+				}).then(r =>
+					this.setState({newForm: null, newId: "", newName: "", updateForm: null, isUpdate: false})
+				)
 			}
-			this.setState({newForm: null, newId: "", newName: "", updateForm: null, isUpdate: false})
 		}
 		reader.readAsBinaryString(this.state.newForm.file)
 		// able to download File using the File object
@@ -95,16 +95,16 @@ class Home extends React.Component {
 		this.setState({filter: e.target.value}, () => {
 			this.setState({
 				displayedForms: this.state.forms.filter(
-					form => form.formId.toString().toUpperCase().indexOf(this.state.filter.toUpperCase()) > -1 ||
-						form.formName.toUpperCase().indexOf(this.state.filter.toUpperCase()) > -1 ||
-						form.procedureId.toUpperCase().indexOf(this.state.filter.toUpperCase()) > -1
+					form => form.id.toString().toUpperCase().indexOf(this.state.filter.toUpperCase()) > -1 ||
+						form.name.toUpperCase().indexOf(this.state.filter.toUpperCase()) > -1 ||
+						form.diagnosticProcedureID.toUpperCase().indexOf(this.state.filter.toUpperCase()) > -1
 				)
 			})
 		})
 	}
 
 	onDeleteForm(form) {
-		deleteForm(this, form)
+		deleteForm(this, form.diagnosticProcedureID)
 	}
 
 	render() {
@@ -151,7 +151,7 @@ class Home extends React.Component {
 								<td>{form.timestamp}</td>
 								<td>
 									<Link style={{color: "#267bf7", textDecoration: "underline"}} to={{
-										pathname: `/forms/${form.procedureId}`,
+										pathname: `/forms/${form.diagnosticProcedureID}`,
 										data: form
 									}}>View</Link>
 								</td>
@@ -195,8 +195,8 @@ class Home extends React.Component {
 										              disabled={this.state.completeUpload}
 										              onChange={this.onInputId.bind(this)}/>
 									) : (
-										<Form.Control type="id" placeholder={this.state.updateForm.procedureId}
-										              value={this.state.updateForm.procedureId} disabled={true}
+										<Form.Control type="id" placeholder={this.state.updateForm.diagnosticProcedureID}
+										              value={this.state.updateForm.diagnosticProcedureID} disabled={true}
 										              onChange={this.onInputId.bind(this)}/>
 									))}
 								</Form.Group>
