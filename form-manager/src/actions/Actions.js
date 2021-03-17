@@ -1,9 +1,11 @@
 import axios from "axios";
 
+const SERVER_URL = "http://dababysdcbackendapi-env-2.eba-ybqn7as3.ca-central-1.elasticbeanstalk.com";
+
 /* GET all forms */
 export const getAllForms = async (page) => {
 	axios
-		.get(`/api/sdcform?metadata=true`)
+		.get(`${SERVER_URL}/api/sdcform?metadata=true`)
 		.then((res) => {
 			if (res.data) {
 				let forms = res.data.sdcFormObjects.filter(form => form.diagnosticProcedureID)
@@ -20,7 +22,7 @@ export const getAllForms = async (page) => {
 /* POST a new form */
 export const uploadForm = async (page, data) => {
 	axios
-		.post(`/api/sdcform/`, data)
+		.post(`${SERVER_URL}/api/sdcform/`, data)
 		.then((res) => {
 			if (res.data) {
 				getAllForms(page)
@@ -37,7 +39,7 @@ export const uploadForm = async (page, data) => {
 /* DELETE a form */
 export const deleteForm = async (page, id) => {
 	axios
-		.delete(`/api/sdcform/${id}/`)
+		.delete(`${SERVER_URL}/api/sdcform/${id}/`)
 		.then((res) => {
 			if (res.data) {
 				getAllForms(page)
@@ -53,7 +55,7 @@ export const deleteForm = async (page, id) => {
 /* PUT a form */
 export const updateForm = async (page, data) => {
 	axios
-		.put(`/api/sdcform/${data.id}/`, {xmlString: data.xmlString})
+		.put(`${SERVER_URL}/api/sdcform/${data.id}/`, {xmlString: data.xmlString})
 		.then((res) => {
 			if (res.data) {
 				getAllForms(page)

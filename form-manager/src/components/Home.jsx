@@ -10,7 +10,7 @@ import Dropzone from 'react-dropzone-uploader'
 import {deleteForm, getAllForms, updateForm, uploadForm} from "../actions/Actions";
 import {Link} from "react-router-dom";
 
-const FileSaver = require('file-saver');
+//const FileSaver = require('file-saver');
 
 class Home extends React.Component {
 	constructor(props) {
