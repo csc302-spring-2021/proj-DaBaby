@@ -211,7 +211,7 @@ def sdcform(request, procedure_id):
         old_sdc_form.diagnostic_procedure_id = None
         old_sdc_form.save()
 
-        new_sdc_form = SDCForm(name=old_sdc_form.name,
+        new_sdc_form = SDCForm(name=request.data["name"],
                                diagnostic_procedure_id=diagnostic_procedure_id)
         new_sdc_form.save()
 
