@@ -24,5 +24,6 @@ urlpatterns = [
                   path("admin/", admin.site.urls),
                   path("api/", views.open_api, name="open-api"),
                   path("api/sdcform/", include("sdcform.urls")),
+                  path("api/sdcformresponse/", include("sdcformresponse.urls")),
                   path('api/test/', include("setup.urls")),
               ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
