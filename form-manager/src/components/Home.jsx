@@ -63,11 +63,12 @@ class Home extends React.Component {
 			this.setState({showUpload: false, completeUpload: true})
 			if (this.state.isUpdate) {
 				updateForm(this, {
-					updateForm: this.state.updateForm,
-					lastUpdated: new Date().toISOString(),
+					id: this.state.updateForm.diagnosticProcedureID,
 					formName: this.state.newName,
-					file: this.state.newForm.file
-				})
+					xmlString: binaryStr
+				}).then(r =>
+					this.setState({newForm: null, newId: "", newName: "", updateForm: null, isUpdate: false})
+				)
 			} else {
 				uploadForm(this, {
 					diagnosticProcedureID: this.state.newId,
@@ -172,7 +173,7 @@ class Home extends React.Component {
 					</Table>
 					<Modal show={this.state.showUpload} onHide={this.onCloseUploadModal.bind(this)}>
 						<Modal.Header closeButton>
-							<Modal.Title>Upload&nbsp;New&nbsp;Form</Modal.Title>
+							<Modal.Title>Upload&nbsp;SDC&nbsp;Form</Modal.Title>
 						</Modal.Header>
 						<Modal.Body>
 							<Dropzone
@@ -195,8 +196,10 @@ class Home extends React.Component {
 										              disabled={this.state.completeUpload}
 										              onChange={this.onInputId.bind(this)}/>
 									) : (
-										<Form.Control type="id" placeholder={this.state.updateForm.diagnosticProcedureID}
-										              value={this.state.updateForm.diagnosticProcedureID} disabled={true}
+										<Form.Control type="id"
+										              placeholder={this.state.updateForm.diagnosticProcedureID}
+										              value={this.state.updateForm.diagnosticProcedureID}
+										              disabled={true}
 										              onChange={this.onInputId.bind(this)}/>
 									))}
 								</Form.Group>

@@ -14,10 +14,6 @@ class Forms extends React.Component {
 		}
 	}
 
-	returnHome() {
-		console.log("return")
-	}
-
 	render() {
 		return (
 			<div className={"Form-Container"}>
