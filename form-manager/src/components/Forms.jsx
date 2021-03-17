@@ -7,7 +7,7 @@ class Forms extends React.Component {
 	constructor(props) {
 		super(props);
 		// we can get the actual form from Home using Link
-		// but for now I am using hardcoded JSON to render questions
+		// but for now I am using hardcoded JSON to render questions before XML parsing algo is finished
 		this.state = {
 			realForm: this.props.location.data,
 			form: hardcodedForm
