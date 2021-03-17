@@ -5,8 +5,20 @@ let forms = [
 ]
 
 /* GET all forms */
-export const getAllForms = (page) => {
-	page.setState({ forms: forms, displayedForms: forms, filter: "" });
+export const getAllForms = async (page) => {
+	axios
+		.get(`/api/sdcform?metadata=true`)
+		.then((res) => {
+			if (res.data) {
+				forms = res.data.sdcFormObjects.filter(form => form.diagnosticProcedureID)
+				page.setState({ forms: forms, displayedForms: forms, filter: "" });
+			} else {
+				alert("NO ITEMS DATA");
+			}
+		})
+		.catch((err) => {
+			alert(err);
+		});
 };
 
 /* POST a new form */
@@ -20,7 +32,7 @@ export const uploadForm = async (page, data) => {
 					formId: res.data.sdcFormObject.id,
 					formName: res.data.sdcFormObject.name,
 					procedureId: res.data.sdcFormObject.diagnosticProcedureID,
-					lastUpdated: data.lastUpdated,
+					lastUpdated: res.data.sdcFormObject.timestamp,
 					sections: res.data.sdcFormObject.sections
 				})
 				getAllForms(page)
@@ -31,7 +43,6 @@ export const uploadForm = async (page, data) => {
 		.catch((err) => {
 			alert(err);
 		});
-	getAllForms(page)
 };
 
 /* DELETE a form */

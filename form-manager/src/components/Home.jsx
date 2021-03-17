@@ -145,10 +145,10 @@ class Home extends React.Component {
 						<tbody>
 						{this.state.displayedForms.map(form => (
 							<tr>
-								<td>{form.formId}</td>
-								<td>{form.formName}</td>
-								<td>{form.procedureId}</td>
-								<td>{form.lastUpdated}</td>
+								<td>{form.id}</td>
+								<td>{form.name}</td>
+								<td>{form.diagnosticProcedureID}</td>
+								<td>{form.timestamp}</td>
 								<td>
 									<Link style={{color: "#267bf7", textDecoration: "underline"}} to={{
 										pathname: `/forms/${form.procedureId}`,
