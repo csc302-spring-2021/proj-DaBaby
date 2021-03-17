@@ -64,7 +64,7 @@ class Home extends React.Component {
 			if (this.state.isUpdate) {
 				updateForm(this, {
 					id: this.state.updateForm.diagnosticProcedureID,
-					formName: this.state.newName,
+					name: this.state.newName,
 					xmlString: binaryStr
 				}).then(r =>
 					this.setState({newForm: null, newId: "", newName: "", updateForm: null, isUpdate: false})

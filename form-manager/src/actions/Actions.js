@@ -55,7 +55,7 @@ export const deleteForm = async (page, id) => {
 /* PUT a form */
 export const updateForm = async (page, data) => {
 	axios
-		.put(`${SERVER_URL}/api/sdcform/${data.id}/`, {xmlString: data.xmlString})
+		.put(`${SERVER_URL}/api/sdcform/${data.id}/`, {xmlString: data.xmlString, name: data.name})
 		.then((res) => {
 			if (res.data) {
 				getAllForms(page)
