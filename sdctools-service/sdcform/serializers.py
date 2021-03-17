@@ -49,4 +49,4 @@ class SDCFormSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = SDCForm
-        fields = ["id", "name", "diagnosticProcedureID", "sections"]
+        fields = ["id", "name", "timestamp", "diagnosticProcedureID", "sections"]

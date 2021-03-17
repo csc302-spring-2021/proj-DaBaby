@@ -12,6 +12,7 @@ class SDCForm(models.Model):
     diagnostic_procedure_id = models.OneToOneField(DiagnosticProcedureID,
                                                    on_delete=models.CASCADE,
                                                    blank=True, null=True)
+    timestamp = models.DateTimeField(blank=True, auto_now=True)
 
 
 class Section(models.Model):
