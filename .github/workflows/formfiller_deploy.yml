@@ -23,7 +23,7 @@ jobs:
 
     steps:
       - name: Set timestamp
-        run: echo "TIMESTAMP=$(date "+%Y.%m.%d-%H.%M.%S")" >> $GITHUB_ENV
+        run: echo "TIMESTAMP=$(date +'%Y.%m.%d-%H.%M.%S')" >> $GITHUB_ENV
       - name: Set deploy package name
         run: echo "S3_DEPLOY_PACKAGE_NAME=formfiller_${{ github.sha }}-${{ env.TIMESTAMP }}.zip" >> $GITHUB_ENV
       - name: Clone repository
