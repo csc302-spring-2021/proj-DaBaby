@@ -12,7 +12,7 @@ const SERVER_URL = "http://dababysdcbackendapi-env-2.eba-ybqn7as3.ca-central-1.e
 class App extends React.Component {
   // Backend call
   componentDidMount() {
-    fetch(`${SERVER_URL}/api/sdcform/ardenal`)
+    fetch(`${SERVER_URL}/api/test/sdcform/covid19`)
       .then((response) => response.json())
       .then((data) =>
         this.setState({ isLoaded: true, sdcForm: data.sdcFormObject })

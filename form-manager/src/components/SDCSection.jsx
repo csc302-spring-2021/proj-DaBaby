@@ -8,7 +8,7 @@ import {Form} from "react-final-form";
 import Question from "./Question";
 
 class SDCSection extends React.Component {
-	onSubmit = async (values) => {
+	async onSubmit (values) {
 		console.log(JSON.stringify(values));
 	};
 
