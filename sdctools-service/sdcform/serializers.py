@@ -18,7 +18,7 @@ class SDCQuestionSerializer(serializers.ModelSerializer):
         source="controller.id", read_only=True, allow_null=True)
     controllerAnswerEnabler = serializers.CharField(
         source="controller_answer_enabler", read_only=True)
-    choices = ChoiceSerializer(many=True, read_only=True, allow_null=True)
+    choices = ChoiceSerializer(many=True, read_only=True)
 
     class Meta:
         model = SDCQuestion

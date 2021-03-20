@@ -17,7 +17,12 @@ from .serializers import *
 
 @api_view(['GET', 'POST'])
 def sdcformresponses(request):
-    pass
+    if request.method == "GET":
+        lst = SDCFormResponse.objects.all()
+        serializer = SDCFormResponseSerializer(lst, many=True)
+        return Response(serializer.data)
+    else:
+        pass
 
 
 @api_view(['GET', 'PUT', 'DELETE'])
