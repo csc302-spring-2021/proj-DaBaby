@@ -57,7 +57,7 @@ class SDCSection extends React.Component {
                     onClick={handleSubmit}
                     disabled={submitting}
                   >
-                    Submit
+                    Continue
                   </Button>
                 </form>
               )}
