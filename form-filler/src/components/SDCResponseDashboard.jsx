@@ -42,16 +42,13 @@ class ResponseDashboard extends React.Component {
 	}
 
 	onSearch() {
-		this.setState({
-			displayedResponses: this.state.responses.filter(
-				resp => resp.diagnosticProcedureID.toUpperCase().indexOf(this.state.searchProcedure) > -1 &&
-					resp.patientID.toUpperCase().indexOf(this.state.searchPatient) > -1 &&
-					((this.state.searchStartDate === "" && this.state.searchEndDate === "") ||
-						(this.state.searchStartDate === "" && new Date(this.state.searchEndDate).toISOString() >= resp.timestamp) ||
-						(this.state.searchEndDate === "" && new Date(this.state.searchStartDate).toISOString() <= resp.timestamp) ||
-						(new Date(this.state.searchEndDate).toISOString() >= resp.timestamp && new Date(this.state.searchStartDate).toISOString() <= resp.timestamp))
-			)
-		})
+		const filter = {
+			diagnosticProcedureID: this.state.searchProcedure,
+			patientID: this.state.searchPatient,
+			startDate: new Date(this.state.searchStartDate).toISOString(),
+			endDate: new Date(this.state.searchEndDate).toISOString()
+		}
+		alert(`make request to get responses with ${filter.diagnosticProcedureID}, ${filter.patientID}, ${filter.startDate}, ${filter.endDate}`)
 	}
 
 	onInputProcedure(e) {
@@ -71,11 +68,11 @@ class ResponseDashboard extends React.Component {
 	}
 
 	onDeleteResp(resp) {
-		console.log(`make request to delete response ${resp.id}`)
+		alert(`make request to delete response ${resp.id}`)
 	}
 
 	onUpdateResp(resp) {
-		console.log(`transfer to fill response ${resp.id}`)
+		alert(`transfer to fill response ${resp.id}`)
 	}
 
 	render() {
