@@ -39,11 +39,11 @@ class FreeTextAnswer(Answer):
 
 
 class IntegerAnswer(Answer):
-    answer = models.IntegerField()
+    answer = models.IntegerField(blank=True, null=True)
 
 
 class TrueFalseAnswer(Answer):
-    answer = models.BooleanField()
+    answer = models.BooleanField(blank=True, null=True)
 
 
 class SingleChoiceAnswer(Answer):
@@ -57,9 +57,6 @@ class MultipleChoiceAnswer(Answer):
 class ChoiceAnswer(models.Model):
     selection = models.TextField()
     addition = models.TextField(default=None, blank=True, null=True)
-
-    class Meta:
-        abstract = True
 
 
 class SingleChoice(ChoiceAnswer):

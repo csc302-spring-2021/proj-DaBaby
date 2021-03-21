@@ -7,6 +7,14 @@ class ChoiceAnswerSerializer(serializers.ModelSerializer):
         model = ChoiceAnswer
         fields = ["selection", "addition"]
 
+    def to_representation(self, obj):
+        r = super().to_representation(obj)
+
+        if getattr(obj, "addition") is None:
+            r.pop("addition")
+
+        return r
+
 
 class AnswerSerializer(serializers.ModelSerializer):
     questionID = serializers.IntegerField(
@@ -69,9 +77,13 @@ class SDCFormResponseSerializer(serializers.ModelSerializer):
     def to_representation(self, obj):
         r = super().to_representation(obj)
 
-        sdcform = SDCForm.objects.get(id=getattr(obj, "sdcFormID"))
         sdcformresponse = SDCFormResponse.objects.get(id=getattr(obj, "id"))
-        answers = sdcformresponse.answers
+        answers = list(sdcformresponse.freetextanswer_set.all()) + \
+            list(sdcformresponse.integeranswer_set.all()) + \
+            list(sdcformresponse.truefalseanswer_set.all()) + \
+            list(sdcformresponse.singlechoiceanswer_set.all()) + \
+            list(sdcformresponse.multiplechoiceanswer_set.all())
+        answers.sort(key=lambda x: x.sdcquestion.id)
         r["answers"] = []
 
         for answer in answers:
@@ -90,6 +102,6 @@ class SDCFormResponseSerializer(serializers.ModelSerializer):
             else:
                 answer_serializer = MultipleChoiceAnswerSerializer(
                     instance=answer, read_only=True)
-            r["answers"].append(answer_serializer)
+            r["answers"].append(answer_serializer.to_representation(answer))
 
         return r
