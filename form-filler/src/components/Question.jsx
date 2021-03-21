@@ -30,11 +30,12 @@ class Question extends Component {
     if (question.controllerAnswerEnabler == "*")
       question.controllerAnswerEnabler = "[0-9A-Za-z]+";
 
-    if (question.controllerAnswerEnabler == true) question.controllerAnswerEnabler = "true";
+    if (question.controllerAnswerEnabler == true)
+      question.controllerAnswerEnabler = "true";
 
     // Depending on type of question render different ways
     switch (question.type) {
-      // Single Choice Option
+      // Single Choice Option ------------------------------------------------------------------------------------------------------------------------------------------
       case "single-choice":
         if (question.controllerID) {
           return (
@@ -43,9 +44,7 @@ class Question extends Component {
               is={new RegExp(question.controllerAnswerEnabler)}
             >
               <div>
-                <FormLabel className="title">
-                  {question.questionText}
-                </FormLabel>
+                <FormLabel className="title">{question.questionText}</FormLabel>
                 <div className="radio">
                   {/* Dynamically rendering all choices the question has */}
                   {question.choices.map((option, index) => (
@@ -58,6 +57,11 @@ class Question extends Component {
                           value={option.text}
                         />{" "}
                         {option.text}
+                        {/* If the choice has an optionalfieldinputtype, render it below  */}
+                        {option.optionalFieldInputType ? <FormControl
+                      type="text"
+                      placeholder="Specify"
+                    /> : ""}
                       </FormLabel>
                     </div>
                   ))}
@@ -81,6 +85,11 @@ class Question extends Component {
                         value={option.text}
                       />{" "}
                       {option.text}
+                      {/* If the choice has an optionalfieldinputtype, render it below  */}
+                      {option.optionalFieldInputType ? <FormControl
+                      type="text"
+                      placeholder="Specify"
+                    /> : ""}
                     </FormLabel>
                   </div>
                 ))}
@@ -90,7 +99,7 @@ class Question extends Component {
         }
         break;
 
-      // Multiple Choice Option
+      // Multiple Choice Option ------------------------------------------------------------------------------------------------------------------------------------------
       case "multiple-choice":
         if (question.controllerID) {
           return (
@@ -99,9 +108,7 @@ class Question extends Component {
               is={new RegExp(question.controllerAnswerEnabler)}
             >
               <div>
-                <FormLabel className="title">
-                  {question.questionText}
-                </FormLabel>
+                <FormLabel className="title">{question.questionText}</FormLabel>
                 <div className="checkbox">
                   {/* Dynamically rendering all choices the question has */}
                   {question.choices.map((option, index) => (
@@ -114,6 +121,11 @@ class Question extends Component {
                           value={option.text}
                         />{" "}
                         {option.text}
+                        {/* If the choice has an optionalfieldinputtype, render it below  */}
+                        {option.optionalFieldInputType ? <FormControl
+                      type="text"
+                      placeholder="Specify"
+                    /> : ""}
                       </FormLabel>
                     </div>
                   ))}
@@ -137,6 +149,11 @@ class Question extends Component {
                         value={option.text}
                       />{" "}
                       {option.text}
+                      {/* If the choice has an optionalfieldinputtype, render it below  */}
+                      {option.optionalFieldInputType ? <FormControl
+                      type="text"
+                      placeholder="Specify"
+                    /> : ""}
                     </FormLabel>
                   </div>
                 ))}
@@ -146,7 +163,7 @@ class Question extends Component {
         }
         break;
 
-      // Free text option
+      // Free text option ------------------------------------------------------------------------------------------------------------------------------------------
       case "free-text":
         // If question has a controller id, render it depending on whether controller has right answer
         if (question.controllerID) {
@@ -155,10 +172,7 @@ class Question extends Component {
               when={"filler" + question.controllerID}
               is={new RegExp(question.controllerAnswerEnabler)}
             >
-              <Field
-                name={"filler" + question.id}
-                validate={this.required}
-              >
+              <Field name={"filler" + question.id} validate={this.required}>
                 {({ input, meta }) => (
                   <FormGroup controlId={this.key}>
                     <FormLabel className="title">
@@ -180,10 +194,7 @@ class Question extends Component {
           );
         } else {
           return (
-            <Field
-              name={"filler" + question.id}
-              validate={this.required}
-            >
+            <Field name={"filler" + question.id} validate={this.required}>
               {({ input, meta }) => (
                 <FormGroup controlId={this.key}>
                   <FormLabel className="title">
@@ -205,7 +216,7 @@ class Question extends Component {
         }
         break;
 
-      // Integer Option
+      // Integer Option ------------------------------------------------------------------------------------------------------------------------------------------
       case "integer":
         if (question.controllerID) {
           return (
@@ -214,9 +225,7 @@ class Question extends Component {
               is={new RegExp(question.controllerAnswerEnabler)}
             >
               <div>
-                <FormLabel className="title">
-                  {question.questionText}
-                </FormLabel>
+                <FormLabel className="title">{question.questionText}</FormLabel>
                 <div className="integer">
                   <FormLabel>
                     <Field
@@ -253,7 +262,7 @@ class Question extends Component {
         }
         break;
 
-      // True/false option
+      // True/false option ------------------------------------------------------------------------------------------------------------------------------------------
       case "true-false":
         if (question.controllerID) {
           return (
@@ -262,9 +271,7 @@ class Question extends Component {
               is={new RegExp(question.controllerAnswerEnabler)}
             >
               <div>
-                <FormLabel className="title">
-                  {question.questionText}
-                </FormLabel>
+                <FormLabel className="title">{question.questionText}</FormLabel>
                 <div className="checkbox">
                   <FormLabel>
                     <Field
