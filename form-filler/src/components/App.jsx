@@ -6,6 +6,9 @@ import SDCSection from "./SDCSection";
 
 import { Col, Row, Container } from "react-bootstrap";
 import SDCSidebar from "./SDCSidebar";
+import {
+  BrowserRouter as Router
+} from "react-router-dom";
 
 const SERVER_URL = "http://dababysdcbackendapi-env-2.eba-ybqn7as3.ca-central-1.elasticbeanstalk.com";
 
@@ -46,27 +49,30 @@ class App extends React.Component {
     // Once data has been loaded it is okay to then gather from the sdcForm object
     const { sections, name } = this.state.sdcForm;
     return (
-      <Container fluid className="App">
-        <NavigationBar />
-        <Col>
-          <Row>
-            <Col md={8}>
-              <SDCSection
-                section={sections[curr_section]}
-                name={name}
-                section_name={sections[curr_section].name}
-              />
-            </Col>
-            <Col md={4}>
-              <SDCSidebar
-                sections={sections}
-                onSelection={this.handleSelection}
-                curr_section={curr_section}
-              />
-            </Col>
-          </Row>
-        </Col>
-      </Container>
+        <Router>
+          <Container fluid className="App">
+          <NavigationBar />
+          {/*<Col>*/}
+          {/*  <Row>*/}
+          {/*    <Col md={8}>*/}
+          {/*      <SDCSection*/}
+          {/*          section={sections[curr_section]}*/}
+          {/*          name={name}*/}
+          {/*          section_name={sections[curr_section].name}*/}
+          {/*      />*/}
+          {/*    </Col>*/}
+          {/*    <Col md={4}>*/}
+          {/*      <SDCSidebar*/}
+          {/*          sections={sections}*/}
+          {/*          onSelection={this.handleSelection}*/}
+          {/*          curr_section={curr_section}*/}
+          {/*      />*/}
+          {/*    </Col>*/}
+          {/*  </Row>*/}
+          {/*</Col>*/}
+        </Container>
+        </Router>
+
     );
   }
 }
