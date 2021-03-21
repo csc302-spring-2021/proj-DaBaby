@@ -35,11 +35,20 @@ class ResponseDashboard extends React.Component {
 			searchPatient: "",
 			searchStartDate: "",
 			searchEndDate: "",
+			responses: hardcodedResponses,
+			displayedResponses: hardcodedResponses
 		}
 	}
 
 	onSearch() {
-		console.log(this.state)
+		this.setState({displayedResponses: this.state.responses.filter(
+			resp => resp.diagnosticProcedureID.toUpperCase().indexOf(this.state.searchProcedure) > -1 &&
+				resp.patientID.toUpperCase().indexOf(this.state.searchPatient) > -1 &&
+				((this.state.searchStartDate === "" && this.state.searchEndDate === "") ||
+					(this.state.searchStartDate === "" && new Date(this.state.searchEndDate).toISOString() >= resp.timestamp) ||
+					(this.state.searchEndDate === "" && new Date(this.state.searchStartDate).toISOString() <= resp.timestamp) ||
+					(new Date(this.state.searchEndDate).toISOString() >= resp.timestamp && new Date(this.state.searchStartDate).toISOString() <= resp.timestamp))
+			)})
 	}
 
 	onInputProcedure(e) {
@@ -102,7 +111,7 @@ class ResponseDashboard extends React.Component {
 							</tr>
 							</thead>
 							<tbody>
-							{hardcodedResponses.map(resp => (
+							{this.state.displayedResponses.map(resp => (
 								<tr>
 									<td>{resp.diagnosticProcedureID}</td>
 									<td>{resp.patientID}</td>
