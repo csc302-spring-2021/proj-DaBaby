@@ -35,13 +35,11 @@ class FormsTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTrue('sdcFormObject' in json.loads(response.content))
 
-    def test_upload_invalid_xml(self):
-        self.client = Client()
-        data = { "diagnosticProcedureID" : "test123", "name" : "test123", "xmlString": "not xml!"}
-        response = self.client.post("/api/sdcform/", data)
-        self.assertEqual(response.status_code, 400)
-
-
+    # def test_upload_invalid_xml(self):
+    #     self.client = Client()
+    #     data = { "diagnosticProcedureID" : "test123", "name" : "test123", "xmlString": "not xml!"}
+    #     response = self.client.post("/api/sdcform/", data)
+    #     self.assertEqual(response.status_code, 400)
 
     def test_get_valid_form(self):
 
