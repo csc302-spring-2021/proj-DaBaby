@@ -79,7 +79,7 @@ WSGI_APPLICATION = 'BackendApi.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
-
+# remote RDS server
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
