@@ -83,7 +83,7 @@
           }
         },
         "responses": {
-          "200": {
+          "201": {
             "description": "The XML is uploaded successfully. Response contains the SDCForm object represented by the XML.",
             "content": {
               "application/json": {
