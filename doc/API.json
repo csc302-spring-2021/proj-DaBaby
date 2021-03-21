@@ -1,602 +1,844 @@
 {
-    "openapi": "3.0.0",
-    "info": {
-        "version": "1.0.0",
-        "title": "SDC Form Backend API - Team Da Baby",
-        "description": "A SDC Form filler/manager web application"
-    },
-    "servers": [
-        {
-            "url": "http://127.0.0.1"
-        }
-    ],
-    "paths": {
-        "/api/sdcform": {
-            "post": {
-                "summary": "Endpoint for Uploading the XML (also returns the SDCForm object)",
-                "operationId": "uploadSDCFormXML",
-                "requestBody": {
-                    "description": "XML string, form name and DiagnosticProcedureID",
-                    "required": true,
-                    "content":{
-                        "application/json":{
-                            "schema":{
-                                "$ref": "#/components/schemas/XMLUploadBody"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "The XML is uploaded successfully. Response contains the SDCForm object represented by the XML.",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/SDCFormObjectResponse"
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "DiagnosticProcedureID already used.",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ServerMessage"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/api/sdcform/{sdcform-id}": {
-            "put": {
-                "summary": "Update an SDCForm",
-                "operationId": "updateSDCForm",
-                "parameters": [
-                    {
-                        "name": "sdcform-id",
-                        "in": "path",
-                        "required": true,
-                        "description": "The SDCFormID of the SDCForm to be updated.",
-                        "schema": {
-                            "type": "integer",
-                            "format": "int32"
-                        }
-                    }
-                ],
-                "requestBody": {
-                    "description": "The XML string of the updated SDCForm",
-                    "required": true,
-                    "content":{
-                        "application/json":{
-                            "schema":{
-                                "$ref": "#/components/schemas/SDCFormUpdateBody"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "The SDCForm object is updated successfully. Response contains the latest updated SDCForm object.",
-                        "content": {
-                            "application/json":{
-                                "schema":{
-                                    "$ref": "#/components/schemas/SDCFormObjectResponse"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "The given SDCFormID does not exist.",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ServerMessage"
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            "delete": {
-                "summary": "Delete an SDCForm",
-                "operationId": "deleteSDCForm",
-                "parameters": [
-                    {
-                        "name": "sdcform-id",
-                        "in": "path",
-                        "required": true,
-                        "description": "The SDCFormID of the SDCForm to be deleted.",
-                        "schema": {
-                            "type": "integer",
-                            "format": "int32"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "The SDCForm object is successfully deleted.",
-                        "content": {
-                            "application/json":{
-                                "schema":{
-                                    "$ref": "#/components/schemas/ServerMessage"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "The given SDCFormID does not exist.",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ServerMessage"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/api/sdcform/{procedure-id}": {
-            "parameters": [
-                {
-                    "name": "procedure-id",
-                    "in": "path",
-                    "required": true,
-                    "description": "The procedureID of the SDCForm to be updated.",
-                    "schema": {
-                        "type": "integer",
-                        "format": "int32"
-                    }
-                }
-            ],
-            "get": {
-                "summary": "Get the SDCForm object with the provided procedureID.",
-                "operationId": "getSDCForm",
-                "responses": {
-                    "200": {
-                        "description": "The SDCForm object with the provided procedureID is fetched successfully.",
-                        "content": {
-                            "application/json":{
-                                "schema":{
-                                    "$ref": "#/components/schemas/SDCFormObjectResponse"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "There is no SDCForm associated with the provided procedureID.",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ServerMessage"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/api/sdcformresponse": {
-            "post": {
-                "summary": "Saving a new “partially complete” response",
-                "operationId": "savePartialSDCFormResponse",
-                "requestBody": {
-                    "description": "The partially completed response object.",
-                    "required": true,
-                    "content":{
-                        "application/json":{
-                            "schema":{
-                                "$ref": "#/components/schemas/SDCPartialFormResponseObject"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "The partial SDCForm response is saved successfully. Response contains the SDCFormResponse object containing the partial response object.",
-                        "content": {
-                            "application/json":{
-                                "schema":{
-                                    "$ref": "#/components/schemas/SDCFormResponseUpdateResponse"
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            "get": {
-                "parameters": [
-                    {
-                        "name": "patientID",
-                        "in": "query",
-                        "required": false,
-                        "description": "Query for all responses with the given patientID.",
-                        "schema": {
-                            "type": "integer",
-                            "format": "int32",
-                            "example": 1
-                        }
-                    },
-                    {
-                        "name": "diagnosticProcedureID",
-                        "in": "query",
-                        "required": false,
-                        "description": "Query for all responses with the given DiagnosticProcedureID",
-                        "schema": {
-                            "type": "integer",
-                            "format": "int32",
-                            "example": 1
-                        }
-                    },
-                    {
-                        "name": "timestamp",
-                        "in": "query",
-                        "required": false,
-                        "description": "Query for all responses with the given timestamp",
-                        "schema": {
-                            "type": "string",
-                            "format": "date-time",
-                            "example": "2021-02-01T00:00:00"
-                        }
-                    }
-                ],
-                "summary": "Get all SDCFormResponse objects that matches the query parameter.",
-                "operationId": "getSDCFormResponse",
-                "responses": {
-                    "200": {
-                        "description": "All SDCForms matching the query conditions are fetched successfully.",
-                        "content": {
-                            "application/json":{
-                                "schema":{
-                                    "$ref": "#/components/schemas/SDCFormResponseQueryResponse"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/api/sdcformresponse/{response-id}": {
-            "parameters": [
-                {
-                    "name": "response-id",
-                    "in": "path",
-                    "required": true,
-                    "description": "The id of the SDCFormResponse to be updated/deleted.",
-                    "schema": {
-                        "type": "integer",
-                        "format": "int32"
-                    }
-                }
-            ],
-            "put": {
-                "summary": "Update a saved response.",
-                "operationId": "updateSDCFormResponse",
-                "requestBody": {
-                    "description": "The updated response object.",
-                    "required": true,
-                    "content":{
-                        "application/json":{
-                            "schema":{
-                                "$ref": "#/components/schemas/SDCFormResponseObject"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "The SDCForm response is updated successfully. Response contains the latest updated SDCFormResponse object.",
-                        "content": {
-                            "application/json":{
-                                "schema":{
-                                    "$ref": "#/components/schemas/SDCFormResponseUpdateResponse"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "The given responseID does not exist.",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ServerMessage"
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            "delete": {
-                "summary": "Delete the SDCFormResponse with the provided id.",
-                "operationId": "deleteSDCFormResponse",
-                "responses": {
-                    "200": {
-                        "description": "The SDCFormResponse object with the provided responseID is successfully deleted.",
-                        "content": {
-                            "application/json":{
-                                "schema":{
-                                    "$ref": "#/components/schemas/ServerMessage"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "There is no SDCFormResponse object associated with the provided responseID.",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ServerMessage"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    },
-    "components": {
-        "schemas": {
-            "ServerMessage": {
-                "type": "object",
-                "required": ["message"],
-                "properties": {
-                    "message": {
-                        "type": "string"
-                    }
-                }
-            },
-            "SDCFormObject": {
-                "type": "object",
-                "required": ["id", "name", "sections"],
-                "properties": {
-                    "id": {
-                        "type": "integer",
-                        "format": "int32",
-                        "example": 1
-                    },
-                    "name": {
-                        "type": "string",
-                        "example": "example sdc form"
-                    },
-                    "sections": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/SDCFormSectionObject"
-                        }
-                    }
-                }
-            },
-            "SDCFormSectionObject": {
-                "type": "object",
-                "required": ["id", "name", "questions"],
-                "properties": {
-                    "id": {
-                        "type": "integer",
-                        "format": "int32",
-                        "example": 1
-                    },
-                    "name": {
-                        "type": "string",
-                        "example": "example section"
-                    },
-                    "questions": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/SDCFormQuestionObject"
-                        }
-                    }
-                }
-            },
-            "SDCFormQuestionObject": {
-                "type": "object",
-                "required": ["id", "type", "questionText"],
-                "properties": {
-                    "id": {
-                        "type": "integer",
-                        "format": "int32",
-                        "example": 1
-                    },
-                    "type": {
-                        "type": "string",
-                        "example": "single-choice"
-                    },
-                    "questionText": {
-                        "type": "string",
-                        "example": "example question text"
-                    },
-                    "choices": {
-                        "type": "array",
-                        "items": {
-                            "type": "object",
-                            "required": ["text"],
-                            "properties": {
-                                "text": {
-                                    "type": "string",
-                                    "example": "example choice text"
-                                },
-                                "optionalFieldInputType": {
-                                    "type": "string"
-                                }
-                            }
-                        }
-                    },
-                    "controllerID": {
-                        "type": "integer",
-                        "format": "int32",
-                        "example": 1
-                    },
-                    "controllerAnswerEnabler": {
-                        "type": "string"
-                    }
-                }
-            },
-            "SDCFormResponseObject": {
-                "type": "object",
-                "required": ["id", "patientID", "sdcFormID", "timestamp", "answers"],
-                "properties":{
-                    "id": {
-                        "type": "integer",
-                        "format": "int32",
-                        "example": 1
-                    },
-                    "patientID": {
-                        "type": "integer",
-                        "format": "int32",
-                        "example": 1
-                    },
-                    "sdcFormID": {
-                        "type": "integer",
-                        "format": "int32",
-                        "example": 1
-                    },
-                    "timestamp": {
-                        "type": "string",
-                        "format": "date-time",
-                        "example": "2021-02-01T00:00:00"
-                    },
-                    "answers": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/SDCFormAnswerObject"
-                        }
-                    }
-                }
-            },
-            "SDCPartialFormResponseObject": {
-                "type": "object",
-                "required": ["patientID", "sdcFormID", "timestamp", "answers"],
-                "properties":{
-                    "patientID": {
-                        "type": "integer",
-                        "format": "int32",
-                        "example": 1
-                    },
-                    "sdcFormID": {
-                        "type": "integer",
-                        "format": "int32",
-                        "example": 1
-                    },
-                    "timestamp": {
-                        "type": "string",
-                        "format": "date-time",
-                        "example": "2021-02-01T00:00:00"
-                    },
-                    "answers": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/SDCFormAnswerObject"
-                        }
-                    }
-                }
-            },
-            "SDCFormAnswerObject": {
-                "type": "object",
-                "required": ["questionID", "answer"],
-                "properties": {
-                    "questionID": {
-                        "type": "integer",
-                        "format": "int32",
-                        "example": 1
-                    },
-                    "answer": {
-                        "type": "string",
-                        "example": "non-null example answer"
-                    }
-                }
-            },
-            "SDCFormInvalidInputObject": {
-                "type": "object",
-                "required": ["questionID", "message"],
-                "properties": {
-                    "questionID": {
-                        "type": "integer",
-                        "format": "int32",
-                        "example": 1
-                    },
-                    "message": {
-                        "type": "string"
-                    }
-                }
-            },
-            "XMLUploadBody": {
-                "type": "object",
-                "required": [
-                    "xmlString",
-                    "name",
-                    "diagnosticProcedureID"
-                ],
-                "properties": {
-                    "xmlString": {
-                        "type": "string"
-                    },
-                    "name": {
-                        "type": "string"
-                    },
-                    "diagnosticProcedureID": {
-                        "type": "string"
-                    }
-                }
-            },
-            "SDCFormObjectResponse": {
-                "type": "object",
-                "required": [
-                    "message",
-                    "sdcFormObject"
-                ],
-                "properties": {
-                    "message": {
-                        "type": "string"
-                    },
-                    "sdcFormObject": {
-                        "$ref": "#/components/schemas/SDCFormObject"
-                    }
-                }
-            },
-            "SDCFormUpdateBody": {
-                "type": "object",
-                "required": ["xmlString"],
-                "properties": {
-                    "xmlString": {
-                        "type": "string"
-                    }
-                }
-            },
-            "SDCFormResponseUpdateResponse": {
-                "type": "object",
-                "required": ["message", "responseObject", "invalidInputs"],
-                "properties": {
-                    "message": {
-                        "type": "string"
-                    },
-                    "responseObject": {
-                        "$ref": "#/components/schemas/SDCFormResponseObject"
-                    },
-                    "invalidInputs": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/SDCFormInvalidInputObject"
-                        }
-                    }
-                }
-            },
-            "SDCFormResponseQueryResponse": {
-                "type": "object",
-                "required": ["message", "sdcFormResponses"],
-                "properties": {
-                    "message": {
-                        "type": "string"
-                    },
-                    "sdcFormResponses": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/SDCFormResponseObject"
-                        }
-                    }
-                }
-            }
-        }
+  "openapi": "3.0.0",
+  "info": {
+    "version": "2.0.0",
+    "title": "SDC Form Backend API - Team Da Baby",
+    "description": "A SDC Form filler/manager web application"
+  },
+  "servers": [
+    {
+      "url": "http://127.0.0.1"
     }
+  ],
+  "paths": {
+    "/api/sdcform": {
+      "get": {
+        "summary": "Endpoint for getting a list of all sdcforms",
+        "description": "If neither metadata=true nor historyID appears as a query param, then will return all sdcforms including their non-metadata\nIf only metadata=true appears, then will return all sdcforms with only their metadata\nIf only historyID appears, then will return a list with only one element which will be the sdcform with id <int:sdcform_id>\nIf both query params appear, then will return the list with one element where the sdcform inside it only includes metadata",
+        "operationId": "querySDCForms",
+        "parameters": [
+          {
+            "name": "metadata",
+            "in": "query",
+            "required": false,
+            "description": "Set to true to only return sdcforms with their metadata (ignore sections).",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "historyID",
+            "in": "query",
+            "required": false,
+            "description": "Return data of the sdcform with its sdcform-id = historyID.",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "example": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The list of sdcform(s) queried for.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/SDCFormQueryResponse"
+                    },
+                    {
+                      "$ref": "#/components/schemas/SDCFormMetadataQueryResponse"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "There is no sdcform with id equals the given historyID.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServerMessage"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Endpoint for Uploading the XML (also returns the SDCForm object)",
+        "operationId": "uploadSDCFormXML",
+        "requestBody": {
+          "description": "XML string, form name and DiagnosticProcedureID",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/XMLUploadBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The XML is uploaded successfully. Response contains the SDCForm object represented by the XML.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SDCFormObjectResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "DiagnosticProcedureID already used.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServerMessage"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/sdcform/{procedure-id}": {
+      "get": {
+        "summary": "Get the SDCForm object with the provided procedureID.",
+        "operationId": "getSDCForm",
+        "parameters": [
+          {
+            "name": "procedure-id",
+            "in": "path",
+            "required": true,
+            "description": "The procedureID that links to the sdcform to be updated.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The SDCForm object with the provided procedureID is fetched successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SDCFormObjectResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "There is no SDCForm associated with the provided procedureID.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServerMessage"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Update an SDCForm",
+        "operationId": "updateSDCForm",
+        "parameters": [
+          {
+            "name": "procedure-id",
+            "in": "path",
+            "required": true,
+            "description": "The procedureID that links to the sdcform to be updated.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The XML string of the updated SDCForm",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SDCFormUpdateBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The SDCForm object is updated successfully. Response contains the latest updated SDCForm object.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SDCFormObjectResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The given SDCFormID does not exist.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServerMessage"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete an SDCForm",
+        "operationId": "deleteSDCForm",
+        "parameters": [
+          {
+            "name": "procedure-id",
+            "in": "path",
+            "required": true,
+            "description": "The procedureID that links to the sdcform to be updated.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The SDCForm object is successfully deleted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServerMessage"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The given SDCFormID does not exist.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServerMessage"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/sdcformresponse": {
+      "post": {
+        "summary": "Endpoint for starting a new response.",
+        "operationId": "startNewSDCFormResponse",
+        "requestBody": {
+          "description": "The partially completed response object.",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SDCFormResponseUploadObject"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The SDCForm response is saved successfully. Response contains the saved SDCFormResponse object.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SDCFormResponseServerObject"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Request object invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServerMessage"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "parameters": [
+          {
+            "name": "patientID",
+            "in": "query",
+            "required": false,
+            "description": "Query for all responses with the given patientID.",
+            "schema": {
+              "type": "string",
+              "example": "patient1"
+            }
+          },
+          {
+            "name": "diagnosticProcedureID",
+            "in": "query",
+            "required": false,
+            "description": "Query for all responses with the given DiagnosticProcedureID",
+            "schema": {
+              "type": "string",
+              "example": "procedure1"
+            }
+          },
+          {
+            "name": "starttime",
+            "in": "query",
+            "required": false,
+            "description": "Query for all responses after starttime.",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "example": "2021-02-01T00:00:00"
+            }
+          },
+          {
+            "name": "endtime",
+            "in": "query",
+            "required": false,
+            "description": "Query for all responses before endtime.",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "example": "2021-02-01T00:00:00"
+            }
+          },
+          {
+            "name": "metadata",
+            "in": "query",
+            "required": false,
+            "description": "Query for responses' metadata only.",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "summary": "Get all SDCFormResponse objects that matches the query parameter. If no query parameter is define, all response objects are returned.",
+        "operationId": "querySDCFormResponses",
+        "responses": {
+          "200": {
+            "description": "All SDCForms matching the query conditions are fetched successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SDCFormResponseQueryResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/sdcformresponse/{response-id}": {
+      "parameters": [
+        {
+          "name": "response-id",
+          "in": "path",
+          "required": true,
+          "description": "The id of the SDCFormResponse to be updated/deleted.",
+          "schema": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Get SDCFormResponse by responseId.",
+        "operationId": "getSDCFormResponse",
+        "responses": {
+          "200": {
+            "description": "The SDCFormResponse object with the given responseId",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SDCFormResponseObjectResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The responseId has no corresponding SDCFormResponse.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServerMessage"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Update a saved response.",
+        "operationId": "updateSDCFormResponse",
+        "requestBody": {
+          "description": "The updated response object.",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SDCFormResponseServerObject"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The SDCForm response is updated successfully. Response contains the latest updated SDCFormResponse object.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SDCFormResponseUpdateResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The response does not exist or is not editable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServerMessage"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete the SDCFormResponse with the provided id.",
+        "operationId": "deleteSDCFormResponse",
+        "responses": {
+          "200": {
+            "description": "The SDCFormResponse object with the provided responseID is successfully deleted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServerMessage"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "There is no SDCFormResponse object associated with the provided responseID.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServerMessage"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ServerMessage": {
+        "type": "object",
+        "required": [
+          "message"
+        ],
+        "properties": {
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "SDCFormMetadataObject": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "diagnosticProcedureID",
+          "timestamp"
+        ],
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32",
+            "example": 1
+          },
+          "name": {
+            "type": "string",
+            "example": "example sdc form"
+          },
+          "diagnosticProcedureID": {
+            "type": "string",
+            "example": "id1"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "SDCFormObject": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "diagnosticProcedureID",
+          "timestamp",
+          "sections"
+        ],
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32",
+            "example": 1
+          },
+          "name": {
+            "type": "string",
+            "example": "example sdc form"
+          },
+          "diagnosticProcedureID": {
+            "type": "string",
+            "example": "id1"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "sections": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SDCFormSectionObject"
+            }
+          }
+        }
+      },
+      "SDCFormSectionObject": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "questions"
+        ],
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32",
+            "example": 1
+          },
+          "name": {
+            "type": "string",
+            "example": "example section"
+          },
+          "questions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SDCFormQuestionObject"
+            }
+          }
+        }
+      },
+      "SDCFormQuestionObject": {
+        "type": "object",
+        "required": [
+          "id",
+          "type",
+          "questionText"
+        ],
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32",
+            "example": 1
+          },
+          "type": {
+            "type": "string",
+            "example": "single-choice / multiple-choice / free-text / integer / true-false"
+          },
+          "questionText": {
+            "type": "string",
+            "example": "example question text"
+          },
+          "choices": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "text"
+              ],
+              "properties": {
+                "text": {
+                  "type": "string",
+                  "example": "example choice text"
+                },
+                "optionalFieldInputType": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "controllerID": {
+            "type": "integer",
+            "format": "int32",
+            "example": 1
+          },
+          "controllerAnswerEnabler": {
+            "type": "string"
+          }
+        }
+      },
+      "SDCFormResponseServerObject": {
+        "type": "object",
+        "required": [
+          "id",
+          "patientID",
+          "clinicianID",
+          "sdcFormID",
+          "diagnosticProcedureID",
+          "timestamp",
+          "answers"
+        ],
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32",
+            "example": 1
+          },
+          "patientID": {
+            "type": "string",
+            "example": "patient1"
+          },
+          "clinicianID": {
+            "type": "string",
+            "example": "clinician1"
+          },
+          "sdcFormID": {
+            "type": "integer",
+            "format": "int32",
+            "example": 1
+          },
+          "diagnosticProcedureID": {
+            "type": "string",
+            "example": "procedure1"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2021-02-01T00:00:00"
+          },
+          "answers": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SDCFormAnswerObject"
+            }
+          }
+        }
+      },
+      "SDCFormResponseUploadObject": {
+        "type": "object",
+        "required": [
+          "patientID",
+          "clinicianID",
+          "sdcFormID"
+        ],
+        "properties": {
+          "patientID": {
+            "type": "string",
+            "example": "patient1"
+          },
+          "clinicianID": {
+            "type": "string",
+            "example": "clinician1"
+          },
+          "sdcFormID": {
+            "type": "integer",
+            "format": "int32",
+            "example": 1
+          }
+        }
+      },
+      "SDCFormAnswerObject": {
+        "type": "object",
+        "required": [
+          "questionID",
+          "answer"
+        ],
+        "properties": {
+          "questionID": {
+            "type": "integer",
+            "format": "int32",
+            "example": 1
+          },
+          "answer": {
+            "type": "string",
+            "example": "example answer"
+          }
+        }
+      },
+      "XMLUploadBody": {
+        "type": "object",
+        "required": [
+          "xmlString",
+          "name",
+          "diagnosticProcedureID"
+        ],
+        "properties": {
+          "xmlString": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "diagnosticProcedureID": {
+            "type": "string"
+          }
+        }
+      },
+      "SDCFormObjectResponse": {
+        "type": "object",
+        "required": [
+          "message",
+          "sdcFormObject"
+        ],
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "sdcFormObject": {
+            "$ref": "#/components/schemas/SDCFormObject"
+          }
+        }
+      },
+      "SDCFormUpdateBody": {
+        "type": "object",
+        "required": [
+          "xmlString"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "xmlString": {
+            "type": "string"
+          }
+        }
+      },
+      "SDCFormInvalidInputObject": {
+        "type": "object",
+        "required": [
+          "questionID",
+          "message"
+        ],
+        "properties": {
+          "questionID": {
+            "type": "integer",
+            "format": "int32",
+            "example": 1
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "SDCFormResponseUpdateResponse": {
+        "type": "object",
+        "required": [
+          "message",
+          "responseObject",
+          "invalidInputs"
+        ],
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "responseObject": {
+            "$ref": "#/components/schemas/SDCFormResponseServerObject"
+          },
+          "invalidInputs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SDCFormInvalidInputObject"
+            }
+          }
+        }
+      },
+      "SDCFormResponseQueryResponse": {
+        "type": "object",
+        "required": [
+          "message",
+          "sdcFormResponses"
+        ],
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "sdcFormResponses": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SDCFormResponseServerObject"
+            }
+          }
+        }
+      },
+      "SDCFormResponseObjectResponse": {
+        "type": "object",
+        "required": [
+          "message",
+          "responseObject"
+        ],
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "responseObject": {
+            "$ref": "#/components/schemas/SDCFormResponseServerObject"
+          }
+        }
+      },
+      "SDCFormQueryResponse": {
+        "type": "object",
+        "required": [
+          "message",
+          "sdcFormObjects"
+        ],
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "sdcFormObjects": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SDCFormObject"
+            }
+          }
+        }
+      },
+      "SDCFormMetadataQueryResponse": {
+        "type": "object",
+        "required": [
+          "message",
+          "sdcFormObjects"
+        ],
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "sdcFormObjects": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SDCFormMetadataObject"
+            }
+          }
+        }
+      }
+    }
+  }
 }
