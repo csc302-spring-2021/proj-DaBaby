@@ -39,9 +39,8 @@ class CreateNewResponseTests(TestCase):
     #         "patientID": "OH27891892",
     #         "clinicianID": "CAMD92378223"
     #     }
-
-        response = self.client.post("/api/sdcformresponse/", data)
-        self.assertEqual(response.status_code, 400)
+        # response = self.client.post("/api/sdcformresponse/", data)
+        # self.assertEqual(response.status_code, 400)
 
     def test_invalid_sdcformid(self):
         self.client = Client()

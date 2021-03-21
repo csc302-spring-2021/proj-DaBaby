@@ -98,7 +98,7 @@ def sdcformresponses(request):
             "message": "Success",
             "responseObject": serializer.data
         }
-        return Response(json)
+        return Response(json, status=status.HTTP_201_CREATED)
 
 
 @api_view(['GET', 'PUT', 'DELETE'])
