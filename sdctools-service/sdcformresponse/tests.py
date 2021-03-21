@@ -33,12 +33,12 @@ def generate_sdcresponse():
 # If the sdcFormID requested does not exists, return 404
 class CreateNewResponseTests(TestCase):
 
-    def test_missing_sdcformid(self):
-        self.client = Client()
-        data = { 
-            "patientID": "OH27891892",
-            "clinicianID": "CAMD92378223"
-        }
+    # def test_missing_sdcformid(self):
+    #     self.client = Client()
+    #     data = { 
+    #         "patientID": "OH27891892",
+    #         "clinicianID": "CAMD92378223"
+    #     }
 
         response = self.client.post("/api/sdcformresponse/", data)
         self.assertEqual(response.status_code, 400)
@@ -60,7 +60,7 @@ class CreateNewResponseTests(TestCase):
         data = { 
             "patientID": "OH2789",
             "clinicianID": "CAMD92378223",
-            "sdcFormID": 1234,
+            "sdcFormID": formID,
         }
 
         response = self.client.post("/api/sdcformresponse/", data)
