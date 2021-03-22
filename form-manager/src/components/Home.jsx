@@ -145,7 +145,7 @@ class Home extends React.Component {
 						</thead>
 						<tbody>
 						{this.state.displayedForms.map(form => (
-							<tr>
+							<tr key={form.id}>
 								<td>{form.id}</td>
 								<td>{form.name}</td>
 								<td>{form.diagnosticProcedureID}</td>
