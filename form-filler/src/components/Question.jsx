@@ -74,7 +74,7 @@ class Question extends Component {
                           >
                             <Field
                               validate={this.required}
-                              name={option.text}
+                              name={"optionalFieldInputType" + question.id + option.text}
                               type="text"
                               component="input"
                               placeholder="Specify"
@@ -130,7 +130,7 @@ class Question extends Component {
                         >
                           <Field
                             validate={this.required}
-                            name={option.text}
+                            name={"optionalFieldInputType" + question.id + option.text}
                             type="text"
                             component="input"
                             placeholder="Specify"
@@ -194,7 +194,7 @@ class Question extends Component {
                           >
                             <Field
                               validate={this.required}
-                              name={option.text}
+                              name={"optionalFieldInputType" + question.id + option.text}
                               type="text"
                               component="input"
                               placeholder="Specify"
@@ -250,7 +250,7 @@ class Question extends Component {
                         >
                           <Field
                             validate={this.required}
-                            name={option.text}
+                            name={"optionalFieldInputType" + question.id + option.text}
                             type="text"
                             component="input"
                             placeholder="Specify"

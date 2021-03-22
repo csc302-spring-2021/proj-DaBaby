@@ -18,7 +18,74 @@ import Question from "./Question";
 
 class SDCSection extends React.Component {
   onSubmit = async (values) => {
-    console.log(JSON.stringify(values));
+    console.log("values")
+    console.log(values);
+    console.log("questionAnswerList");
+    // This list will hold a list of questionAnswerObjects
+    const questionAnswerList = [];
+
+    // Loop through the values object that is essentially the questionAnswer to each question and each question id
+    // Then prepare them and add them to the questionAnswerObject
+    for (const property in values) {
+      // console.log(property.slice(6));
+      // console.log(values[property]);
+      // Creating response object that'll be sent to the backend
+      const questionAnswerObject = {};
+
+      let single_or_multiple_choice_question = false;
+
+      // If the property is filler, then it is not an addition
+      if (property.slice(0, 6) == "filler") {
+        const questionID = property.slice(6); // Parse the question id from the property
+        // Get the object with matching questionID
+        const { section, name, section_name } = this.props;
+        const { questions } = section;
+
+        // Loop through questions from section to match up with the value from the form, and see if that question is 
+        // single-choice or multiple-choice, if so then they need a section field in their questionAnswerObject
+        for (let i = 0; i < questions.length; i++) {
+            if (questions[i]["id"] == questionID && questions[i]["type"] == "single-choice") {
+                questionAnswerObject["questionID"] = questionID;
+                questionAnswerObject["answer"] = {"selection": values[property]};
+                single_or_multiple_choice_question = "single-choice";
+            }
+            if (questions[i]["id"] == questionID && questions[i]["type"] == "multiple-choice") {
+              questionAnswerObject["questionID"] = questionID;
+              questionAnswerObject["answer"].push({"selection": values[property]});
+              single_or_multiple_choice_question = "multiple-choice";
+          }
+        }
+
+        if (!single_or_multiple_choice_question) {
+          questionAnswerObject["questionID"] = property.slice(6);
+        questionAnswerObject["answer"] = values[property];
+        questionAnswerList.push(questionAnswerObject);
+        }
+
+        else if (single_or_multiple_choice_question == "single-choice") {
+          questionAnswerObject["questionID"] = property.slice(6);
+          questionAnswerObject["answer"]["selection"] = values[property];
+          questionAnswerList.push(questionAnswerObject);
+        }
+
+        else if (single_or_multiple_choice_question == "multiple-choice") {
+
+        }
+
+
+      }
+      // Otherwise it is an addition
+      else {
+        const questionID = property.slice(22, 27); // Parse the question id from the property
+        const existingQuestionAnswerObject = questionAnswerList.find(obj => {
+          return obj.questionID === questionID 
+        })
+        existingQuestionAnswerObject["answer"]["addition"] = values[property];
+      }
+      
+    
+      console.log(questionAnswerList)
+    }
   };
 
   /**
