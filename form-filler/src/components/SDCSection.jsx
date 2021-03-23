@@ -161,7 +161,7 @@ class SDCSection extends React.Component {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(answerResponseObject),
     };
-    fetch(`${SERVER_URL}/api/sdcform/${sdcFormResponse["id"]}`, requestOptions)
+    fetch(`${SERVER_URL}/api/sdcform/${sdcFormResponse["diagnosticProcedureID"]}`, requestOptions)
       .then((response) => response.json())
       .then((data) => console.log(data))
       .catch((error) => {
