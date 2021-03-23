@@ -68,7 +68,8 @@ def sdcforms(request):
                            diagnostic_procedure_id=diagnostic_procedure_id)
         sdc_form.save()
 
-        xml_dict = xmltodict.parse(request.data["xmlString"][3:])
+        xml_start_index = request.data["xmlString"].find("<")
+        xml_dict = xmltodict.parse(request.data["xmlString"][xml_start_index:])
 
         section_dicts = xml_dict["FormDesign"]["Body"]["ChildItems"]["Section"]
         if not isinstance(section_dicts, list):
@@ -140,7 +141,8 @@ def sdcform(request, procedure_id):
                                diagnostic_procedure_id=diagnostic_procedure_id)
         new_sdc_form.save()
 
-        xml_dict = xmltodict.parse(request.data["xmlString"][3:])
+        xml_start_index = request.data["xmlString"].find("<")
+        xml_dict = xmltodict.parse(request.data["xmlString"][xml_start_index:])
 
         section_dicts = xml_dict["FormDesign"]["Body"]["ChildItems"]["Section"]
         if not isinstance(section_dicts, list):
