@@ -101,13 +101,26 @@ class SDCSection extends React.Component {
       // Otherwise it is an addition
       else {
         // If the addition is a single choice question handle it this way
-        const questionID = property.slice(22, 27); // Parse the question id from the property
-        const question = property.slice(27); // Parse the question from the property
+
+        // Use this to determine how long the id is for the question
+        let k = 0;
+        console.log(property)
+        // Loop through the property to find the * (thats where the id ends and the question begins)
+        while (property[22 + k] !== "*") {
+            k++;
+        }
+        const id_length = k;
+        console.log(id_length)
+
+
+        const questionID = property.slice(22, 22 + id_length); // Parse the question id from the property
+        const question = property.slice(22 + id_length + 1); // Parse the question from the property
 
         // Find existingQuestionAnswerObject from the questionAnswerList so we can include the addition field
         const existingQuestionAnswerObject = questionAnswerList.find((obj) => {
           return obj.questionID === questionID;
         });
+
 
         if (existingQuestionAnswerObject) {
           // If the question we are adding the addition to is an array (meaning multiple-choice question), do this
@@ -134,11 +147,11 @@ class SDCSection extends React.Component {
 
     // Get useful form properties from prop
     const { id } = this.props.sdcForm;
-    answerResponseObject["id"] = 2468;
+    answerResponseObject["id"] = 9;
     answerResponseObject["answers"] = questionAnswerList;
-    answerResponseObject["patientID"] = "OH27891892";
-    answerResponseObject["clinicianID"] = "YP27923782";
-    answerResponseObject["sdcFormID"] = id;
+    answerResponseObject["patientID"] = "abc1234567";
+    answerResponseObject["clinicianID"] = "abc123456789";
+    answerResponseObject["sdcFormID"] = 21;
 
     // Make backend call to call PUT on url
     const requestOptions = {
