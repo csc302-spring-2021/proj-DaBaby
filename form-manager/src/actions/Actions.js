@@ -69,3 +69,19 @@ export const updateForm = (page, data) => {
             alert(err.response.data.message);
         });
 };
+
+/* GET SDC forms */
+export const getSDCForm = async (page, id) => {
+    axios
+        .get(`${SERVER_URL}/api/sdcform/${id}/`)
+        .then((res) => {
+            if (res.data) {
+                page.setState({form: res.data.sdcFormObject});
+            } else {
+                alert("GET SDC FORM FAILED");
+            }
+        })
+        .catch((err) => {
+            alert(err.response.data);
+        });
+};

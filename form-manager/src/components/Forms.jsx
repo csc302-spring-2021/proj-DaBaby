@@ -1,27 +1,36 @@
 import React from "react";
-import hardcodedForm from "./sdcform.json";
 import SDCSection from "./SDCSection";
 import "./Forms.scss";
+import {getSDCForm} from "../actions/Actions";
 
 class Forms extends React.Component {
 	constructor(props) {
 		super(props);
-		// we can get the actual form from Home using Link
-		// but for now I am using hardcoded JSON to render questions before XML parsing algo is finished
+
 		this.state = {
-			realForm: this.props.location.data,
-			form: hardcodedForm
+			form: null,
+			id: this.props.location.state.id,
+		}
+
+		console.log(this.state.id)
+	}
+
+	componentDidMount() {
+		if (this.props.location) {
+			getSDCForm(this, this.state.id)
 		}
 	}
 
 	render() {
 		return (
-			<div className={"Form-Container"}>
+			(this.state.form ? (<div className={"Form-Container"}>
 				<h2 id="form-name-display">{this.state.form.name}</h2>
 				{this.state.form.sections.map((section) => (
 					<SDCSection section={section} key={section.id}/>
 				))}
-			</div>
+			</div>) : (<div>
+				<h1>SDCForm is invalid</h1>
+			</div>))
 		);
 	}
 }
