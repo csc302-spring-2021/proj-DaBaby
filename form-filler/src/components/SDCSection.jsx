@@ -40,11 +40,11 @@ class SDCSection extends React.Component {
         const { section, name, section_name } = this.props;
         const questions = [];
         const { sdcForm } = this.props;
-        
+
         // Loop through all sections and add question to list of questions
         for (let i = 0; i < sdcForm["sections"].length; i++) {
           for (let j = 0; j < sdcForm["sections"][i]["questions"].length; j++)
-            questions.push(sdcForm["sections"][i]["questions"][j])
+            questions.push(sdcForm["sections"][i]["questions"][j]);
         }
 
         // Loop through questions from section to match up with the value from the form, and see if that question is
@@ -130,13 +130,12 @@ class SDCSection extends React.Component {
     const answerResponseObject = {};
 
     // Get useful form properties from prop
-    const { id } = this.props.sdcForm;
-    answerResponseObject["id"] = 2468;
+    const { id, sdcFormID, clinicianID, patientID } = this.props.sdcResponse;
+    answerResponseObject["id"] = id;
     answerResponseObject["answers"] = questionAnswerList;
-    answerResponseObject["patientID"] = "OH27891892";
-    answerResponseObject["clinicianID"] = "YP27923782";
-    answerResponseObject["sdcFormID"] = id;
-
+    answerResponseObject["patientID"] = patientID;
+    answerResponseObject["clinicianID"] = clinicianID;
+    answerResponseObject["sdcFormID"] = sdcFormID;
 
     // Make backend call to call PUT on url
     const requestOptions = {
@@ -144,7 +143,7 @@ class SDCSection extends React.Component {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(answerResponseObject),
     };
-    fetch(`${SERVER_URL}/api/test/sdcformresponse/2468`, requestOptions)
+    fetch(`${SERVER_URL}/api/test/sdcformresponse/${id}`, requestOptions)
       .then((response) => response.json())
       .then((data) => console.log(data))
       .catch((error) => {
