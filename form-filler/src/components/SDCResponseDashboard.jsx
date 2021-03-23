@@ -7,6 +7,7 @@ import Dropdown from "react-bootstrap/Dropdown";
 import NavItem from "react-bootstrap/NavItem";
 import NavLink from "react-bootstrap/NavLink";
 import "./SDCResponseDashboard.scss";
+import {Link} from "react-router-dom";
 
 const hardcodedResponses = [
 	{
@@ -16,7 +17,74 @@ const hardcodedResponses = [
 		sdcFormID: 1234,
 		timestamp: "2021-03-14T15:29:23.925Z",
 		diagnosticProcedureID: "covid19",
+		answers: [
+			{
+				questionID: 37326,
+				answer: "CA1000"
+			},
+			{
+				questionID: 35972,
+				answer:
+					{
+						"selection": "Greater than 1 year old (specify years)",
+						"addition": 5
+					}
+			},
+			{
+				questionID: 35978,
+				answer: {"selection": "Male"}
+			},
+			{
+				questionID: 35932,
+				answer: "Canada"
+			},
+			{
+				questionID: 35935,
+				answer: "Ontario"
+			},
+			{
+				questionID: 35943,
+				answer: "22 / 10 / 2020"
+			},
 
+			{
+				questionID: 35995,
+				answer: {"selection": "Unknown"}
+
+			},
+			{
+				questionID: 37429,
+				answer: "15 / 10 / 2020"
+			},
+			{
+				questionID: 38610,
+				answer: {"selection": "Present"}
+			},
+			{
+				questionID: 35960,
+				answer: [
+					{selection: "Cardiovascular disease"},
+					{selection: "Diabetes"},
+					{selection: "Others (specify):", "addition": "Respiratory Issues"}
+				]
+			},
+			{
+				questionID: 36015,
+				answer: true
+			},
+			{
+				questionID: 39750,
+				answer: "22 / 10 / 2020"
+			},
+			{
+				questionID: 35988,
+				answer: []
+			},
+			{
+				questionID: 35989,
+				answer: []
+			}
+		]
 	},
 	{
 		id: 1357,
@@ -25,6 +93,74 @@ const hardcodedResponses = [
 		sdcFormID: 1234,
 		timestamp: "2021-03-15T15:29:23.925Z",
 		diagnosticProcedureID: "covid19",
+		answers: [
+			{
+				questionID: 37326,
+				answer: "CA1000"
+			},
+			{
+				questionID: 35972,
+				answer:
+					{
+						"selection": "Greater than 1 year old (specify years)",
+						"addition": 5
+					}
+			},
+			{
+				questionID: 35978,
+				answer: {"selection": "Male"}
+			},
+			{
+				questionID: 35932,
+				answer: "Canada"
+			},
+			{
+				questionID: 35935,
+				answer: "Ontario"
+			},
+			{
+				questionID: 35943,
+				answer: "22 / 10 / 2020"
+			},
+
+			{
+				questionID: 35995,
+				answer: {"selection": "Unknown"}
+
+			},
+			{
+				questionID: 37429,
+				answer: "15 / 10 / 2020"
+			},
+			{
+				questionID: 38610,
+				answer: {"selection": "Present"}
+			},
+			{
+				questionID: 35960,
+				answer: [
+					{selection: "Cardiovascular disease"},
+					{selection: "Diabetes"},
+					{selection: "Others (specify):", "addition": "Respiratory Issues"}
+				]
+			},
+			{
+				questionID: 36015,
+				answer: true
+			},
+			{
+				questionID: 39750,
+				answer: "22 / 10 / 2020"
+			},
+			{
+				questionID: 35988,
+				answer: []
+			},
+			{
+				questionID: 35989,
+				answer: []
+			}
+		]
 	}
 ]
 
@@ -37,7 +173,7 @@ class ResponseDashboard extends React.Component {
 			searchStartDate: "",
 			searchEndDate: "",
 			responses: hardcodedResponses,
-			displayedResponses: hardcodedResponses
+			displayedResponses: hardcodedResponses,
 		}
 	}
 
@@ -69,10 +205,6 @@ class ResponseDashboard extends React.Component {
 
 	onDeleteResp(resp) {
 		alert(`make request to delete response ${resp.id}`)
-	}
-
-	onUpdateResp(resp) {
-		alert(`transfer to fill response ${resp.id}`)
 	}
 
 	render() {
@@ -113,6 +245,7 @@ class ResponseDashboard extends React.Component {
 							<th>Patient ID</th>
 							<th>Last Edited</th>
 							<th/>
+							<th/>
 						</tr>
 						</thead>
 						<tbody>
@@ -127,10 +260,17 @@ class ResponseDashboard extends React.Component {
 										<Dropdown.Menu>
 											<Dropdown.Item
 												onClick={this.onDeleteResp.bind(this, resp)}>Delete</Dropdown.Item>
-											<Dropdown.Item
-												onClick={this.onUpdateResp.bind(this, resp)}>Update</Dropdown.Item>
 										</Dropdown.Menu>
 									</Dropdown>
+								</td>
+								<td>
+									<Link style={{color: "#267bf7", textDecoration: "underline"}} to={{
+										pathname: `/forms/${resp.diagnosticProcedureID}`,
+										data: {
+											answers: resp.answers,
+											procedureID: resp.diagnosticProcedureID
+										}
+									}}>Update</Link>
 								</td>
 							</tr>
 						))}
