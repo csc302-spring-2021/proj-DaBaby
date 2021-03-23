@@ -3,25 +3,24 @@ import SDCSection from "./SDCSection";
 import {Col, Container, Row} from "react-bootstrap";
 import SDCSidebar from "./SDCSidebar";
 import "./Form.scss";
-import { getSDCForm } from "../actions/Actions";
+import {getSDCForm} from "../actions/Actions";
 
 
 class Form extends React.Component {
 	constructor(props) {
 		super(props);
-
 		this.state = {
 			curr_section: 0,
-			procedureID: this.props.location.data.response.diagnosticProcedureID,
-			sdcResponse: this.props.location.data.response,
+			procedureID: this.props.location.state.response.diagnosticProcedureID,
+			sdcResponse: this.props.location.state.response,
 			sdcForm: null
 		}
-
-		console.log(this.state.sdcResponse.id)
 	}
 
 	componentDidMount() {
-		getSDCForm(this, this.state.procedureID)
+		if (this.props.location) {
+			getSDCForm(this, this.state.procedureID)
+		}
 	}
 
 	// This function will change the current section to be displayed
@@ -54,7 +53,9 @@ class Form extends React.Component {
 					</Row>
 				</Col>
 			</Container>
-		) : <div></div>);
+		) : <div>
+			<h1>SDCForm is invalid</h1>
+		</div>);
 	}
 }
 
