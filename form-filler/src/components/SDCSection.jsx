@@ -38,7 +38,14 @@ class SDCSection extends React.Component {
         const questionID = property.slice(6); // Parse the question id from the property
         // Get the object with matching questionID
         const { section, name, section_name } = this.props;
-        const { questions } = section;
+        const questions = [];
+        const { sdcForm } = this.props;
+        
+        // Loop through all sections and add question to list of questions
+        for (let i = 0; i < sdcForm["sections"].length; i++) {
+          for (let j = 0; j < sdcForm["sections"][i]["questions"].length; j++)
+            questions.push(sdcForm["sections"][i]["questions"][j])
+        }
 
         // Loop through questions from section to match up with the value from the form, and see if that question is
         // single-choice or multiple-choice, if so then they need a section field in their questionAnswerObject
@@ -130,13 +137,12 @@ class SDCSection extends React.Component {
     answerResponseObject["clinicianID"] = "YP27923782";
     answerResponseObject["sdcFormID"] = id;
 
-    console.log(answerResponseObject); // Print formatted response
 
     // Make backend call to call PUT on url
     const requestOptions = {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(answerResponseObject)
+      body: JSON.stringify(answerResponseObject),
     };
     fetch(`${SERVER_URL}/api/test/sdcformresponse/2468`, requestOptions)
       .then((response) => response.json())
