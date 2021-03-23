@@ -10,7 +10,7 @@ import Dropzone from 'react-dropzone-uploader'
 import {deleteForm, getAllForms, updateForm, uploadForm} from "../actions/Actions";
 import {Link} from "react-router-dom";
 
-const FileSaver = require('file-saver');
+//const FileSaver = require('file-saver');
 
 class Home extends React.Component {
 	constructor(props) {
@@ -63,20 +63,21 @@ class Home extends React.Component {
 			this.setState({showUpload: false, completeUpload: true})
 			if (this.state.isUpdate) {
 				updateForm(this, {
-					updateForm: this.state.updateForm,
-					lastUpdated: new Date().toISOString(),
-					formName: this.state.newName,
-					file: this.state.newForm.file
-				})
+					id: this.state.updateForm.diagnosticProcedureID,
+					name: this.state.newName,
+					xmlString: binaryStr
+				}).then(r =>
+					this.setState({newForm: null, newId: "", newName: "", updateForm: null, isUpdate: false})
+				)
 			} else {
 				uploadForm(this, {
 					diagnosticProcedureID: this.state.newId,
-					lastUpdated: new Date().toISOString(),
 					name: this.state.newName,
 					xmlString: binaryStr
-				})
+				}).then(r =>
+					this.setState({newForm: null, newId: "", newName: "", updateForm: null, isUpdate: false})
+				)
 			}
-			this.setState({newForm: null, newId: "", newName: "", updateForm: null, isUpdate: false})
 		}
 		reader.readAsBinaryString(this.state.newForm.file)
 		// able to download File using the File object
@@ -95,16 +96,16 @@ class Home extends React.Component {
 		this.setState({filter: e.target.value}, () => {
 			this.setState({
 				displayedForms: this.state.forms.filter(
-					form => form.formId.toString().toUpperCase().indexOf(this.state.filter.toUpperCase()) > -1 ||
-						form.formName.toUpperCase().indexOf(this.state.filter.toUpperCase()) > -1 ||
-						form.procedureId.toUpperCase().indexOf(this.state.filter.toUpperCase()) > -1
+					form => form.id.toString().toUpperCase().indexOf(this.state.filter.toUpperCase()) > -1 ||
+						form.name.toUpperCase().indexOf(this.state.filter.toUpperCase()) > -1 ||
+						form.diagnosticProcedureID.toUpperCase().indexOf(this.state.filter.toUpperCase()) > -1
 				)
 			})
 		})
 	}
 
 	onDeleteForm(form) {
-		deleteForm(this, form)
+		deleteForm(this, form.diagnosticProcedureID)
 	}
 
 	render() {
@@ -145,13 +146,13 @@ class Home extends React.Component {
 						<tbody>
 						{this.state.displayedForms.map(form => (
 							<tr>
-								<td>{form.formId}</td>
-								<td>{form.formName}</td>
-								<td>{form.procedureId}</td>
-								<td>{form.lastUpdated}</td>
+								<td>{form.id}</td>
+								<td>{form.name}</td>
+								<td>{form.diagnosticProcedureID}</td>
+								<td>{form.timestamp}</td>
 								<td>
 									<Link style={{color: "#267bf7", textDecoration: "underline"}} to={{
-										pathname: `/forms/${form.procedureId}`,
+										pathname: `/forms/${form.diagnosticProcedureID}`,
 										data: form
 									}}>View</Link>
 								</td>
@@ -172,7 +173,7 @@ class Home extends React.Component {
 					</Table>
 					<Modal show={this.state.showUpload} onHide={this.onCloseUploadModal.bind(this)}>
 						<Modal.Header closeButton>
-							<Modal.Title>Upload&nbsp;New&nbsp;Form</Modal.Title>
+							<Modal.Title>Upload&nbsp;SDC&nbsp;Form</Modal.Title>
 						</Modal.Header>
 						<Modal.Body>
 							<Dropzone
@@ -195,8 +196,10 @@ class Home extends React.Component {
 										              disabled={this.state.completeUpload}
 										              onChange={this.onInputId.bind(this)}/>
 									) : (
-										<Form.Control type="id" placeholder={this.state.updateForm.procedureId}
-										              value={this.state.updateForm.procedureId} disabled={true}
+										<Form.Control type="id"
+										              placeholder={this.state.updateForm.diagnosticProcedureID}
+										              value={this.state.updateForm.diagnosticProcedureID}
+										              disabled={true}
 										              onChange={this.onInputId.bind(this)}/>
 									))}
 								</Form.Group>

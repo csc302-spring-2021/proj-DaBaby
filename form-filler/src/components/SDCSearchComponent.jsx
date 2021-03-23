@@ -32,6 +32,7 @@ class SDCSearchComponent extends React.Component {
     formResponse: {},
     pages: 1,
     activePage: 0,
+    searchQuery: "",
   };
 
   async componentDidMount() {
@@ -65,11 +66,13 @@ class SDCSearchComponent extends React.Component {
       return;
     }
 
-    const pages = Math.floor(sdcFormObjects.length / 10);
+    let formItems = sdcFormObjects.filter((form) => form.diagnosticProcedureID);
+
+    const pages = Math.floor(formItems.length / 10);
 
     this.setState({
       pages,
-      formData: sdcFormObjects,
+      formData: formItems,
       isLoading: false,
       hasError: false,
     });
@@ -88,8 +91,6 @@ class SDCSearchComponent extends React.Component {
 
       return;
     }
-
-    console.log(this.state);
 
     const response = await fetch(`/api/sdcformresponse/`, {
       method: "POST",
@@ -129,8 +130,6 @@ class SDCSearchComponent extends React.Component {
       return;
     }
 
-    console.log(responseData);
-
     this.setState({
       formResponse: responseData,
       isLoading: false,
@@ -150,8 +149,6 @@ class SDCSearchComponent extends React.Component {
       activePage,
     } = this.state;
 
-    console.log(activePage);
-
     return (
       <Col>
         <Row>
@@ -160,7 +157,12 @@ class SDCSearchComponent extends React.Component {
             {hasError ? <Alert variant="danger">{errorMsg}</Alert> : null}
             <h2 className="search-input">Start Filling New Form</h2>
             <InputGroup className="search-input">
-              <FormControl placeholder="Search for a proceedure to get started" />
+              <FormControl
+                onChange={(event) =>
+                  this.setState({ searchQuery: event.target.value })
+                }
+                placeholder="Search for a proceedure to get started"
+              />
               <InputGroup.Append>
                 <Button variant="outline-secondary">Search</Button>
               </InputGroup.Append>

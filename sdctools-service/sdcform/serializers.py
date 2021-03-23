@@ -18,7 +18,7 @@ class SDCQuestionSerializer(serializers.ModelSerializer):
         source="controller.id", read_only=True, allow_null=True)
     controllerAnswerEnabler = serializers.CharField(
         source="controller_answer_enabler", read_only=True)
-    choices = ChoiceSerializer(many=True, read_only=True, allow_null=True)
+    choices = ChoiceSerializer(many=True, read_only=True)
 
     class Meta:
         model = SDCQuestion
@@ -44,9 +44,9 @@ class SectionSerializer(serializers.ModelSerializer):
 
 class SDCFormSerializer(serializers.ModelSerializer):
     diagnosticProcedureID = serializers.CharField(
-        source="diagnostic_procedure_id.code", read_only=True)
+        source="diagnostic_procedure_id.code", read_only=True, allow_null=True)
     sections = SectionSerializer(many=True, read_only=True)
 
     class Meta:
         model = SDCForm
-        fields = ["id", "name", "diagnosticProcedureID", "sections"]
+        fields = ["id", "name", "timestamp", "diagnosticProcedureID", "sections"]

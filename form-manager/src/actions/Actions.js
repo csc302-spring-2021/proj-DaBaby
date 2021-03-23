@@ -1,55 +1,69 @@
 import axios from "axios";
-/* hard-coded forms */
-let forms = [
 
-]
+const SERVER_URL = "http://dababysdcbackendapi-env-2.eba-ybqn7as3.ca-central-1.elasticbeanstalk.com";
 
 /* GET all forms */
-export const getAllForms = (page) => {
-	page.setState({ forms: forms, displayedForms: forms, filter: "" });
+export const getAllForms = async (page) => {
+	axios
+		.get(`${SERVER_URL}/api/sdcform?metadata=true`)
+		.then((res) => {
+			if (res.data) {
+				let forms = res.data.sdcFormObjects.filter(form => form.diagnosticProcedureID)
+				page.setState({forms: forms, displayedForms: forms, filter: ""});
+			} else {
+				alert("GET ALL FORMS FAILED");
+			}
+		})
+		.catch((err) => {
+			alert(err.response.data);
+		});
 };
 
 /* POST a new form */
 export const uploadForm = async (page, data) => {
 	axios
-		.post(`/api/sdcform/`, data )
+		.post(`${SERVER_URL}/api/sdcform/`, data)
 		.then((res) => {
 			if (res.data) {
-				console.log(res)
-				forms.push({
-					formId: res.data.sdcFormObject.id,
-					formName: res.data.sdcFormObject.name,
-					procedureId: res.data.sdcFormObject.diagnosticProcedureID,
-					lastUpdated: data.lastUpdated,
-					sections: res.data.sdcFormObject.sections
-				})
 				getAllForms(page)
 			} else {
-				alert("NO ITEMS DATA");
+				alert("UPLOAD FORM FAILED");
 			}
 		})
 		.catch((err) => {
-			alert(err);
+			console.log(err.response.data)
+			alert(err.response.data.message);
 		});
-	getAllForms(page)
 };
 
 /* DELETE a form */
-export const deleteForm = (page, data) => {
-	const index = forms.indexOf(data);
-	if (index > -1) {
-		forms.splice(index, 1);
-	}
-	getAllForms(page)
+export const deleteForm = async (page, id) => {
+	axios
+		.delete(`${SERVER_URL}/api/sdcform/${id}/`)
+		.then((res) => {
+			if (res.data) {
+				getAllForms(page)
+			} else {
+				alert("DELETE FORM FAILED");
+			}
+		})
+		.catch((err) => {
+			alert(err.response.data.message);
+		});
 };
 
 /* PUT a form */
-export const updateForm = (page, data) => {
-	const index = forms.indexOf(data.updateForm);
-	if (index > -1) {
-		forms[index].formName = data.formName
-		forms[index].lastUpdated = data.lastUpdated
-		forms[index].file = data.file
-	}
-	getAllForms(page)
+export const updateForm = async (page, data) => {
+	axios
+		.put(`${SERVER_URL}/api/sdcform/${data.id}/`, {xmlString: data.xmlString, name: data.name})
+		.then((res) => {
+			if (res.data) {
+				getAllForms(page)
+			} else {
+				alert("UPDATE FORM FAILED");
+			}
+		})
+		.catch((err) => {
+			alert(err.response.data.message);
+		});
 };
