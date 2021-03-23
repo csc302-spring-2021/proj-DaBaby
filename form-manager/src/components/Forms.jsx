@@ -17,9 +17,9 @@ class Forms extends React.Component {
 	render() {
 		return (
 			<div className={"Form-Container"}>
-				<h2 style={{textAlign: "center", marginTop: "5%", marginBottom: "5%"}}>{this.state.form.name}</h2>
+				<h2 id="form-name-display">{this.state.form.name}</h2>
 				{this.state.form.sections.map((section) => (
-					<SDCSection section={section}/>
+					<SDCSection section={section} key={section.id}/>
 				))}
 			</div>
 		);
