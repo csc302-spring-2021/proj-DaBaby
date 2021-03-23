@@ -13,10 +13,12 @@ import {
 import "./SDCSection.scss";
 import "./Question.scss";
 
+// Check when value (what the user inputs on the form), matches with is (the controllerAnswerEnabler), 
+// if they do match, render the dependent question from the sdcForm
 const Condition = ({ when, is, children }) => (
   <Field name={when} subscription={{ value: true }}>
     {/* Use value.match(is) because controlleranswer could be * meaning it could be anything so we will use a regex to express this */}
-    {({ input: { value } }) => (String(value).match(is) ? children : null)}
+    {({ input: { value } }) => (String(value).match(is[0]) || (Array.isArray(value) ? value.includes(is[1]) : false) ? children : null)}
   </Field>
 );
 
@@ -48,9 +50,11 @@ class Question extends Component {
       case "single-choice":
         if (question.controllerID) {
           return (
+            // Is is a list cuz we need to check if the answerenabler is a * which means anything goes in or if its a list which comes from
+            // Multiple choice values, so we need to handle regex option or the list option for the controlleranswerenabler
             <Condition
               when={"filler" + question.controllerID}
-              is={new RegExp(question.controllerAnswerEnabler)}
+              is={[new RegExp(question.controllerAnswerEnabler), question.controllerAnswerEnabler]}
             >
               <div>
                 <FormLabel className="title">{question.questionText}</FormLabel>
@@ -170,7 +174,7 @@ class Question extends Component {
           return (
             <Condition
               when={"filler" + question.controllerID}
-              is={new RegExp(question.controllerAnswerEnabler)}
+              is={[new RegExp(question.controllerAnswerEnabler), question.controllerAnswerEnabler]}
             >
               <div>
                 <FormLabel className="title">{question.questionText}</FormLabel>
@@ -291,7 +295,7 @@ class Question extends Component {
           return (
             <Condition
               when={"filler" + question.controllerID}
-              is={new RegExp(question.controllerAnswerEnabler)}
+              is={[new RegExp(question.controllerAnswerEnabler), question.controllerAnswerEnabler]}
             >
               <Field name={"filler" + question.id} validate={this.required}>
                 {({ input, meta }) => (
@@ -343,7 +347,7 @@ class Question extends Component {
           return (
             <Condition
               when={"filler" + question.controllerID}
-              is={new RegExp(question.controllerAnswerEnabler)}
+              is={[new RegExp(question.controllerAnswerEnabler), question.controllerAnswerEnabler]}
             >
               <div>
                 <FormLabel className="title">{question.questionText}</FormLabel>
@@ -389,7 +393,7 @@ class Question extends Component {
           return (
             <Condition
               when={"filler" + question.controllerID}
-              is={new RegExp(question.controllerAnswerEnabler)}
+              is={[new RegExp(question.controllerAnswerEnabler), question.controllerAnswerEnabler]}
             >
               <div>
                 <FormLabel className="title">{question.questionText}</FormLabel>
