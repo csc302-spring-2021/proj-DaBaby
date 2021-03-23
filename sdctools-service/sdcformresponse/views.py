@@ -7,7 +7,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 
-import xmltodict
+from dateutil import parser
 
 from .models import *
 from .serializers import *
@@ -18,11 +18,46 @@ from .serializers import *
 @api_view(['GET', 'POST'])
 def sdcformresponses(request):
     if request.method == "GET":
+        ohip = request.GET.get("patientID", "")
+        code = request.GET.get("diagnosticProcedureID", "")
+        start_time = request.GET.get("starttime", "")
+        end_time = request.GET.get("endtime", "")
+        metadata = request.GET.get("metadata", "")
         lst = SDCFormResponse.objects.all()
+
+        if ohip != "":
+            try:
+                patient_id = PatientID.objects.get(ohip=ohip)
+                lst = lst.filter(patient_id=patient_id)
+            except PatientID.DoesNotExist:
+                lst = SDCFormResponse.objects.none()
+
+        if code != "":
+            try:
+                diagnostic_procedure_id = DiagnosticProcedureID.objects.get(
+                    code=code)
+                lst = lst.filter(diagnostic_procedure_id=diagnostic_procedure_id)
+            except DiagnosticProcedureID.DoesNotExist:
+                lst = SDCFormResponse.objects.none()
+
+        if start_time != "":
+            start_timestamp = parser.parse(start_time)
+            lst = lst.filter(timestamp__gte=start_timestamp)
+
+        if end_time != "":
+            end_timestamp = parser.parse(end_time)
+            lst = lst.filter(timestamp__lte=end_timestamp)
+
         serializer = SDCFormResponseSerializer(lst, many=True)
+        d = serializer.data
+
+        if metadata == "true":
+            for sdc_form_response in d:
+                del sdc_form_response["answers"]
+
         json = {
             "message": "Success",
-            "sdcFormResponses": serializer.data
+            "sdcFormResponses": d
         }
         return Response(json)
     else:

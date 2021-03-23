@@ -22,6 +22,7 @@ def sdcforms(request):
     if request.method == "GET":
         metadata = request.GET.get("metadata", "")
         history_id = request.GET.get("historyID", "")
+        lst = SDCForm.objects.all()
 
         if history_id != "":
             try:
@@ -31,18 +32,16 @@ def sdcforms(request):
                     "message": "Not a valid sdcform id, "
                                "needs to be an integer"},
                     status=status.HTTP_404_NOT_FOUND)
+
             try:
                 sdc_form = SDCForm.objects.get(id=history_id)
+                lst = lst.filter(id=sdc_form.id)
             except SDCForm.DoesNotExist:
                 return Response({"message": "This sdcformID does not exist."},
                                 status=status.HTTP_404_NOT_FOUND)
 
-            serializer = SDCFormSerializer(instance=sdc_form)
-            d = [serializer.data]
-        else:
-            lst = SDCForm.objects.all()
-            serializer = SDCFormSerializer(lst, many=True)
-            d = serializer.data
+        serializer = SDCFormSerializer(lst, many=True)
+        d = serializer.data
 
         if metadata == "true":
             for sdc_form in d:
