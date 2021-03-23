@@ -1,7 +1,7 @@
 import "./App.scss";
 import React from "react";
 
-import { BrowserRouter, Switch, Route } from "react-router-dom";
+import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom";
 
 import NavigationBar from "./NavigationBar";
 import SDCSection from "./SDCSection";
@@ -67,6 +67,7 @@ class App extends React.Component {
         <Container fluid className="App">
           <NavigationBar />
           <Switch>
+            <Route exact path="/" render={() => <Redirect to="/new-form" />} />
             <Route path="/edit-response">
               <Col>
                 <Row>
