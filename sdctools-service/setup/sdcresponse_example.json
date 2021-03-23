@@ -3,6 +3,7 @@
     "patientID": "OH27891892",
     "clinicianID": "YP27923782",
     "sdcFormID": 1234,
+    "diagnosticProcedureID": "covid19",
     "timestamp": "2021-03-14T15:29:23.925Z",
     "answers": [
         {
@@ -62,6 +63,14 @@
         {
             "questionID": 39750,
             "answer": "22 / 10 / 2020"
+        },
+        {
+            "questionID": 35988,
+            "answer": []
+        },
+        {
+            "questionID": 35989,
+            "answer": []
         }
     ]
 

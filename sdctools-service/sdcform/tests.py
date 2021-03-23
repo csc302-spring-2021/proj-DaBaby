@@ -35,6 +35,11 @@ class FormsTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTrue('sdcFormObject' in json.loads(response.content))
 
+    # def test_upload_invalid_xml(self):
+    #     self.client = Client()
+    #     data = { "diagnosticProcedureID" : "test123", "name" : "test123", "xmlString": "not xml!"}
+    #     response = self.client.post("/api/sdcform/", data)
+    #     self.assertEqual(response.status_code, 400)
 
     def test_get_valid_form(self):
 
@@ -121,6 +126,13 @@ class ModifyFormsTests(TestCase):
         new_data = json.dumps(get_request_with_xml_file())
         put_response = self.client.put("/api/sdcform/foo/", new_data, content_type="application/json")
         self.assertEqual(put_response.status_code, 404)
+
+    # def test_update_form_invalid_request(self):
+    #     upload_initial_form() # Only form in db is the one with procedureID = test123
+    #     self.client = Client()
+    #     data = json.dumps({ "diagnosticProcedureID" : "test123", "name" : "test123"}) # missing body field xmlString
+    #     put_response = self.client.put("/api/sdcform/test123/", data, content_type="application/json")
+    #     self.assertEqual(put_response.status_code, 400)
 
     def test_add_form_with_same_procedure_id(self):
         upload_initial_form() # form with diagnosticProcedureID = test123
