@@ -3,7 +3,7 @@ import axios from "axios";
 const SERVER_URL = "http://dababysdcbackendapi-env-2.eba-ybqn7as3.ca-central-1.elasticbeanstalk.com";
 
 /* GET SDC forms */
-export const getSDCForm = async (page, id) => {
+export const getSDCForm = (page, id) => {
 	axios
 		.get(`${SERVER_URL}/api/sdcform/${id}/`)
 		.then((res) => {
@@ -19,7 +19,7 @@ export const getSDCForm = async (page, id) => {
 };
 
 /* GET all resps */
-export const getAllResps = async (page, data) => {
+export const getAllResps = (page, data) => {
 	console.log(data)
 	axios
 		.get(`${SERVER_URL}/api/sdcformresponse?patientID=${data.patient}&diagnosticProcedureID=${data.procedure}&tamp=${data.start}`)
@@ -36,7 +36,7 @@ export const getAllResps = async (page, data) => {
 };
 
 /* DELETE resp */
-export const deleteResp = async (page, id) => {
+export const deleteResp = (page, id) => {
 	axios
 		.delete(`${SERVER_URL}/api/sdcformresponse/${id}/`)
 		.then((res) => {

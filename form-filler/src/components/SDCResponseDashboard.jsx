@@ -119,7 +119,7 @@ class ResponseDashboard extends React.Component {
 									</Dropdown>
 								</td>
 								<td>
-									<Link style={{color: "#267bf7", textDecoration: "underline"}} to={{
+									<Link id="update-button" to={{
 										pathname: `/forms/${resp.diagnosticProcedureID}`,
 										state: {
 											response: resp
