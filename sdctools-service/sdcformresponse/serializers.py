@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import *
+from sdcform.models import Choice
 
 
 class ChoiceAnswerSerializer(serializers.ModelSerializer):
@@ -12,6 +13,14 @@ class ChoiceAnswerSerializer(serializers.ModelSerializer):
 
         if getattr(obj, "addition") is None:
             r.pop("addition")
+        else:
+            answer = getattr(obj, "answer")
+            sdcquestion = answer.sdcquestion
+            choice = Choice.objects.get(text=getattr(obj, "selection"),
+                                        sdcquestion=sdcquestion)
+
+            if choice.input_type == "int":
+                r["addition"] = int(r["addition"])
 
         return r
 
@@ -105,3 +114,12 @@ class SDCFormResponseSerializer(serializers.ModelSerializer):
             r["answers"].append(answer_serializer.to_representation(answer))
 
         return r
+
+
+class InvalidInputSerializer(serializers.ModelSerializer):
+    questionID = serializers.IntegerField(source="sdcquestion.id",
+                                          read_only=True)
+
+    class Meta:
+        model = InvalidInput
+        fields = ["questionID", "message"]
