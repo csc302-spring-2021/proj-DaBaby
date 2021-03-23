@@ -55,6 +55,7 @@ class App extends React.Component {
                 section={sections[curr_section]}
                 name={name}
                 section_name={sections[curr_section].name}
+                sdcForm={this.state.sdcForm}
               />
             </Col>
             <Col md={4}>

@@ -15,9 +15,18 @@ import "./Question.scss";
 
 const Condition = ({ when, is, children }) => (
   <Field name={when} subscription={{ value: true }}>
+    {/* Use value.match(is) because controlleranswer could be * meaning it could be anything so we will use a regex to express this */}
     {({ input: { value } }) => (String(value).match(is) ? children : null)}
   </Field>
 );
+
+const ConditionSpecify = ({ when, is, children }) => (
+  <Field name={when} subscription={{ value: true }}>
+    {/* Use value.includes because multiple choice value is an array and we need to see if the value includes it */}
+    {({ input: { value } }) => (value.includes(is) ? children : null)} 
+  </Field>
+);
+
 
 class Question extends Component {
   required = (value) => {
@@ -58,10 +67,38 @@ class Question extends Component {
                         />{" "}
                         {option.text}
                         {/* If the choice has an optionalfieldinputtype, render it below  */}
-                        {option.optionalFieldInputType ? <FormControl
-                      type="text"
-                      placeholder="Specify"
-                    /> : ""}
+                        {option.optionalFieldInputType ? (
+                          <ConditionSpecify
+                            when={"filler" + question.id}
+                            is={option.text}
+                          >
+                            <Field
+                              validate={this.required}
+                              name={"optionalFieldInputType" + question.id + option.text}
+                              type="text"
+                              component="input"
+                              placeholder="Specify"
+                            >
+                              {({ input, meta }) => (
+                                <FormGroup controlId={this.key}>
+                                  <FormControl
+                                    {...input}
+                                    type="text"
+                                    placeholder="Specify"
+                                    isInvalid={meta.error && meta.touched}
+                                  />
+                                  <FormText data-testid="caseIdValidation">
+                                    {meta.error && meta.touched && (
+                                      <span>{meta.error}</span>
+                                    )}
+                                  </FormText>
+                                </FormGroup>
+                              )}
+                            </Field>
+                          </ConditionSpecify>
+                        ) : (
+                          ""
+                        )}
                       </FormLabel>
                     </div>
                   ))}
@@ -86,10 +123,38 @@ class Question extends Component {
                       />{" "}
                       {option.text}
                       {/* If the choice has an optionalfieldinputtype, render it below  */}
-                      {option.optionalFieldInputType ? <FormControl
-                      type="text"
-                      placeholder="Specify"
-                    /> : ""}
+                      {option.optionalFieldInputType ? (
+                        <ConditionSpecify
+                          when={"filler" + question.id}
+                          is={option.text}
+                        >
+                          <Field
+                            validate={this.required}
+                            name={"optionalFieldInputType" + question.id + option.text}
+                            type="text"
+                            component="input"
+                            placeholder="Specify"
+                          >
+                            {({ input, meta }) => (
+                              <FormGroup controlId={this.key}>
+                                <FormControl
+                                  {...input}
+                                  type="text"
+                                  placeholder="Specify"
+                                  isInvalid={meta.error && meta.touched}
+                                />
+                                <FormText data-testid="caseIdValidation">
+                                  {meta.error && meta.touched && (
+                                    <span>{meta.error}</span>
+                                  )}
+                                </FormText>
+                              </FormGroup>
+                            )}
+                          </Field>
+                        </ConditionSpecify>
+                      ) : (
+                        ""
+                      )}
                     </FormLabel>
                   </div>
                 ))}
@@ -122,10 +187,38 @@ class Question extends Component {
                         />{" "}
                         {option.text}
                         {/* If the choice has an optionalfieldinputtype, render it below  */}
-                        {option.optionalFieldInputType ? <FormControl
-                      type="text"
-                      placeholder="Specify"
-                    /> : ""}
+                        {option.optionalFieldInputType ? (
+                          <ConditionSpecify
+                            when={"filler" + question.id}
+                            is={option.text}
+                          >
+                            <Field
+                              validate={this.required}
+                              name={"optionalFieldInputType" + question.id + option.text}
+                              type="text"
+                              component="input"
+                              placeholder="Specify"
+                            >
+                              {({ input, meta }) => (
+                                <FormGroup controlId={this.key}>
+                                  <FormControl
+                                    {...input}
+                                    type="text"
+                                    placeholder="Specify"
+                                    isInvalid={meta.error && meta.touched}
+                                  />
+                                  <FormText data-testid="caseIdValidation">
+                                    {meta.error && meta.touched && (
+                                      <span>{meta.error}</span>
+                                    )}
+                                  </FormText>
+                                </FormGroup>
+                              )}
+                            </Field>
+                          </ConditionSpecify>
+                        ) : (
+                          ""
+                        )}
                       </FormLabel>
                     </div>
                   ))}
@@ -150,10 +243,38 @@ class Question extends Component {
                       />{" "}
                       {option.text}
                       {/* If the choice has an optionalfieldinputtype, render it below  */}
-                      {option.optionalFieldInputType ? <FormControl
-                      type="text"
-                      placeholder="Specify"
-                    /> : ""}
+                      {option.optionalFieldInputType ? (
+                        <ConditionSpecify
+                          when={"filler" + question.id}
+                          is={option.text}
+                        >
+                          <Field
+                            validate={this.required}
+                            name={"optionalFieldInputType" + question.id + option.text}
+                            type="text"
+                            component="input"
+                            placeholder="Specify"
+                          >
+                            {({ input, meta }) => (
+                              <FormGroup controlId={this.key}>
+                                <FormControl
+                                  {...input}
+                                  type="text"
+                                  placeholder="Specify"
+                                  isInvalid={meta.error && meta.touched}
+                                />
+                                <FormText data-testid="caseIdValidation">
+                                  {meta.error && meta.touched && (
+                                    <span>{meta.error}</span>
+                                  )}
+                                </FormText>
+                              </FormGroup>
+                            )}
+                          </Field>
+                        </ConditionSpecify>
+                      ) : (
+                        ""
+                      )}
                     </FormLabel>
                   </div>
                 ))}
