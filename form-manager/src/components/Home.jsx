@@ -148,7 +148,9 @@ class Home extends React.Component {
                                     <td>
                                         <Link id="view-form-button" to={{
                                             pathname: `/forms/${form.diagnosticProcedureID}`,
-                                            data: form
+                                            state: {
+                                                id: form.diagnosticProcedureID
+                                            }
                                         }}>View</Link>
                                     </td>
                                     <td>

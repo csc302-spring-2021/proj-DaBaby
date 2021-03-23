@@ -2,14 +2,20 @@ import "./SDCSection.scss";
 
 import React from "react";
 
-import {Col, Container, Row,} from "react-bootstrap";
+import {Button, Col, Container, Row,} from "react-bootstrap";
 
 import {Form} from "react-final-form";
 import Question from "./Question";
 
+
 class SDCSection extends React.Component {
-	async onSubmit (values) {
-		console.log(JSON.stringify(values));
+	onSubmit = async (values) => {
+	}
+	/**
+	 * Validates field client side as required
+	 */
+	required = (value) => {
+		return value ? undefined : "Required";
 	};
 
 	render() {
@@ -23,11 +29,22 @@ class SDCSection extends React.Component {
 						<hr className="divider"/>
 						<Form
 							onSubmit={this.onSubmit}
-							render={() => (
-								<form>
+							render={({
+								         handleSubmit,
+								         submitting,
+							         }) => (
+								<form onSubmit={handleSubmit}>
+									{/* Where the questions will be rendered */}
 									{questions.map((question) => (
 										<Question question={question} key={question.id}/>
 									))}
+									<Button
+										type="submit"
+										onClick={handleSubmit}
+										disabled={submitting}
+									>
+										Continue
+									</Button>
 								</form>
 							)}
 						/>
