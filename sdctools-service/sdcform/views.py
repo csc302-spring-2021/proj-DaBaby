@@ -144,6 +144,12 @@ def sdcform(request, procedure_id):
         xml_start_index = request.data["xmlString"].find("<")
         xml_dict = xmltodict.parse(request.data["xmlString"][xml_start_index:])
 
+        if "SDCPackage" in xml_dict:
+            xml_dict = xml_dict["SDCPackage"]
+
+        if "XMLPackage" in xml_dict:
+            xml_dict = xml_dict["XMLPackage"]
+
         section_dicts = xml_dict["FormDesign"]["Body"]["ChildItems"]["Section"]
         if not isinstance(section_dicts, list):
             section_dicts = [section_dicts]
