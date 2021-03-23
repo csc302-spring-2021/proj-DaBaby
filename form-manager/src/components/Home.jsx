@@ -104,12 +104,12 @@ class Home extends React.Component {
         deleteForm(this, form.diagnosticProcedureID)
     }
 
+
     render() {
         // receives array of files that are done uploading when submit button is clicked
         const onDropzoneSubmit = (files, allFiles) => {
-            this.setState({completeUpload: false})
-            allFiles.forEach(f => this.setState({newForm: f}))
-        }
+            this.setState({completeUpload: false, newForm: allFiles[0]});
+        };
 
         return (
             <div id="manager-panel">
