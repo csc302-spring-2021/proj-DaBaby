@@ -71,7 +71,7 @@ export const updateForm = (page, data) => {
 };
 
 /* GET SDC forms */
-export const getSDCForm = async (page, id) => {
+export const getSDCForm = (page, id) => {
     axios
         .get(`${SERVER_URL}/api/sdcform/${id}/`)
         .then((res) => {
