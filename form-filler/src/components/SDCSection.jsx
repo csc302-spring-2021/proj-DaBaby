@@ -104,14 +104,13 @@ class SDCSection extends React.Component {
 
         // Use this to determine how long the id is for the question
         let k = 0;
-        console.log(property)
+        console.log(property);
         // Loop through the property to find the * (thats where the id ends and the question begins)
         while (property[22 + k] !== "*") {
-            k++;
+          k++;
         }
         const id_length = k;
-        console.log(id_length)
-
+        console.log(id_length);
 
         const questionID = property.slice(22, 22 + id_length); // Parse the question id from the property
         const question = property.slice(22 + id_length + 1); // Parse the question from the property
@@ -120,7 +119,6 @@ class SDCSection extends React.Component {
         const existingQuestionAnswerObject = questionAnswerList.find((obj) => {
           return obj.questionID === questionID;
         });
-
 
         if (existingQuestionAnswerObject) {
           // If the question we are adding the addition to is an array (meaning multiple-choice question), do this
@@ -146,14 +144,14 @@ class SDCSection extends React.Component {
     const answerResponseObject = {};
 
     // Get useful form properties from prop
-    const sdcFormResponse = this.props.sdcFormResponse
+    const sdcFormResponse = this.props.sdcFormResponse;
     answerResponseObject["id"] = sdcFormResponse["id"];
     answerResponseObject["answers"] = questionAnswerList;
     answerResponseObject["patientID"] = sdcFormResponse["patientID"];
     answerResponseObject["clinicianID"] = sdcFormResponse["clinicianID"];
     answerResponseObject["sdcFormID"] = sdcFormResponse["sdcFormID"];
-    
-    console.log(answerResponseObject)
+
+    console.log(answerResponseObject);
 
     // Make backend call to call PUT on url
     const requestOptions = {
