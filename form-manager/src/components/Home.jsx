@@ -93,15 +93,15 @@ class Home extends React.Component {
     }
 
     onInputFilter(e) {
-        this.setState({filter: e.target.value}, () => {
-            this.setState({
-                displayedForms: this.state.forms.filter(
-                    form => form.id.toString().toUpperCase().indexOf(this.state.filter.toUpperCase()) > -1 ||
-                        form.name.toUpperCase().indexOf(this.state.filter.toUpperCase()) > -1 ||
-                        form.diagnosticProcedureID.toUpperCase().indexOf(this.state.filter.toUpperCase()) > -1
+        const filter = e.target.value;
+        this.setState({
+                filter: filter, displayedForms: this.state.forms.filter(
+                form => form.id.toString().toUpperCase().indexOf(filter.toUpperCase()) > -1 ||
+                    form.name.toUpperCase().indexOf(filter.toUpperCase()) > -1 ||
+                    form.diagnosticProcedureID.toUpperCase().indexOf(filter.toUpperCase()) > -1
                 )
-            })
-        })
+            }
+        );
     }
 
     onDeleteForm(form) {
