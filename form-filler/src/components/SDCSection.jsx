@@ -16,6 +16,9 @@ import {
 import { Form, Field } from "react-final-form";
 import Question from "./Question";
 
+const SERVER_URL =
+  "http://dababysdcbackendapi-env-2.eba-ybqn7as3.ca-central-1.elasticbeanstalk.com";
+
 class SDCSection extends React.Component {
   // Prepare the values into a JSON that'll be sent to the backend
   onSubmit = async (values) => {
@@ -127,7 +130,20 @@ class SDCSection extends React.Component {
     answerResponseObject["clinicianID"] = "YP27923782";
     answerResponseObject["sdcFormID"] = id;
 
-    console.log(answerResponseObject) // Print formatted response
+    console.log(answerResponseObject); // Print formatted response
+
+    // Make backend call to call PUT on url
+    const requestOptions = {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(answerResponseObject)
+    };
+    fetch(`${SERVER_URL}/api/test/sdcformresponse/2468`, requestOptions)
+      .then((response) => response.json())
+      .then((data) => console.log(data))
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   /**
