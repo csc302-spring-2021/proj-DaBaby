@@ -79,10 +79,11 @@ def parse_question(question_dict, section, controller=None,
                 elif ["decimal"] == type_key_lst:
                     # might change this later
                     input_type = "int"
-                else:
-                    assert ["integer"] == type_key_lst
+                elif ["integer"] == type_key_lst:
                     # need a way to store max and min inclusive
                     input_type = "int"
+                else:
+                    input_type = "str"
             else:
                 input_type = None
 
