@@ -198,7 +198,7 @@ class SDCSection extends React.Component {
               }
           }
           // Otherwise (single-choice), handle it this way
-          else {
+          else if (value) {
             let additionName = "optionalFieldInputType" + sdcFormResponse["answers"][i]["questionID"] + value["selection"]
             initialValues[name] = value["selection"]
             initialValues[additionName] = value["addition"]

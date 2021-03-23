@@ -41,6 +41,7 @@ class Form extends React.Component {
 								name={this.state.sdcForm.name}
 								section_name={this.state.sdcForm.sections[curr_section].name}
 								sdcForm={this.state.sdcForm}
+								sdcFormResponse={this.state.sdcResponse}
 							/>
 						</Col>
 						<Col md={4}>
