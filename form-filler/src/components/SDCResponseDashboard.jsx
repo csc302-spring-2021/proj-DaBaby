@@ -33,13 +33,20 @@ class ResponseDashboard extends React.Component {
 	}
 
 	onSearch() {
-		const filter = {
-			diagnosticProcedureID: this.state.searchProcedure,
-			patientID: this.state.searchPatient,
-			startDate: new Date(this.state.searchStartDate).toISOString(),
-			endDate: new Date(this.state.searchEndDate).toISOString()
+		let start = ""
+		let end = ""
+		if (this.state.searchStartDate !== "") {
+			start = new Date(this.state.searchStartDate).toISOString()
 		}
-		alert(`make request to get responses with ${filter.diagnosticProcedureID}, ${filter.patientID}, ${filter.startDate}, ${filter.endDate}`)
+		if (this.state.searchEndDate !== "") {
+			end = new Date(this.state.searchEndDate).toISOString()
+		}
+		getAllResps(this, {
+			patient: this.state.searchPatient,
+			procedure: this.state.searchProcedure,
+			start: start,
+			end: end
+		});
 	}
 
 	onInputProcedure(e) {

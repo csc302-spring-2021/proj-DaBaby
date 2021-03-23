@@ -22,7 +22,7 @@ export const getSDCForm = (page, id) => {
 export const getAllResps = (page, data) => {
 	console.log(data)
 	axios
-		.get(`${SERVER_URL}/api/sdcformresponse?patientID=${data.patient}&diagnosticProcedureID=${data.procedure}&tamp=${data.start}`)
+		.get(`${SERVER_URL}/api/sdcformresponse?patientID=${data.patient}&diagnosticProcedureID=${data.procedure}&starttime=${data.start}&endtime=${data.end}`)
 		.then((res) => {
 			if (res.data) {
 				page.setState({responses: res.data.sdcFormResponses});
