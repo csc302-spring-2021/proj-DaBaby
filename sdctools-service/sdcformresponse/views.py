@@ -20,7 +20,11 @@ def sdcformresponses(request):
     if request.method == "GET":
         lst = SDCFormResponse.objects.all()
         serializer = SDCFormResponseSerializer(lst, many=True)
-        return Response(serializer.data)
+        json = {
+            "message": "Success",
+            "sdcFormResponses": serializer.data
+        }
+        return Response(json)
     else:
         try:
             sdc_form = SDCForm.objects.get(id=request.data["sdcFormID"])
@@ -103,4 +107,159 @@ def sdcformresponses(request):
 
 @api_view(['GET', 'PUT', 'DELETE'])
 def sdcformresponse(request, response_id):
-    pass
+    if request.method == "GET":
+        try:
+            sdc_form_response = SDCFormResponse.objects.get(id=response_id)
+        except SDCFormResponse.DoesNotExist:
+            content = {
+                'message':
+                    'This SDCFormResponseID does not exist.'
+            }
+            return Response(content, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = SDCFormResponseSerializer(instance=sdc_form_response)
+        json = {
+            "message": "Success",
+            "responseObject": serializer.data
+        }
+        return Response(json)
+    elif request.method == "PUT":
+        try:
+            sdc_form_response = SDCFormResponse.objects.get(id=response_id)
+        except SDCFormResponse.DoesNotExist:
+            content = {
+                'message':
+                    'This SDCFormResponseID does not exist.'
+            }
+            return Response(content, status=status.HTTP_404_NOT_FOUND)
+
+        if sdc_form_response.sdcform.diagnostic_procedure_id is None:
+            content = {
+                'message':
+                    'The sdcForm associated with the sdcFormID in this response'
+                    ' does not have a diagnosticProcedureID. This means that '
+                    'the sdcForm is outdated and so this response is not '
+                    'editable'
+            }
+            return Response(content, status=status.HTTP_400_BAD_REQUEST)
+
+        sdc_form_response.save(update_fields=["timestamp"])
+        client_answers = request.data["answers"]
+        invalid_inputs = []
+
+        for client_answer in client_answers:
+            question_id = client_answer["questionID"]
+            question = SDCQuestion.objects.get(id=question_id)
+            question_type = question.type
+
+            if question_type == "free-text":
+                answer = FreeTextAnswer.objects.get(
+                    sdcformresponse=sdc_form_response, sdcquestion=question)
+                answer.answer = client_answer["answer"]
+
+                try:
+                    answer.full_clean()
+                    answer.save()
+                except ValidationError:
+                    invalid_input = InvalidInput(
+                        sdcquestion=question, message="Not a valid text answer")
+                    invalid_inputs.append(invalid_input)
+            elif question_type == "integer":
+                answer = IntegerAnswer.objects.get(
+                    sdcformresponse=sdc_form_response, sdcquestion=question)
+                answer.answer = client_answer["answer"]
+
+                try:
+                    answer.full_clean()
+                    answer.save()
+                except ValidationError:
+                    invalid_input = InvalidInput(
+                        sdcquestion=question, message="Not a valid integer "
+                                                      "answer")
+                    invalid_inputs.append(invalid_input)
+            elif question_type == "true-false":
+                answer = TrueFalseAnswer.objects.get(
+                    sdcformresponse=sdc_form_response, sdcquestion=question)
+                answer.answer = client_answer["answer"]
+
+                try:
+                    answer.full_clean()
+                    answer.save()
+                except ValidationError:
+                    invalid_input = InvalidInput(
+                        sdcquestion=question, message="Not a valid true-false"
+                                                      "answer")
+                    invalid_inputs.append(invalid_input)
+            elif question_type == "single-choice":
+                answer = SingleChoiceAnswer.objects.get(
+                    sdcformresponse=sdc_form_response, sdcquestion=question)
+
+                try:
+                    answer.singlechoice.delete()
+                except ObjectDoesNotExist:
+                    pass
+
+                choice_answer = client_answer["answer"]
+                if choice_answer is not None:
+                    single_choice = SingleChoice(
+                        answer=answer, selection=choice_answer["selection"])
+
+                    if "addition" in choice_answer:
+                        single_choice.addition = choice_answer["addition"]
+
+                    try:
+                        # should implement full_clean to check selection and
+                        # addition fields are good, depending on
+                        # optionalFieldInputType of the choice object
+                        single_choice.full_clean()
+                        single_choice.save()
+                    except ValidationError:
+                        invalid_input = InvalidInput(
+                            sdcquestion=question,
+                            message="Not a valid single-choice answer")
+                        invalid_inputs.append(invalid_input)
+            else:
+                answer = MultipleChoiceAnswer.objects.get(
+                    sdcformresponse=sdc_form_response, sdcquestion=question)
+                answer.multiple_choices.all().delete()
+                choice_answers = client_answer["answer"]
+
+                for choice_answer in choice_answers:
+                    multiple_choice = MultipleChoice(
+                            answer=answer, selection=choice_answer["selection"])
+
+                    if "addition" in choice_answer:
+                        multiple_choice.addition = choice_answer["addition"]
+
+                    try:
+                        multiple_choice.full_clean()
+                        multiple_choice.save()
+                    except ValidationError:
+                        invalid_input = InvalidInput(
+                            sdcquestion=question,
+                            message="Not a valid multiple-choice answer")
+                        invalid_inputs.append(invalid_input)
+                        break
+
+        response_serializer = SDCFormResponseSerializer(
+            instance=sdc_form_response)
+        invalid_inputs_serializer = InvalidInputSerializer(invalid_inputs,
+                                                           many=True)
+        json = {
+            "message": "Success",
+            "responseObject": response_serializer.data,
+            "invalidInputs": invalid_inputs_serializer.data
+        }
+        return Response(json)
+    else:
+        try:
+            sdc_form_response = SDCFormResponse.objects.get(id=response_id)
+        except SDCFormResponse.DoesNotExist:
+            content = {
+                'message':
+                    'This SDCFormResponseID does not exist.'
+            }
+            return Response(content, status=status.HTTP_404_NOT_FOUND)
+
+        sdc_form_response.delete()
+        return Response({"message": "Success"})
