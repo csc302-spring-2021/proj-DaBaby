@@ -25,7 +25,8 @@ export const uploadForm = (page, data) => {
         .post(`${SERVER_URL}/api/sdcform/`, data)
         .then((res) => {
             if (res.data) {
-                getAllForms(page)
+                page.setState({newForm: null, newId: "", newName: "", updateForm: null, isUpdate: false});
+                getAllForms(page);
             } else {
                 alert("UPLOAD FORM FAILED");
             }
@@ -58,6 +59,7 @@ export const updateForm = (page, data) => {
         .put(`${SERVER_URL}/api/sdcform/${data.id}/`, {xmlString: data.xmlString, name: data.name})
         .then((res) => {
             if (res.data) {
+                page.setState({newForm: null, newId: "", newName: "", updateForm: null, isUpdate: false})
                 getAllForms(page)
             } else {
                 alert("UPDATE FORM FAILED");

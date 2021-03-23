@@ -66,17 +66,13 @@ class Home extends React.Component {
                     id: this.state.updateForm.diagnosticProcedureID,
                     name: this.state.newName,
                     xmlString: binaryStr
-                }).then(r =>
-                    this.setState({newForm: null, newId: "", newName: "", updateForm: null, isUpdate: false})
-                )
+                })
             } else {
                 uploadForm(this, {
                     diagnosticProcedureID: this.state.newId,
                     name: this.state.newName,
                     xmlString: binaryStr
-                }).then(r =>
-                    this.setState({newForm: null, newId: "", newName: "", updateForm: null, isUpdate: false})
-                )
+                })
             }
         }
         reader.readAsBinaryString(this.state.newForm.file)
