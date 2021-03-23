@@ -16,6 +16,8 @@ import {
   Spinner,
   Pagination,
 } from "react-bootstrap";
+import { SERVER_URL } from "../utils/constants";
+import { withRouter } from "react-router";
 
 const apiSuccessMessage = "Success";
 
@@ -33,6 +35,7 @@ class SDCSearchComponent extends React.Component {
     pages: 1,
     activePage: 0,
     searchQuery: "",
+    filteredData: [],
   };
 
   async componentDidMount() {
@@ -40,7 +43,7 @@ class SDCSearchComponent extends React.Component {
       isLoading: true,
     });
 
-    const response = await fetch(`/api/sdcform?metadata=true`);
+    const response = await fetch(`${SERVER_URL}/api/sdcform?metadata=true`);
 
     if (response.status !== 200) {
       this.setState({
@@ -73,6 +76,7 @@ class SDCSearchComponent extends React.Component {
     this.setState({
       pages,
       formData: formItems,
+      filteredData: formItems,
       isLoading: false,
       hasError: false,
     });
@@ -92,7 +96,7 @@ class SDCSearchComponent extends React.Component {
       return;
     }
 
-    const response = await fetch(`/api/sdcformresponse/`, {
+    const response = await fetch(`${SERVER_URL}/api/sdcformresponse/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -130,11 +134,61 @@ class SDCSearchComponent extends React.Component {
       return;
     }
 
+    // Make call to SDCForm
+    const sdcFormDataResponse = await fetch(
+      `${SERVER_URL}/api/sdcform/${responseData.responseObject.diagnosticProcedureID}`
+    );
+
+    if (response.status !== 201) {
+      this.setState({
+        hasError: true,
+        errorMsg: `Invalid API Response ${response.status}`,
+        isLoading: false,
+        showNewFormModal: false,
+      });
+
+      return;
+    }
+
+    const sdcFormData = await sdcFormDataResponse.json();
+
+    responseData["sdcFormData"] = sdcFormData;
+
+    this.props.sdcResponseHandler(responseData);
+
+    const { history } = this.props;
+
+    this.setState(
+      {
+        formResponse: responseData,
+        isLoading: false,
+        hasError: false,
+        showNewFormModal: false,
+      },
+      history.push("/edit-response")
+    );
+  };
+
+  searchFormData = () => {
+    const { searchQuery, formData } = this.state;
+
+    if (searchQuery.length === 0) {
+      this.setState({
+        filteredData: formData,
+      });
+
+      return;
+    }
+
+    const filteredData = formData.filter((form) => {
+      if (form.name.includes(searchQuery)) return true;
+      if (form.diagnosticProcedureID.includes(searchQuery)) return true;
+
+      return false;
+    });
+
     this.setState({
-      formResponse: responseData,
-      isLoading: false,
-      hasError: false,
-      showNewFormModal: false,
+      filteredData,
     });
   };
 
@@ -143,10 +197,10 @@ class SDCSearchComponent extends React.Component {
       hasError,
       errorMsg,
       isLoading,
-      formData,
       showNewFormModal,
       selectedForm,
       activePage,
+      filteredData,
     } = this.state;
 
     return (
@@ -161,10 +215,15 @@ class SDCSearchComponent extends React.Component {
                 onChange={(event) =>
                   this.setState({ searchQuery: event.target.value })
                 }
-                placeholder="Search for a proceedure to get started"
+                placeholder="Search for a procedure to get started"
               />
               <InputGroup.Append>
-                <Button variant="outline-secondary">Search</Button>
+                <Button
+                  onClick={() => this.searchFormData()}
+                  variant="outline-secondary"
+                >
+                  Search
+                </Button>
               </InputGroup.Append>
             </InputGroup>
           </Col>
@@ -175,19 +234,19 @@ class SDCSearchComponent extends React.Component {
           {!isLoading ? (
             <Col md={8}>
               <p>
-                Results {formData.length >= 10 ? 10 : formData.length} of{" "}
-                {formData.length}
+                Results {filteredData.length >= 10 ? 10 : filteredData.length}{" "}
+                of {filteredData.length}
               </p>
               <Table>
                 <thead>
                   <tr>
-                    <th>Diagnostic Proceedure ID</th>
-                    <th>Proceedure Name</th>
+                    <th>Diagnostic Procedure ID</th>
+                    <th>Procedure Name</th>
                     <th></th>
                   </tr>
                 </thead>
                 <tbody>
-                  {formData.slice(activePage * 10).map((form, i) => (
+                  {filteredData.slice(activePage * 10).map((form, i) => (
                     <tr key={i}>
                       <td>{form.diagnosticProcedureID}</td>
                       <td>{form.name}</td>
@@ -218,17 +277,18 @@ class SDCSearchComponent extends React.Component {
           <Col></Col>
           <Col className="text-center" md={6}>
             <Pagination>
-              {formData.map((item, i) => {
+              {filteredData.map((item, i) => {
                 return i % 10 === 0 ? (
                   <Pagination.Item
-                    active={Math.ceil(i / formData.length) === activePage}
+                    key={i}
+                    active={Math.ceil(i / filteredData.length) === activePage}
                     onClick={() =>
                       this.setState({
-                        activePage: Math.ceil(i / formData.length),
+                        activePage: Math.ceil(i / filteredData.length),
                       })
                     }
                   >
-                    {Math.ceil(i / formData.length) + 1}
+                    {Math.ceil(i / filteredData.length) + 1}
                   </Pagination.Item>
                 ) : null;
               })}
@@ -247,7 +307,7 @@ class SDCSearchComponent extends React.Component {
             <Container>
               <Row>
                 <Form.Group>
-                  <Form.Label>Selected Proceedure</Form.Label>
+                  <Form.Label>Selected Procedure</Form.Label>
                   <p>{selectedForm.name}</p>
                 </Form.Group>
               </Row>
@@ -300,4 +360,4 @@ class SDCSearchComponent extends React.Component {
   }
 }
 
-export default SDCSearchComponent;
+export default withRouter(SDCSearchComponent);
