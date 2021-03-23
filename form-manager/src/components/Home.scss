@@ -29,7 +29,26 @@
       display: flex;
       align-items: center;
     }
+
   }
+
+  #manager-panel-body-head {
+    margin-left: auto;
+  }
+
+  #manager-panel-body-filter {
+    margin-left: auto;
+  }
+
+  #view-form-button {
+    color: #267bf7;
+    textDecoration: "underline";
+  }
+
+}
+
+#upload-info-form {
+  margin-top: 5%;
 }
 
 .btn-primary {

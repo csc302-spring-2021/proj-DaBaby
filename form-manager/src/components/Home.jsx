@@ -125,7 +125,7 @@ class Home extends React.Component {
                 <div id="manager-panel-body">
                     <div id="manager-panel-body-head">
                         <p>Displaying {this.state.displayedForms.length} of {this.state.forms.length}</p>
-                        <Form style={{marginLeft: "auto"}}>
+                        <Form id="manager-panel-body-filter">
                             <Form.Group controlId="formId">
                                 <Form.Control value={this.state.filter} type="name" placeholder="Filter..."
                                               onChange={this.onInputFilter.bind(this)}/>
@@ -154,7 +154,7 @@ class Home extends React.Component {
                                     <td>{form.diagnosticProcedureID}</td>
                                     <td>{readableTime}</td>
                                     <td>
-                                        <Link style={{color: "#267bf7", textDecoration: "underline"}} to={{
+                                        <Link id="view-form-button" to={{
                                             pathname: `/forms/${form.diagnosticProcedureID}`,
                                             data: form
                                         }}>View</Link>
@@ -185,10 +185,10 @@ class Home extends React.Component {
                                 submitButtonContent={"Confirm"}
                                 inputContent={"Drop XML file here or browse"}
                                 onSubmit={onDropzoneSubmit}
-                                accept=".xml,.png"
+                                accept=".xml"
                                 canRemove={this.state.completeUpload}
                             />
-                            <Form style={{marginTop: "5%"}}>
+                            <Form id="upload-info-form">
                                 <Form.Group controlId="formId">
                                     <Form.Label>Form Name</Form.Label>
                                     <Form.Control type="name" placeholder="Required"
