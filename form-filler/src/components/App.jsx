@@ -13,17 +13,17 @@ import { SERVER_URL } from "../utils/constants";
 
 class App extends React.Component {
   // Backend call
-  // componentDidMount() {
-  //   fetch(`${SERVER_URL}/api/test/sdcform/covid19`)
-  //     .then((response) => response.json())
-  //     .then((data) =>
-  //       this.setState({ isLoaded: true, sdcForm: data.sdcFormObject })
-  //     )
-  //     .catch((error) => {
-  //       this.setState({ errorMessage: error.toString() });
-  //       console.log(error);
-  //     });
-  // }
+  componentDidMount() {
+    fetch(`${SERVER_URL}/api/test/sdcform/covid19`)
+      .then((response) => response.json())
+      .then((data) =>
+        this.setState({ isLoaded: true, sdcForm: data.sdcFormObject })
+      )
+      .catch((error) => {
+        this.setState({ errorMessage: error.toString() });
+        console.log(error);
+      });
+  }
 
   // This is where we will pass the SDCForm json
   state = {
