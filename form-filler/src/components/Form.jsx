@@ -12,8 +12,8 @@ class Form extends React.Component {
 
 		this.state = {
 			curr_section: 0,
-			procedureID: this.props.location.data.procedureID,
-			sdcResponse: this.props.location.data.answers,
+			procedureID: this.props.location.data.response.diagnosticProcedureID,
+			sdcResponse: this.props.location.data.response,
 			sdcForm: null
 		}
 	}
