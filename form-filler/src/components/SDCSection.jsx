@@ -146,12 +146,14 @@ class SDCSection extends React.Component {
     const answerResponseObject = {};
 
     // Get useful form properties from prop
-    const { id } = this.props.sdcForm;
-    answerResponseObject["id"] = 9;
+    const sdcFormResponse = this.props.sdcFormResponse
+    answerResponseObject["id"] = sdcFormResponse["id"];
     answerResponseObject["answers"] = questionAnswerList;
-    answerResponseObject["patientID"] = "abc1234567";
-    answerResponseObject["clinicianID"] = "abc123456789";
-    answerResponseObject["sdcFormID"] = 21;
+    answerResponseObject["patientID"] = sdcFormResponse["patientID"];
+    answerResponseObject["clinicianID"] = sdcFormResponse["clinicianID"];
+    answerResponseObject["sdcFormID"] = sdcFormResponse["sdcFormID"];
+    
+    console.log(answerResponseObject)
 
     // Make backend call to call PUT on url
     const requestOptions = {
@@ -159,7 +161,7 @@ class SDCSection extends React.Component {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(answerResponseObject),
     };
-    fetch(`${SERVER_URL}/api/test/sdcformresponse/2468`, requestOptions)
+    fetch(`${SERVER_URL}/api/sdcform/${sdcFormResponse["id"]}`, requestOptions)
       .then((response) => response.json())
       .then((data) => console.log(data))
       .catch((error) => {
