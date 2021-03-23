@@ -25,6 +25,7 @@ class NavigationBar extends React.Component {
         </Navbar>
         <Switch>
           <Route exact path="/forms/:procedureId" component={Form} />
+          <Route exact path="/responses" component={ResponseDashboard} />
         </Switch>
       </div>
     );

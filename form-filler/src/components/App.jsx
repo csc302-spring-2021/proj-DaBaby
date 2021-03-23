@@ -72,28 +72,6 @@ class App extends React.Component {
                 sdcResponseHandler={this.sdcResponseHandler}
               />
             </Route>
-            <Route path="/responses">
-              <Col>
-                <Row>
-                  <Col md={8}>
-                    <SDCSection
-                      section={sections[curr_section]}
-                      name={name}
-                      section_name={sections[curr_section].name}
-                      sdcFormResponse={newSDCResponse}
-                      sdcForm={sdcFormData}
-                    />
-                  </Col>
-                  <Col md={4}>
-                    <SDCSidebar
-                      sections={sections}
-                      onSelection={this.handleSelection}
-                      curr_section={curr_section}
-                    />
-                  </Col>
-                </Row>
-              </Col>
-            </Route>
           </Switch>
         </Container>
       </BrowserRouter>
