@@ -17,6 +17,8 @@ import { Form, Field } from "react-final-form";
 import Question from "./Question";
 
 class SDCSection extends React.Component {
+
+  // Prepare the values into a JSON that'll be sent to the backend
   onSubmit = async (values) => {
     console.log("values")
     console.log(values);
@@ -51,7 +53,6 @@ class SDCSection extends React.Component {
             }
             if (questions[i]["id"] == questionID && questions[i]["type"] == "multiple-choice") {
               questionAnswerObject["questionID"] = questionID;
-              questionAnswerObject["answer"].push({"selection": values[property]});
               single_or_multiple_choice_question = "multiple-choice";
           }
         }
@@ -59,32 +60,68 @@ class SDCSection extends React.Component {
         if (!single_or_multiple_choice_question) {
           questionAnswerObject["questionID"] = property.slice(6);
         questionAnswerObject["answer"] = values[property];
-        questionAnswerList.push(questionAnswerObject);
+        questionAnswerList.push(questionAnswerObject); // Add free-text/integer/true-false questionID and answer to the list
         }
 
         else if (single_or_multiple_choice_question == "single-choice") {
           questionAnswerObject["questionID"] = property.slice(6);
           questionAnswerObject["answer"]["selection"] = values[property];
-          questionAnswerList.push(questionAnswerObject);
+          questionAnswerList.push(questionAnswerObject); // Add single-choice questionID and answer to the list
         }
 
         else if (single_or_multiple_choice_question == "multiple-choice") {
-
+          
+            // Loop through array of values gotten form values[property]
+            let first = true
+            for (let i = 0; i < values[property].length; i++) {
+                // If first value added to questionAnswerObject, create a new array for the answer field
+                if (first) {
+                  questionAnswerObject["questionID"] = property.slice(6);
+                  questionAnswerObject["answer"] = [{"selection": values[property][i]}];
+                  first = false;
+                }
+                // Otherwise push it to list of answers
+                else {
+                  questionAnswerObject["answer"].push({"selection": values[property][i]});
+                }
+            }
+            questionAnswerList.push(questionAnswerObject); // Add multiple-choice questionID and answer to the list
         }
 
 
       }
+
       // Otherwise it is an addition
       else {
+
+        // If the addition is a single choice question handle it this way
         const questionID = property.slice(22, 27); // Parse the question id from the property
+        const question = property.slice(27); // Parse the question from the property
+
+        // Find existingQuestionAnswerObject from the questionAnswerList so we can include the addition field
         const existingQuestionAnswerObject = questionAnswerList.find(obj => {
           return obj.questionID === questionID 
         })
-        existingQuestionAnswerObject["answer"]["addition"] = values[property];
+
+        // If the question we are adding the addition to is an array (meaning multiple-choice question), do this
+        if (Array.isArray(existingQuestionAnswerObject["answer"])) {
+
+            // Find existingAnswerObject from existing answer list so we can include the addition field
+            // to the specific answer in that list
+            const existingAnswerObject = existingQuestionAnswerObject["answer"].find(obj => {
+              return obj.selection === question
+            })
+            existingAnswerObject["addition"] = values[property] // Add the addition field to that answer
+        }
+        // Otherwise do this (single-choice question)
+        else {
+          existingQuestionAnswerObject["answer"]["addition"] = values[property]; // Add the addition field to that answer
+        }
+        
       }
       
     
-      console.log(questionAnswerList)
+      console.log(questionAnswerList) // Print response 
     }
   };
 
