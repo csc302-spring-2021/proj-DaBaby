@@ -159,6 +159,58 @@ class SDCSection extends React.Component {
     return value ? undefined : "Required";
   };
 
+  /**
+   * Parse sdcFormResponse object to match the format of the Form, to give it its initial values
+   * @returns response object to give initial values to Form
+   */
+  sdcFormResponseParser = () => {
+    const {sdcFormResponse} = this.props; // get sdcFormResponse object from props
+    const initialValues = {}
+    //Loop through answers and add it to the initialValues object
+    for (let i = 0; i < sdcFormResponse["answers"].length; i++) {
+       let name = "filler" + sdcFormResponse["answers"][i]["questionID"]
+   
+       let value = sdcFormResponse["answers"][i]["answer"]
+       // If the type of the value (answer) is a string or boolean or integer, then we can directly add it in
+       if (typeof value === 'string' || typeof value === 'boolean' || Number.isInteger(value)) {
+        initialValues[name] = value
+       }
+       // If it is none of these, then answer must be a list of selections or just a selection (multiple-choice or single-choice)
+       else {
+         // If value is an array (multiple-choice), handle it this way
+          if (Array.isArray(value)) {
+               
+              // Loop through list and insert the values
+              let first = true;
+              for (let j = 0; j < value.length; j++) {
+                let additionName = "optionalFieldInputType" + sdcFormResponse["answers"][i]["questionID"] + value[j]["selection"]
+                initialValues[additionName] = value[j]["addition"]
+                // If first value being added, create the list
+                if (first) {
+                  initialValues[name] = [value[j]["selection"]]
+                  first = false;
+                }
+                // Otherwise, push to the list
+                else {
+                  initialValues[name].push(value[j]["selection"])
+                }
+                
+              }
+          }
+          // Otherwise (single-choice), handle it this way
+          else {
+            let additionName = "optionalFieldInputType" + sdcFormResponse["answers"][i]["questionID"] + value["selection"]
+            initialValues[name] = value["selection"]
+            initialValues[additionName] = value["addition"]
+          }
+       }
+        
+      
+    }
+    console.log(initialValues)
+    return initialValues // Return the parsed object 
+  }
+
   render() {
     const { section, name, section_name } = this.props;
     const { questions } = section;
@@ -171,6 +223,7 @@ class SDCSection extends React.Component {
             <hr className="divider"></hr>
             <Form
               onSubmit={this.onSubmit}
+              initialValues={this.sdcFormResponseParser()}
               render={({
                 handleSubmit,
                 form,

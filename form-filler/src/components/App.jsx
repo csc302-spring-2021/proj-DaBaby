@@ -15,7 +15,83 @@ class App extends React.Component {
     fetch(`${SERVER_URL}/api/test/sdcform/covid19`)
       .then((response) => response.json())
       .then((data) =>
-        this.setState({ isLoaded: true, sdcForm: data.sdcFormObject })
+        this.setState({ isLoaded: true, sdcForm: data.sdcFormObject, sdcFormResponse:  {
+          "id": 2468,
+          "patientID": "OH27891892",
+          "clinicianID": "YP27923782",
+          "sdcFormID": 1234,
+          "diagnosticProcedureID": "covid19",
+          "timestamp": "2021-03-14T15:29:23.925Z",
+          "answers": [
+              {
+                  "questionID": 37326,
+                  "answer": "CA1000"
+              },
+              {
+                  "questionID": 35972,
+                  "answer": 
+                      {
+                          "selection": "Greater than 1 year old (specify years)",
+                          "addition": 5
+                      }
+              },
+              {
+                  "questionID": 35978,
+                  "answer": { "selection": "Male" }
+              },
+              {
+                  "questionID": 35932,
+                  "answer": "Canada"
+              },
+              {
+                  "questionID": 35935,
+                  "answer": "Ontario"
+              },
+              {
+                  "questionID": 35943,
+                  "answer": "22 / 10 / 2020"
+              },
+      
+              {
+                  "questionID": 35995,
+                  "answer": { "selection": "Unknown" }
+      
+              },
+              {
+                  "questionID": 37429,
+                  "answer": "15 / 10 / 2020"
+              },
+              {
+                  "questionID": 38610,
+                  "answer": { "selection" : "Present" }
+              },
+              {
+                  "questionID": 35960,
+                  "answer": [
+                      { "selection": "Cardiovascular disease" },
+                      { "selection": "Diabetes" },
+                      { "selection": "Others (specify): ", "addition": "Respiratory Issues" }
+                  ]
+              },
+              {
+                  "questionID": 36015,
+                  "answer": true
+              },
+              {
+                  "questionID": 39750,
+                  "answer": "22 / 10 / 2020"
+              },
+              {
+                  "questionID": 35988,
+                  "answer": []
+              },
+              {
+                  "questionID": 35989,
+                  "answer": []
+              }
+          ]
+      
+      }})
       )
       .catch((error) => {
         this.setState({ errorMessage: error.toString() });
@@ -56,6 +132,7 @@ class App extends React.Component {
                 name={name}
                 section_name={sections[curr_section].name}
                 sdcForm={this.state.sdcForm}
+                sdcFormResponse={this.state.sdcFormResponse}
               />
             </Col>
             <Col md={4}>
