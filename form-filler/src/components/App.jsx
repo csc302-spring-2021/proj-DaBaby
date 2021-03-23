@@ -72,7 +72,6 @@ class App extends React.Component {
           {/*</Col>*/}
         </Container>
         </Router>
-
     );
   }
 }
