@@ -40,11 +40,11 @@ class SDCSection extends React.Component {
         const { section, name, section_name } = this.props;
         const questions = [];
         const { sdcForm } = this.props;
-        
+
         // Loop through all sections and add question to list of questions
         for (let i = 0; i < sdcForm["sections"].length; i++) {
           for (let j = 0; j < sdcForm["sections"][i]["questions"].length; j++)
-            questions.push(sdcForm["sections"][i]["questions"][j])
+            questions.push(sdcForm["sections"][i]["questions"][j]);
         }
 
         // Loop through questions from section to match up with the value from the form, and see if that question is
@@ -101,28 +101,44 @@ class SDCSection extends React.Component {
       // Otherwise it is an addition
       else {
         // If the addition is a single choice question handle it this way
-        const questionID = property.slice(22, 27); // Parse the question id from the property
-        const question = property.slice(27); // Parse the question from the property
+
+        // Use this to determine how long the id is for the question
+        let k = 0;
+        console.log(property)
+        // Loop through the property to find the * (thats where the id ends and the question begins)
+        while (property[22 + k] !== "*") {
+            k++;
+        }
+        const id_length = k;
+        console.log(id_length)
+
+
+        const questionID = property.slice(22, 22 + id_length); // Parse the question id from the property
+        const question = property.slice(22 + id_length + 1); // Parse the question from the property
 
         // Find existingQuestionAnswerObject from the questionAnswerList so we can include the addition field
         const existingQuestionAnswerObject = questionAnswerList.find((obj) => {
           return obj.questionID === questionID;
         });
 
-        // If the question we are adding the addition to is an array (meaning multiple-choice question), do this
-        if (Array.isArray(existingQuestionAnswerObject["answer"])) {
-          // Find existingAnswerObject from existing answer list so we can include the addition field
-          // to the specific answer in that list
-          const existingAnswerObject = existingQuestionAnswerObject[
-            "answer"
-          ].find((obj) => {
-            return obj.selection === question;
-          });
-          existingAnswerObject["addition"] = values[property]; // Add the addition field to that answer
-        }
-        // Otherwise do this (single-choice question)
-        else {
-          existingQuestionAnswerObject["answer"]["addition"] = values[property]; // Add the addition field to that answer
+
+        if (existingQuestionAnswerObject) {
+          // If the question we are adding the addition to is an array (meaning multiple-choice question), do this
+          if (Array.isArray(existingQuestionAnswerObject["answer"])) {
+            // Find existingAnswerObject from existing answer list so we can include the addition field
+            // to the specific answer in that list
+            const existingAnswerObject = existingQuestionAnswerObject[
+              "answer"
+            ].find((obj) => {
+              return obj.selection === question;
+            });
+            existingAnswerObject["addition"] = values[property]; // Add the addition field to that answer
+          }
+          // Otherwise do this (single-choice question)
+          else {
+            existingQuestionAnswerObject["answer"]["addition"] =
+              values[property]; // Add the addition field to that answer
+          }
         }
       }
     }
@@ -130,13 +146,14 @@ class SDCSection extends React.Component {
     const answerResponseObject = {};
 
     // Get useful form properties from prop
-    const { id } = this.props.sdcForm;
-    answerResponseObject["id"] = 2468;
+    const sdcFormResponse = this.props.sdcFormResponse
+    answerResponseObject["id"] = sdcFormResponse["id"];
     answerResponseObject["answers"] = questionAnswerList;
-    answerResponseObject["patientID"] = "OH27891892";
-    answerResponseObject["clinicianID"] = "YP27923782";
-    answerResponseObject["sdcFormID"] = id;
-
+    answerResponseObject["patientID"] = sdcFormResponse["patientID"];
+    answerResponseObject["clinicianID"] = sdcFormResponse["clinicianID"];
+    answerResponseObject["sdcFormID"] = sdcFormResponse["sdcFormID"];
+    
+    console.log(answerResponseObject)
 
     // Make backend call to call PUT on url
     const requestOptions = {
@@ -144,7 +161,7 @@ class SDCSection extends React.Component {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(answerResponseObject),
     };
-    fetch(`${SERVER_URL}/api/test/sdcformresponse/2468`, requestOptions)
+    fetch(`${SERVER_URL}/api/sdcform/${sdcFormResponse["id"]}`, requestOptions)
       .then((response) => response.json())
       .then((data) => console.log(data))
       .catch((error) => {
@@ -164,52 +181,58 @@ class SDCSection extends React.Component {
    * @returns response object to give initial values to Form
    */
   sdcFormResponseParser = () => {
-    const {sdcFormResponse} = this.props; // get sdcFormResponse object from props
-    const initialValues = {}
+    const { sdcFormResponse } = this.props; // get sdcFormResponse object from props
+    const initialValues = {};
     //Loop through answers and add it to the initialValues object
     for (let i = 0; i < sdcFormResponse["answers"].length; i++) {
-       let name = "filler" + sdcFormResponse["answers"][i]["questionID"]
-   
-       let value = sdcFormResponse["answers"][i]["answer"]
-       // If the type of the value (answer) is a string or boolean or integer, then we can directly add it in
-       if (typeof value === 'string' || typeof value === 'boolean' || Number.isInteger(value)) {
-        initialValues[name] = value
-       }
-       // If it is none of these, then answer must be a list of selections or just a selection (multiple-choice or single-choice)
-       else {
-         // If value is an array (multiple-choice), handle it this way
-          if (Array.isArray(value)) {
-               
-              // Loop through list and insert the values
-              let first = true;
-              for (let j = 0; j < value.length; j++) {
-                let additionName = "optionalFieldInputType" + sdcFormResponse["answers"][i]["questionID"] + value[j]["selection"]
-                initialValues[additionName] = value[j]["addition"]
-                // If first value being added, create the list
-                if (first) {
-                  initialValues[name] = [value[j]["selection"]]
-                  first = false;
-                }
-                // Otherwise, push to the list
-                else {
-                  initialValues[name].push(value[j]["selection"])
-                }
-                
-              }
+      let name = "filler" + sdcFormResponse["answers"][i]["questionID"];
+
+      let value = sdcFormResponse["answers"][i]["answer"];
+      // If the type of the value (answer) is a string or boolean or integer, then we can directly add it in
+      if (
+        typeof value === "string" ||
+        typeof value === "boolean" ||
+        Number.isInteger(value)
+      ) {
+        initialValues[name] = value;
+      }
+      // If it is none of these, then answer must be a list of selections or just a selection (multiple-choice or single-choice)
+      else {
+        // If value is an array (multiple-choice), handle it this way
+        if (Array.isArray(value)) {
+          // Loop through list and insert the values
+          let first = true;
+          for (let j = 0; j < value.length; j++) {
+            let additionName =
+              "optionalFieldInputType" +
+              sdcFormResponse["answers"][i]["questionID"] +
+              value[j]["selection"];
+            initialValues[additionName] = value[j]["addition"];
+            // If first value being added, create the list
+            if (first) {
+              initialValues[name] = [value[j]["selection"]];
+              first = false;
+            }
+            // Otherwise, push to the list
+            else {
+              initialValues[name].push(value[j]["selection"]);
+            }
           }
-          // Otherwise (single-choice), handle it this way
-          else if (value) {
-            let additionName = "optionalFieldInputType" + sdcFormResponse["answers"][i]["questionID"] + value["selection"]
-            initialValues[name] = value["selection"]
-            initialValues[additionName] = value["addition"]
-          }
-       }
-        
-      
+        }
+        // Otherwise (single-choice), handle it this way
+        else if (value) {
+          let additionName =
+            "optionalFieldInputType" +
+            sdcFormResponse["answers"][i]["questionID"] +
+            value["selection"];
+          initialValues[name] = value["selection"];
+          initialValues[additionName] = value["addition"];
+        }
+      }
     }
-    console.log(initialValues)
-    return initialValues // Return the parsed object 
-  }
+    console.log(initialValues);
+    return initialValues; // Return the parsed object
+  };
 
   render() {
     const { section, name, section_name } = this.props;
