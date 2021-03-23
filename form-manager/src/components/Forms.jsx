@@ -23,7 +23,7 @@ class Forms extends React.Component {
         console.log(this.state.form);
 
         if (this.state.form) {
-        	if (!this.state.form.section || this.state.form.section.length === 0){
+        	if (!this.state.form.sections || this.state.form.sections.length === 0){
         		return <div className={"Form-Container"}>
 					<h2 id="form-name-display">{this.state.form.name}</h2>
 					<h4 id="form-empty-error">The form is empty or may be corrupted!</h4>
