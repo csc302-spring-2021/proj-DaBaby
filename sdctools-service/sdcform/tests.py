@@ -32,7 +32,7 @@ class FormsTests(TestCase):
 
         data = { "diagnosticProcedureID" : "test123", "name" : "test123", "xmlString" : xml_file}
         response = self.client.post("/api/sdcform/", data)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 201)
         self.assertTrue('sdcFormObject' in json.loads(response.content))
 
     # def test_upload_invalid_xml(self):
@@ -140,7 +140,7 @@ class ModifyFormsTests(TestCase):
         form1 = json.loads(get_response.content)['sdcFormObject']
 
         response = upload_initial_form() # Here, we are trying to add another new form with diagnosticProcedureID = test123
-        self.assertNotEqual(response, 200)
+        self.assertNotEqual(response, 201)
 
         # Ensure the form was not modified
         new_get_response = self.client.get("/api/sdcform/test123/")
@@ -157,7 +157,7 @@ class ModifyFormsTests(TestCase):
         self.client.delete("/api/sdcform/test123/")
         
         response = upload_initial_form() # Uploading a "new" form to diagnosticPocedureID = test123
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 201)
 
         get_response = self.client.get("/api/sdcform/test123/")
         form2 = json.loads(get_response.content)['sdcFormObject']

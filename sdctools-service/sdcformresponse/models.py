@@ -66,3 +66,8 @@ class SingleChoice(ChoiceAnswer):
 class MultipleChoice(ChoiceAnswer):
     answer = models.ForeignKey(MultipleChoiceAnswer, on_delete=models.CASCADE,
                                related_name="multiple_choices")
+
+
+class InvalidInput(models.Model):
+    sdcquestion = models.ForeignKey(SDCQuestion, on_delete=models.CASCADE)
+    message = models.TextField()

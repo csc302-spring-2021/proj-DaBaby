@@ -16,16 +16,15 @@ def upload_initial_form():
     response = client.post("/api/sdcform/", data)
     return json.loads(response.content)['sdcFormObject']['id']
 
-def generate_sdcresponse():
+def generate_sdcresponse(formID):
     client = Client()
-    formID = upload_initial_form() 
     data = { 
         "patientID": "OH27891892",
         "clinicianID": "CAMD92378223",
         "sdcFormID": formID,
     }
     response = client.post("/api/sdcformresponse/", data)
-    return json.loads(response.content)
+    return json.loads(response.content)["responseObject"]
 
 
 # If any fields are missing in the POST request, should return 400 Bad Request
@@ -91,13 +90,13 @@ class CreateNewResponseTests(TestCase):
 
 # ===== Uncomment below as functions are added ======= #
 
-# class GetResponseTests(TestCase):
+class GetResponseTests(TestCase):
 
-#     def test_get_all_responses(self):
-#         self.client = Client()
-#         response = self.client.get('/api/sdcformresponse/')
-#         self.assertEqual(response.status_code, 200)
-#         self.assertTrue('sdcFormResponses' in json.loads(response.content))
+    def test_get_all_responses(self):
+        self.client = Client()
+        response = self.client.get('/api/sdcformresponse/')
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue('sdcFormResponses' in json.loads(response.content))
 
 #     def test_get_responses_query(self):
 
@@ -109,85 +108,94 @@ class CreateNewResponseTests(TestCase):
 #         self.assertTrue('sdcFormResponses' in json.loads(response.content))
 
     
-#     def test_get_invalid_responseid(self):
-#         self.client = Client()
-#         response = self.client.get('/api/sdcformresponse/1234/')
-#         self.assertEqual(response.status_code, 404)
+    def test_get_invalid_responseid(self):
+        self.client = Client()
+        response = self.client.get('/api/sdcformresponse/1234/')
+        self.assertEqual(response.status_code, 404)
 
-#     def test_get_valid_response(self):
-#         self.client = Client()
-#         formID = upload_initial_form() 
-#         data = { 
-#             "patientID": "OH27891892",
-#             "clinicianID": "CAMD92378223",
-#             "sdcFormID": formID,
-#         }
-#         response = self.client.post("/api/sdcformresponse/", data)
-#         sdcResponseId = json.loads(response.content)['responseObject']['id']
+    def test_get_valid_response(self):
+        self.client = Client()
+        formID = upload_initial_form() 
+        data = { 
+            "patientID": "OH27891892",
+            "clinicianID": "CAMD92378223",
+            "sdcFormID": formID,
+        }
+        response = self.client.post("/api/sdcformresponse/", data)
+        sdcResponseId = json.loads(response.content)['responseObject']['id']
         
-#         response = self.client.get('/api/sdcformresponse/{}/'.format(sdcResponseId))
-#         self.assertEqual(response.status_code, 200)
+        response = self.client.get('/api/sdcformresponse/{}/'.format(sdcResponseId))
+        self.assertEqual(response.status_code, 200)
 
-#         self.assertTrue('responseObject' in json.loads(response.content))
+        self.assertTrue('responseObject' in json.loads(response.content))
 
 
-# # These tests include DELETE and PUT
-# # PUT should have all body fields validated, if fields are missing or invalid, return 400 - Bad Request
-# # DELETE and PUT return 404 if response id requested is non-existant
-# class ModifyResponseTests(TestCase):
+# These tests include DELETE and PUT
+# PUT should have all body fields validated, if fields are missing or invalid, return 400 - Bad Request
+# DELETE and PUT return 404 if response id requested is non-existant
+class ModifyResponseTests(TestCase):
 
-#     def test_delete_nonexistant_response(self):
-#         self.client = Client()
-#         response = self.client.delete('/api/sdcformresponse/1234/')
-#         self.assertEqual(response.status_code, 404)
+    def test_delete_nonexistant_response(self):
+        self.client = Client()
+        response = self.client.delete('/api/sdcformresponse/1234/')
+        self.assertEqual(response.status_code, 404)
 
-#     def test_delete_existing_response(self):
-#         self.client = Client()
-#         formID = upload_initial_form() 
-#         data = { 
-#             "patientID": "OH27891892",
-#             "clinicianID": "CAMD92378223",
-#             "sdcFormID": formID,
-#         }
-#         response = self.client.post("/api/sdcformresponse/", data)
-#         sdcResponseId = json.loads(response.content)['responseObject']['id']
+    def test_delete_existing_response(self):
+        self.client = Client()
+        formID = upload_initial_form() 
+        data = { 
+            "patientID": "OH27891892",
+            "clinicianID": "CAMD92378223",
+            "sdcFormID": formID,
+        }
+        response = self.client.post("/api/sdcformresponse/", data)
+        sdcResponseId = json.loads(response.content)['responseObject']['id']
         
-#         response = self.client.delete('/api/sdcformresponse/{}/'.format(sdcResponseId))
-#         self.assertEqual(response.status_code, 200)
+        response = self.client.delete('/api/sdcformresponse/{}/'.format(sdcResponseId))
+        self.assertEqual(response.status_code, 200)
 
-#     def test_update_nonexistant_response(self):
-#         sdcResponse = generate_sdcresponse() 
-#         put_response = self.client.put("/api/sdcformresponse/1000/", json.dumps(sdcResponse), content_type="application/json")
-#         self.assertEqual(put_response.status_code, 404) # response 1000 does not exist
+    def test_update_nonexistant_response(self):
+        client = Client()
+        formID = upload_initial_form() 
+        sdcResponse = generate_sdcresponse(formID) 
+        put_response = self.client.put("/api/sdcformresponse/1000/", json.dumps(sdcResponse), content_type="application/json")
+        self.assertEqual(put_response.status_code, 404) # response 1000 does not exist
 
-#      # Test checks if response id in the object body matches one passed in URL
-#     def test_update_not_a_match(self):
-#         sdcResponse1 = generate_sdcresponse()
-#         sdcResponse2 = generate_sdcresponse()
+    # # TODO: Test checks if response id in the object body matches one passed in URL
+    # def test_update_not_a_match(self):
+    #     client = Client()
+    #     formID = upload_initial_form() 
+    #     sdcResponse1 = generate_sdcresponse(formID)
+    #     sdcResponse2 = generate_sdcresponse(formID)
 
-#         self.assertNotEqual(sdcResponse1["id"], sdcResponse2["id"])
-#         # We are updating sdcResponse2 with sdcResponse1, but they have different response id's
-#         put_response = self.client.put("/api/sdcformresponse/{}/".format(sdcResponse2['id']), 
-#                                         json.dumps(sdcResponse1), content_type="application/json")
-#         self.assertEqual(put_response.status_code, 400)
+    #     self.assertNotEqual(sdcResponse1["id"], sdcResponse2["id"])
+    #     # We are updating sdcResponse2 with sdcResponse1, but they have different response id's
+    #     put_response = self.client.put("/api/sdcformresponse/{}/".format(sdcResponse2['id']), 
+    #                                     json.dumps(sdcResponse1), content_type="application/json")
+    #     self.assertEqual(put_response.status_code, 400)
 
-#     def test_invalid_put_body(self):
-#         sdcResponse = generate_sdcresponse()
-#         body = { # Missing lots of fields
-#             "id": sdcResponse['id'],
-#             "patientID": sdcResponse['patientId'],
-#         }
-#         put_response = self.client.put("/api/sdcformresponse/{}/".format(sdcResponse['id']), json.dumps(body), 
-#                                         content_type="application/json")
-#         self.assertEqual(put_response.status_code, 400)
+    # TODO: verify that all fields are present, otherwise return 400
+    # def test_invalid_put_body(self):
+    #     client = Client()
+    #     formID = upload_initial_form() 
+    #     sdcResponse = generate_sdcresponse(formID)
+    #     body = { # Missing lots of fields
+    #         "id": sdcResponse['id'],
+    #         "patientID": sdcResponse['patientID'],
+    #     }
+    #     put_response = self.client.put("/api/sdcformresponse/{}/".format(sdcResponse['id']), json.dumps(body), 
+    #                                     content_type="application/json")
+    #     self.assertEqual(put_response.status_code, 400)
 
-#     def test_update_valid(self):
-#         sdcResponse = generate_sdcresponse()
-#         put_response = self.client.put("/api/sdcformresponse/{}/".format(sdcResponse['id']), json.dumps(sdcResponse), 
-#             content_type="application/json")
-#         self.assertEqual(put_response.status_code, 200)
-#         jsonData = json.loads(put_response.content)
-#         self.assertTrue('responseObject' in jsonData)
-#         self.assertTrue('invalidInputs' in jsonData)
-#         self.assertTrue(len(jsonData['invalidInputs']) > 0) 
-#         # The initial default response should have multiple invalid inputs
+    def test_update_valid(self):
+        client = Client()
+        formID = upload_initial_form() 
+        sdcResponse = generate_sdcresponse(formID)
+        put_response = self.client.put("/api/sdcformresponse/{}/".format(sdcResponse['id']), json.dumps(sdcResponse), 
+            content_type="application/json")
+        self.assertEqual(put_response.status_code, 200)
+        jsonData = json.loads(put_response.content)
+        self.assertTrue('responseObject' in jsonData)
+        self.assertTrue('invalidInputs' in jsonData)
+        self.assertTrue(len(jsonData['invalidInputs']) > 0) 
+        # The initial default response should have multiple invalid inputs
