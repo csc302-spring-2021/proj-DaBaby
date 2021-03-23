@@ -8,161 +8,8 @@ import NavItem from "react-bootstrap/NavItem";
 import NavLink from "react-bootstrap/NavLink";
 import "./SDCResponseDashboard.scss";
 import {Link} from "react-router-dom";
+import {getAllResps, deleteResp} from "../actions/Actions";
 
-const hardcodedResponses = [
-	{
-		id: 2468,
-		patientID: "OH27891892",
-		clinicianID: "YP27923782",
-		sdcFormID: 1234,
-		timestamp: "2021-03-14T15:29:23.925Z",
-		diagnosticProcedureID: "covid19",
-		answers: [
-			{
-				questionID: 37326,
-				answer: "CA1000"
-			},
-			{
-				questionID: 35972,
-				answer:
-					{
-						"selection": "Greater than 1 year old (specify years)",
-						"addition": 5
-					}
-			},
-			{
-				questionID: 35978,
-				answer: {"selection": "Male"}
-			},
-			{
-				questionID: 35932,
-				answer: "Canada"
-			},
-			{
-				questionID: 35935,
-				answer: "Ontario"
-			},
-			{
-				questionID: 35943,
-				answer: "22 / 10 / 2020"
-			},
-
-			{
-				questionID: 35995,
-				answer: {"selection": "Unknown"}
-
-			},
-			{
-				questionID: 37429,
-				answer: "15 / 10 / 2020"
-			},
-			{
-				questionID: 38610,
-				answer: {"selection": "Present"}
-			},
-			{
-				questionID: 35960,
-				answer: [
-					{selection: "Cardiovascular disease"},
-					{selection: "Diabetes"},
-					{selection: "Others (specify):", "addition": "Respiratory Issues"}
-				]
-			},
-			{
-				questionID: 36015,
-				answer: true
-			},
-			{
-				questionID: 39750,
-				answer: "22 / 10 / 2020"
-			},
-			{
-				questionID: 35988,
-				answer: []
-			},
-			{
-				questionID: 35989,
-				answer: []
-			}
-		]
-	},
-	{
-		id: 1357,
-		patientID: "OH11111111",
-		clinicianID: "YP211111111",
-		sdcFormID: 1234,
-		timestamp: "2021-03-15T15:29:23.925Z",
-		diagnosticProcedureID: "covid19",
-		answers: [
-			{
-				questionID: 37326,
-				answer: "CA1000"
-			},
-			{
-				questionID: 35972,
-				answer:
-					{
-						"selection": "Greater than 1 year old (specify years)",
-						"addition": 5
-					}
-			},
-			{
-				questionID: 35978,
-				answer: {"selection": "Male"}
-			},
-			{
-				questionID: 35932,
-				answer: "Canada"
-			},
-			{
-				questionID: 35935,
-				answer: "Ontario"
-			},
-			{
-				questionID: 35943,
-				answer: "22 / 10 / 2020"
-			},
-
-			{
-				questionID: 35995,
-				answer: {"selection": "Unknown"}
-
-			},
-			{
-				questionID: 37429,
-				answer: "15 / 10 / 2020"
-			},
-			{
-				questionID: 38610,
-				answer: {"selection": "Present"}
-			},
-			{
-				questionID: 35960,
-				answer: [
-					{selection: "Cardiovascular disease"},
-					{selection: "Diabetes"},
-					{selection: "Others (specify):", "addition": "Respiratory Issues"}
-				]
-			},
-			{
-				questionID: 36015,
-				answer: true
-			},
-			{
-				questionID: 39750,
-				answer: "22 / 10 / 2020"
-			},
-			{
-				questionID: 35988,
-				answer: []
-			},
-			{
-				questionID: 35989,
-				answer: []
-			}
-		]
-	}
-]
 
 class ResponseDashboard extends React.Component {
 	constructor(props) {
@@ -172,9 +19,17 @@ class ResponseDashboard extends React.Component {
 			searchPatient: "",
 			searchStartDate: "",
 			searchEndDate: "",
-			responses: hardcodedResponses,
-			displayedResponses: hardcodedResponses,
+			responses: [],
 		}
+	}
+
+	componentDidMount() {
+		getAllResps(this, {
+			patient: "",
+			procedure: "",
+			start: "",
+			end: ""
+		});
 	}
 
 	onSearch() {
@@ -204,7 +59,7 @@ class ResponseDashboard extends React.Component {
 	}
 
 	onDeleteResp(resp) {
-		alert(`make request to delete response ${resp.id}`)
+		deleteResp(this, resp.id)
 	}
 
 	render() {
@@ -237,7 +92,7 @@ class ResponseDashboard extends React.Component {
 					</Form>
 				</div>
 				<div id="filler-panel-body">
-					<p>{this.state.displayedResponses.length} Result(s)</p>
+					<p>{this.state.responses.length} Result(s)</p>
 					<Table striped bordered={false} hover>
 						<thead>
 						<tr>
@@ -249,7 +104,7 @@ class ResponseDashboard extends React.Component {
 						</tr>
 						</thead>
 						<tbody>
-						{this.state.displayedResponses.map(resp => (
+						{this.state.responses.map(resp => (
 							<tr key={resp.id}>
 								<td>{resp.diagnosticProcedureID}</td>
 								<td>{resp.patientID}</td>

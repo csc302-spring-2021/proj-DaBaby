@@ -16,6 +16,8 @@ class Form extends React.Component {
 			sdcResponse: this.props.location.data.response,
 			sdcForm: null
 		}
+
+		console.log(this.state.sdcResponse.id)
 	}
 
 	componentDidMount() {
