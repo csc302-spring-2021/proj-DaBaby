@@ -121,7 +121,7 @@ class ResponseDashboard extends React.Component {
 								<td>
 									<Link style={{color: "#267bf7", textDecoration: "underline"}} to={{
 										pathname: `/forms/${resp.diagnosticProcedureID}`,
-										data: {
+										state: {
 											response: resp
 										}
 									}}>Update</Link>
