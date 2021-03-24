@@ -150,38 +150,8 @@
                     "controllerAnswerEnabler": true,
 
                     "questionText": "Specify Date of First Admission (DD / MM / YYYY)"
-                },
-                {
-                    "id": 35988,
-                    "type": "multiple-choice",
-                    "controllerID": null,
-                    "controllerAnswerEnabler": null,
-
-                    "questionText": "Tumour Extension",
-                    "choices": [
-                        { "text": "Tumor invades into or through the adrenal capsule" },
-                        { "text": "Tumor invades into extra-adrenal structures (specify)", "optionalFieldInputType": "string" },
-                        { "text": "Tumor invades into other adjacent organ(s)" },
-                        { "text": "Cannot be assessed (specify reason):", "optionalFieldInputType": "string" }
-                    ]
-                },
-                {
-                    "id": 35989,
-                    "type": "multiple-choice",
-                    "controllerID": 35988,
-                    "controllerAnswerEnabler": "Tumor invades into other adjacent organ(s)",
-
-                    "questionText": "Specify adjacent organ(s)",
-                    "choices": [
-                        { "text": "Kidney" },
-                        { "text": "Pancreas" },
-                        { "text": "Liver" },
-                        { "text": "Spleen" }, 
-                        { "text": "Diaphragm" },
-                        { "text": "Stomach" },
-                        { "text": "Others (specify): ", "optionalFieldInputType": "string" }
-                    ]
                 }
+
             ]
         }
     ]

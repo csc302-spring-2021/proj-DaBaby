@@ -1,0 +1,70 @@
+{
+    "id": 2468,
+    "patientID": "OH27891892",
+    "clinicianID": "YP27923782",
+    "sdcFormID": 1234,
+    "diagnosticProcedureID": "covid19",
+    "timestamp": "2021-03-14T15:29:23.925Z",
+    "answers": [
+        {
+            "questionID": 37326,
+            "answer": ""
+        },
+        {
+            "questionID": 35972,
+            "answer": null
+        },
+        {
+            "questionID": 35978,
+            "answer": null
+        },
+        {
+            "questionID": 35932,
+            "answer": ""
+        },
+        {
+            "questionID": 35935,
+            "answer": ""
+        },
+        {
+            "questionID": 35943,
+            "answer": ""
+        },
+
+        {
+            "questionID": 35995,
+            "answer": null
+
+        },
+        {
+            "questionID": 37429,
+            "answer": ""
+        },
+        {
+            "questionID": 38610,
+            "answer": null
+        },
+        {
+            "questionID": 35960,
+            "answer": []
+        },
+        {
+            "questionID": 36015,
+            "answer": null
+        },
+        {
+            "questionID": 39750,
+            "answer": ""
+        },
+        {
+            "questionID": 35988,
+            "answer": []
+        },
+        {
+            "questionID": 35989,
+            "answer": []
+        }
+
+    ]
+
+}
