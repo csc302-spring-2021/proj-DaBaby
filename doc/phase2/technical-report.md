@@ -28,7 +28,7 @@ Both front-end applications have also been deployed.
 
 ### How is this different from what you originally proposed?
 
-For the most part, what we built aligned with out initial plan and goals. We were able to implement most of the features that we wanted to include in this phase. However, some features are not functioning 100% correctly due to time constraints and last minute bugs that appeared. This includes integrating the server requests from front-end to create new responses, and update partially completed responses. Our ability to 
+For the most part, what we built aligned with out initial plan and goals. We were able to implement most of the features that we wanted to include in this phase. However, some features are not functioning 100% correctly due to time constraints and last minute bugs that appeared. This includes integrating the server requests from front-end to create new responses, and update partially completed responses. Our ability to stay on track with our original proposal comes from a lot of initial planning that took place at the beginning of each phase (described in more detail below). 
 
 ---
 
@@ -56,11 +56,11 @@ We split the work between frontend and backend, which worked well as all the tea
 
 In terms of communication and collaboration, we use discord + google doc (api draft / meeting nots) + figma (UI design and UML diagram) + Github Project (Kanban workflow board). This workflow has proven to be efficient as everyone gets updated with all the progress in real time and the communication within the team is clear and efficient.
 
-[Our Kanban Board](https://github.com/csc302-spring-2021/proj-DaBaby/projects/1)
-[Our PR Page](https://github.com/csc302-spring-2021/proj-DaBaby/pulls)
-[Our Issue Page](https://github.com/csc302-spring-2021/proj-DaBaby/issues)
-[Our Collaborative Google Doc for API draft](https://docs.google.com/document/d/1J7TGGASue_xIjq5fFc85_4OaSO-GMnhKaM1MsyaO9fU/edit)
-[Our Figma Page for Frontend UI Design](https://www.figma.com/file/MOL9rJRDOBurosFFsBjxlB/SDC-Tools?node-id=1%3A3)
+- [Our Kanban Board](https://github.com/csc302-spring-2021/proj-DaBaby/projects/1)
+- [Our PR Page](https://github.com/csc302-spring-2021/proj-DaBaby/pulls)
+- [Our Issue Page](https://github.com/csc302-spring-2021/proj-DaBaby/issues)
+- [Our Collaborative Google Doc for API draft](https://docs.google.com/document/d/1J7TGGASue_xIjq5fFc85_4OaSO-GMnhKaM1MsyaO9fU/edit)
+- [Our Figma Page for Frontend UI Design](https://www.figma.com/file/MOL9rJRDOBurosFFsBjxlB/SDC-Tools?node-id=1%3A3)
 
 #### Strengths 
 
