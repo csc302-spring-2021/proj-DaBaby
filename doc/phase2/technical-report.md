@@ -40,9 +40,9 @@ For the most part, what we built aligned with out initial plan and goals. We wer
 - Next is finding patterns in the XML to distinguish between question types (in particular radio buttons vs checkboxes), and organizing question dependencies. The data in the XML files is semi-structured, and parsing it without any give schema or rules when converting it to the SDC Form object was difficult. We relied on finding patterns in the example XML files. For example, we found that multiple choice questions with the checkbox selections have a property `maxSelections="0"` versus single choice radio button questions did not. The challenge with the question dependencies was with regards to determining when a question is dependent on a specific selection of a (parent) multiple choice question. We were ultimately able to derive certain rules based on patterns in the XML structure as described in this [note](https://www.notion.so/XML-Format-1f9e3db3a698472f8428bdb0df7c85c3).
 - The last significant challenge was trying to mitigate the issue of the SQLite DB being wiped clean on every deployment. It was crucial to persist data beyond the lifecycle of a single deployment, thus we ultimately switched to a PostgreSQL database that was hosted on a remote server (in the cloud). Since we were using Django, the migration to this new database was relatively straightforward. 
 
-#### Our artifacts
+#### Important design artifacts
 
-Our object models changed over time to take into account new considerations. You can view the initial UML diagram (version 1) and the updated version (version 2) with changes highlighted in gray [here](https://www.figma.com/file/IavfCnH57lFSQI2QF0x3ct/UML?node-id=0%3A1).
+Our object models changed over time to take into account new considerations. You can view the initial UML diagram (version 1) and the updated version (version 2) with changes highlighted in gray [here](https://www.figma.com/proto/IavfCnH57lFSQI2QF0x3ct/UML?node-id=1%3A2&scaling=min-zoom).
 
 The first consideration is with regards to outdated forms. Since we are effectively storing all versions of the forms for any diagnostic procedure ID, in order to distinguish between older forms and the active one, older versions of a form will have a procedure ID of null, hence maintaining that a procedure ID can only be associated with one form. 
 
@@ -54,7 +54,7 @@ The second consideration was having to create different answer object schemas to
 
 We split the work between frontend and backend, which worked well as all the team members are working on components that they are most familiar and comfortable with. However, we need more communication and understanding between the frontend members and backend members, as having little knowledge to the other part has made it harder for the integration process. We are planning on making all group members to be somewhat familiar with parts they are not responsible for, so everyone has a big picture of the project and understands the designs and difficulties of other components too.
 
-In terms of communication and collaboration, we use discord + google doc (api draft / meeting nots) + figma (UI design and UML diagram) + Github Project (Kanban workflow board). This workflow has proven to be efficient as everyone gets updated with all the progress in real time and the communication within the team is clear and efficient.
+In terms of communication and collaboration, we use discord, google doc (for the API draft and meeting nots), Figma (UI design and UML diagram), and Github Project (Kanban workflow board). Team members were for most part using these communication channels frequently to stay actively engaged with the rest of the team. The following is a list of our most significant process artifacts:
 
 - [Our Kanban Board](https://github.com/csc302-spring-2021/proj-DaBaby/projects/1)
 - [Our PR Page](https://github.com/csc302-spring-2021/proj-DaBaby/pulls)
