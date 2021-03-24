@@ -22,10 +22,12 @@ def parse_question(question_dict, section, controller=None,
         elif ["decimal"] == type_key_lst:
             # might change this later
             q_type = "integer"
-        else:
+        elif ["integer"] == type_key_lst:
             assert ["integer"] == type_key_lst
             # need a way to store max and min inclusive
             q_type = "integer"
+        else:
+            q_type = "free-text"
     else:
         assert "ListField" in question_dict
 
