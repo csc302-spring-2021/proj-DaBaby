@@ -19,8 +19,8 @@ And the available endpoints and types of requests that can be made are outlined 
 
 We also built two client applications that utilizes the SDC Tools API: 
 
-The first is the Form Filler interface that allows users to search for forms by diagnostic procedure, and renders a selected SDC form to be filled out. The user can start filling out a form, and save their responses, and continue editing later. They can find these incomplete responses by searching by patient ID, procedure ID and time range when the response was created. 
-The second is the Form Manager interface, which is complete with the ability to view all active forms, add a form for a procedure, update and delete forms, as well as view a rendered version of the SDC form. 
+- The first is the Form Filler interface that allows users to search for forms by diagnostic procedure, and renders a selected SDC form to be filled out. The user can start filling out a form, and save their responses, and continue editing later. They can find these incomplete responses by searching by patient ID, procedure ID and time range when the response was created. 
+- The second is the Form Manager interface, which is complete with the ability to view all active forms, add a form for a procedure, update and delete forms, as well as view a rendered version of the SDC form. 
 
 Both front-end applications have also been deployed. 
 - [form-manager](http://dababysdcformmanager-env.eba-kd29msmd.ca-central-1.elasticbeanstalk.com/)
