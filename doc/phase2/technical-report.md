@@ -90,6 +90,6 @@ API Features:
 
 - Permanently save a response upon response completion and successful validation.
 - Adding in checks for when an incomplete response is outdated, and sending an indication to the client when they get the response and if they attempt to update an outdated response.
-- Fix API routes with bugs and do better error-handling.
+- Fix API routes with bugs and do better error-handling. In particular, we need to check that all fields in the body of POST and PUT requests are valid, and that the inputs are correctly formatted. A crucial example is consider if a client sends a request to create a new SDC form from an XML file, but instead of actually sending a string of an XML file, they send a random string. This should not cause the server to crash, but instead handle the request by sending an appropriate error response. 
 
 
