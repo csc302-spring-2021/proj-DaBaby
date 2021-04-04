@@ -31,6 +31,42 @@ class ReviewSection extends React.Component {
     }
   };
 
+  // Format the answer depending on its type
+  formatAnswerToString = (answer) => {
+    let answerString = "";
+    // If answer is an array (multiple-choice) loop through and display their selections
+    if (Array.isArray(answer)) {
+      // Example: answer1, answer2, answer3, answer4 <addition>, answer 5
+      for (let i = 0; i < answer.length; i++) {
+        // If it is not the first item, add a comma
+        if (i != 0) {
+          answerString += ", ";
+        }
+        answerString += answer[i]["selection"].toString();
+        // If there is an addition to the answer, format it like so
+        if (answer[i]["addition"]) {
+          answerString += " - <";
+          answerString += answer[i]["addition"].toString();
+          answerString += ">";
+        }
+      }
+    }
+    // If answer is single-choice
+    else if (answer["selection"]) {
+      answerString += answer["selection"].toString();
+      if (answer["addition"]) {
+        answerString += " - <";
+        answerString += answer["addition"].toString();
+        answerString += ">";
+      }
+    }
+    // Any other type just toString()
+    else {
+      answerString = answer.toString();
+    }
+    return answerString;
+  };
+
   render() {
     const { sdcResponse, sdcForm } = this.props;
     const { name } = sdcForm;
@@ -52,7 +88,10 @@ class ReviewSection extends React.Component {
                 (Array.isArray(answer.answer) && answer.answer.length == 0) ? (
                   <div className="unanswered">Unanswered</div>
                 ) : (
-                  <div className="answer"> {answer.answer.toString()} </div>
+                  <div className="answer">
+                    {" "}
+                    {this.formatAnswerToString(answer.answer)}{" "}
+                  </div>
                 )}{" "}
               </div>
             ))}
