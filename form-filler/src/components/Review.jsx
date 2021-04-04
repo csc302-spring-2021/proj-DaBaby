@@ -26,6 +26,18 @@ class Review extends React.Component {
     }
   }
 
+  handleReturn = () => {
+    console.log("return button clicked");
+  };
+
+  handleEdit = () => {
+    console.log("edit button clicked");
+  };
+
+  handleDelete = () => {
+    console.log("delete button clicked");
+  };
+
   render() {
     console.log(this.state);
     return this.state.sdcForm ? (
@@ -41,14 +53,31 @@ class Review extends React.Component {
             <Col md={4}>
               <ReviewMetaData sdcResponse={this.state.sdcResponse} />
               <div className="actions">Actions</div>
+              <Link to={"/responses"}>
+                <div className="padding">
+                  <button className="buttons" onClick={this.handleReturn}>
+                    RETURN TO SEARCH
+                  </button>
+                </div>
+              </Link>
+              <Link
+                to={{
+                  pathname: `/forms/${this.state.procedureID}`,
+                  state: {
+                    response: this.state.sdcResponse,
+                  },
+                }}
+              >
+                <div className="padding">
+                  <button className="buttons" onClick={this.handleEdit}>
+                    EDIT RESPONSE
+                  </button>
+                </div>
+              </Link>
               <div className="padding">
-                <button className="buttons">RETURN TO SEARCH</button>
-              </div>
-              <div className="padding">
-                <button className="buttons">EDIT RESPONSE</button>
-              </div>
-              <div className="padding">
-                <button className="buttons">DELETE RESPONSE</button>
+                <button className="buttons" onClick={this.handleDelete}>
+                  DELETE RESPONSE
+                </button>
               </div>
             </Col>
           </Row>
