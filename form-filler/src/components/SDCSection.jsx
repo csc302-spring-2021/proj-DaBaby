@@ -101,7 +101,7 @@ class SDCSection extends React.Component {
       // Otherwise it is an addition
       else {
         // If the addition is a single choice question handle it this way
-
+        // debugger;
         // Use this to determine how long the id is for the question
         let k = 0;
         console.log(property);
@@ -203,7 +203,7 @@ class SDCSection extends React.Component {
           for (let j = 0; j < value.length; j++) {
             let additionName =
               "optionalFieldInputType" +
-              sdcFormResponse["answers"][i]["questionID"] +
+              sdcFormResponse["answers"][i]["questionID"] + "*" +
               value[j]["selection"];
             initialValues[additionName] = value[j]["addition"];
             // If first value being added, create the list
@@ -221,7 +221,7 @@ class SDCSection extends React.Component {
         else if (value) {
           let additionName =
             "optionalFieldInputType" +
-            sdcFormResponse["answers"][i]["questionID"] +
+            sdcFormResponse["answers"][i]["questionID"] + "*" +
             value["selection"];
           initialValues[name] = value["selection"];
           initialValues[additionName] = value["addition"];
