@@ -52,7 +52,7 @@ class ReviewSection extends React.Component {
                 (Array.isArray(answer.answer) && answer.answer.length == 0) ? (
                   <div className="unanswered">Unanswered</div>
                 ) : (
-                  <div className="answer"> answer.answer </div>
+                  <div className="answer"> {answer.answer.toString()} </div>
                 )}{" "}
               </div>
             ))}

@@ -159,7 +159,7 @@ class SDCSection extends React.Component {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(answerResponseObject),
     };
-    fetch(`${SERVER_URL}/api/sdcformresponse/${sdcFormResponse["diagnosticProcedureID"]}/`, requestOptions)
+    fetch(`${SERVER_URL}/api/sdcformresponse/${sdcFormResponse["id"]}/`, requestOptions)
       .then((response) => response.json())
       .then((data) => console.log(data))
       .catch((error) => {
@@ -241,7 +241,7 @@ class SDCSection extends React.Component {
           <Col>
             <h1 className="formTitle">{name}</h1>
             <h2 className="sectionTitle">{section_name}</h2>
-            <hr className="divider"></hr>
+            
             <Form
               onSubmit={this.onSubmit}
               initialValues={this.sdcFormResponseParser()}
