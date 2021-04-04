@@ -28,7 +28,7 @@ def parse_question(question_dict, section, controller=None,
         elif ["decimal"] == type_key_lst or ["integer"] == type_key_lst:
             q_type = "integer"
         else:
-            raise ParseError("Unknown type_key_lst: %s" % str(type_key_lst))
+            q_type = "free-text"
     elif "ListField" in question_dict:
         # Single vs multiple choice
         list_field = question_dict["ListField"]
