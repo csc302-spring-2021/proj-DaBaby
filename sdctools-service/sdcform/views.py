@@ -13,8 +13,7 @@ from . import tools
 from .models import *
 from .serializers import *
 
-
-# Create your views here.
+from .tools import ParseError
 
 
 @api_view(['GET', 'POST'])
@@ -29,8 +28,7 @@ def sdcforms(request):
                 history_id = int(history_id)
             except ValueError:
                 return Response({
-                    "message": "Not a valid sdcform id, "
-                               "needs to be an integer"},
+                    "message": "Not a valid sdcform id, needs to be an integer"},
                     status=status.HTTP_404_NOT_FOUND)
 
             try:
@@ -55,10 +53,9 @@ def sdcforms(request):
         diagnostic_procedure_id.save()
 
         try:
-            diagnostic_procedure_id.sdcform
+            _ = diagnostic_procedure_id.sdcform
             content = {
-                'message':
-                    'DiagnosticProcedureID already used.'
+                'message': 'DiagnosticProcedureID already used.'
             }
             return Response(content, status=status.HTTP_400_BAD_REQUEST)
         except ObjectDoesNotExist:
@@ -80,8 +77,15 @@ def sdcforms(request):
         section_dicts = xml_dict["FormDesign"]["Body"]["ChildItems"]["Section"]
         if not isinstance(section_dicts, list):
             section_dicts = [section_dicts]
-        for section_dict in section_dicts:
-            tools.parse_section(section_dict, sdc_form)
+        try:
+            for section_dict in section_dicts:
+                tools.parse_section(section_dict, sdc_form)
+        except ParseError as parse_error:
+            print(parse_error)
+            content = {
+                'message': 'The uploaded XML either is corrupted or has the wrong format.'
+            }
+            return Response(content, status=status.HTTP_400_BAD_REQUEST)
 
         serializer = SDCFormSerializer(instance=sdc_form)
         json = {
@@ -99,8 +103,7 @@ def sdcform(request, procedure_id):
                 code=procedure_id)
         except DiagnosticProcedureID.DoesNotExist:
             content = {
-                'message':
-                    'This procedureID does not exist.'
+                'message': 'This procedureID does not exist.'
             }
             return Response(content, status=status.HTTP_404_NOT_FOUND)
 
@@ -114,9 +117,7 @@ def sdcform(request, procedure_id):
             return Response(json)
         except ObjectDoesNotExist:
             content = {
-                'message':
-                    'There is no SDCForm associated with the provided '
-                    'procedureID.'
+                'message': 'There is no SDCForm associated with the provided procedureID.'
             }
             return Response(content, status=status.HTTP_404_NOT_FOUND)
     elif request.method == "PUT":  # FORM MANAGER
@@ -125,8 +126,7 @@ def sdcform(request, procedure_id):
                 code=procedure_id)
         except DiagnosticProcedureID.DoesNotExist:
             content = {
-                'message':
-                    'This procedureID does not exist.'
+                'message': 'This procedureID does not exist.'
             }
             return Response(content, status=status.HTTP_404_NOT_FOUND)
 
@@ -134,9 +134,7 @@ def sdcform(request, procedure_id):
             old_sdc_form = diagnostic_procedure_id.sdcform
         except ObjectDoesNotExist:
             content = {
-                'message':
-                    'There is no SDCForm associated with the provided '
-                    'procedureID.'
+                'message': 'There is no SDCForm associated with the provided procedureID.'
             }
             return Response(content, status=status.HTTP_404_NOT_FOUND)
 
@@ -159,8 +157,17 @@ def sdcform(request, procedure_id):
         section_dicts = xml_dict["FormDesign"]["Body"]["ChildItems"]["Section"]
         if not isinstance(section_dicts, list):
             section_dicts = [section_dicts]
-        for section_dict in section_dicts:
-            tools.parse_section(section_dict, new_sdc_form)
+
+        try:
+            for section_dict in section_dicts:
+                tools.parse_section(section_dict, new_sdc_form)
+        except ParseError as parse_error:
+            print(parse_error)
+            content = {
+                'message': 'The uploaded XML either is corrupted or has the wrong format.'
+            }
+            return Response(content, status=status.HTTP_400_BAD_REQUEST)
+
         serializer = SDCFormSerializer(instance=new_sdc_form)
         json = {
             "message": "Success",
@@ -173,8 +180,7 @@ def sdcform(request, procedure_id):
                 code=procedure_id)
         except DiagnosticProcedureID.DoesNotExist:
             content = {
-                'message':
-                    'This procedureID does not exist.'
+                'message': 'This procedureID does not exist.'
             }
             return Response(content, status=status.HTTP_404_NOT_FOUND)
 
@@ -182,9 +188,7 @@ def sdcform(request, procedure_id):
             sdc_form = diagnostic_procedure_id.sdcform
         except ObjectDoesNotExist:
             content = {
-                'message':
-                    'There is no SDCForm associated with the provided '
-                    'procedureID.'
+                'message': 'There is no SDCForm associated with the provided procedureID.'
             }
             return Response(content, status=status.HTTP_404_NOT_FOUND)
 
