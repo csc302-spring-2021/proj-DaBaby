@@ -8,6 +8,7 @@ import { Link } from "react-router-dom";
 import ReviewSection from "./ReviewSection";
 import ReviewMetaData from "./ReviewMetaData";
 import "./Review.scss";
+import {deleteResp} from "../actions/Actions";
 
 class Review extends React.Component {
   constructor(props) {
@@ -36,6 +37,7 @@ class Review extends React.Component {
 
   handleDelete = () => {
     console.log("delete button clicked");
+    deleteResp(this, this.state.sdcResponse.id)
   };
 
   render() {
@@ -74,11 +76,13 @@ class Review extends React.Component {
                   </button>
                 </div>
               </Link>
-              <div className="padding">
-                <button className="buttons" onClick={this.handleDelete}>
-                  DELETE RESPONSE
-                </button>
-              </div>
+              <Link to={"/"}>
+                <div className="padding">
+                  <button className="buttons" onClick={this.handleDelete}>
+                    DELETE RESPONSE
+                  </button>
+                </div>
+              </Link>
             </Col>
           </Row>
         </Col>
