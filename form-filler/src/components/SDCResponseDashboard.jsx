@@ -127,7 +127,7 @@ class ResponseDashboard extends React.Component {
 								</td>
 								<td>
 									<Link id="update-button" to={{
-										pathname: `/forms/${resp.diagnosticProcedureID}`,
+										pathname: `/review/${resp.diagnosticProcedureID}`,
 										state: {
 											response: resp
 										}
