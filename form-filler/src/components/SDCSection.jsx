@@ -23,7 +23,6 @@ const SERVER_URL =
 
 class SDCSection extends React.Component {
   state = {
-    finishedSubmitting: false,
     redirect: false,
   };
   // Prepare the values into a JSON that'll be sent to the backend
@@ -136,7 +135,9 @@ class SDCSection extends React.Component {
             ].find((obj) => {
               return obj.selection === question;
             });
-            existingAnswerObject["addition"] = values[property]; // Add the addition field to that answer
+            if (existingAnswerObject) {
+              existingAnswerObject["addition"] = values[property]; // Add the addition field to that answer
+            }
           }
           // Otherwise do this (single-choice question)
           else {
@@ -165,12 +166,12 @@ class SDCSection extends React.Component {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(answerResponseObject),
     };
-    fetch(
+    await fetch(
       `${SERVER_URL}/api/sdcformresponse/${sdcFormResponse["id"]}/`,
       requestOptions
     )
       .then((response) => response.json())
-      .then((data) => this.setState({ finishedSubmitting: true }))
+      .then((data) => console.log(data))
       .catch((error) => {
         console.log(error);
       });
@@ -249,7 +250,7 @@ class SDCSection extends React.Component {
   };
 
   render() {
-    if (this.state.redirect && this.state.finishedSubmitting) {
+    if (this.state.redirect) {
       return <Redirect push to={"/"}></Redirect>;
     }
     const { section, name, section_name } = this.props;
