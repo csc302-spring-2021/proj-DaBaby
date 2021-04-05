@@ -40,6 +40,13 @@ def sdcforms(request):
 
         return Response({"message": "Success", "sdcFormObjects": data})
     else:  # FORM MANAGER
+        if "diagnosticProcedureID" not in request.data or "name" not in \
+                request.data or "xmlString" not in request.data:
+            return Response({"message": 'Require "diagnosticProcedureID", '
+                                        '"name", and "xmlString" in request '
+                                        'body'},
+                            status=status.HTTP_400_BAD_REQUEST)
+
         models_to_save = []
 
         diagnostic_procedure_id = DiagnosticProcedureID(
@@ -81,7 +88,6 @@ def sdcforms(request):
 
 @api_view(['GET', 'PUT', 'DELETE'])
 def sdcform(request, procedure_id):
-
     if request.method == "GET":  # FORM FILLER
         try:
             diagnostic_procedure_id = DiagnosticProcedureID.objects.get(
@@ -106,6 +112,11 @@ def sdcform(request, procedure_id):
             }
             return Response(content, status=status.HTTP_404_NOT_FOUND)
     elif request.method == "PUT":  # FORM MANAGER
+        if "name" not in request.data or "xmlString" not in request.data:
+            return Response({"message": 'Require "name" and "xmlString" in '
+                                        'request body'},
+                            status=status.HTTP_400_BAD_REQUEST)
+
         models_to_save = []
         try:
             diagnostic_procedure_id = DiagnosticProcedureID.objects.get(
