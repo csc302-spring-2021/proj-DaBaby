@@ -40,12 +40,10 @@ def sdcforms(request):
 
         return Response({"message": "Success", "sdcFormObjects": data})
     else:  # FORM MANAGER
-        if "diagnosticProcedureID" not in request.data or "name" not in \
-                request.data or "xmlString" not in request.data:
-            return Response({"message": 'Require "diagnosticProcedureID", '
-                                        '"name", and "xmlString" in request '
-                                        'body'},
-                            status=status.HTTP_400_BAD_REQUEST)
+        s = {"diagnosticProcedureID", "name", "xmlString"}
+        if not s.issubset(request.data):
+            return Response({"message": str(s) + " must be in the request body"}
+                            , status=status.HTTP_400_BAD_REQUEST)
 
         models_to_save = []
 
@@ -112,10 +110,10 @@ def sdcform(request, procedure_id):
             }
             return Response(content, status=status.HTTP_404_NOT_FOUND)
     elif request.method == "PUT":  # FORM MANAGER
-        if "name" not in request.data or "xmlString" not in request.data:
-            return Response({"message": 'Require "name" and "xmlString" in '
-                                        'request body'},
-                            status=status.HTTP_400_BAD_REQUEST)
+        s = {"name", "xmlString"}
+        if not s.issubset(request.data):
+            return Response({"message": str(s) + " must be in the request body"}
+                            , status=status.HTTP_400_BAD_REQUEST)
 
         models_to_save = []
         try:

@@ -54,6 +54,11 @@ def sdcformresponses(request):
         }
         return Response(json)
     else:
+        s = {"sdcFormID", "patientID", "clinicianID"}
+        if not s.issubset(request.data):
+            return Response({"message": str(s) + " must be in the request body"}
+                            , status=status.HTTP_400_BAD_REQUEST)
+
         models_to_save = []
 
         try:
@@ -157,6 +162,18 @@ def sdcformresponse(request, response_id):
         }
         return Response(json)
     elif request.method == "PUT":
+        s = {"sdcFormID", "patientID", "clinicianID", "diagnosticProcedureID",
+             "responseID", "timestamp", "answers"}
+        if not s.issubset(request.data):
+            return Response({"message": str(s) + " must be in the request body"}
+                            , status=status.HTTP_400_BAD_REQUEST)
+
+        if request.data["responseID"] != response_id:
+            return Response({"message": "The responseID from the URL does not"
+                                        "match the responseID from the request"
+                                        "body"},
+                            status=status.HTTP_400_BAD_REQUEST)
+
         models_to_save = []
 
         try:
