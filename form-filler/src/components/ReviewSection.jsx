@@ -2,19 +2,7 @@ import "./SDCSection.scss";
 import "./ReviewSection.scss";
 import React from "react";
 
-import {
-  Container,
-  Row,
-  Col,
-  Button,
-  FormGroup,
-  FormLabel,
-  FormControl,
-  FormText,
-} from "react-bootstrap";
-
-import { Form, Field } from "react-final-form";
-import Question from "./Question";
+import { Col, Container, Row } from "react-bootstrap";
 
 class ReviewSection extends React.Component {
   // Get the question name from the sdcForm
@@ -39,7 +27,7 @@ class ReviewSection extends React.Component {
       // Example: answer1, answer2, answer3, answer4 <addition>, answer 5
       for (let i = 0; i < answer.length; i++) {
         // If it is not the first item, add a comma
-        if (i != 0) {
+        if (i !== 0) {
           answerString += ", ";
         }
         answerString += answer[i]["selection"].toString();
@@ -78,14 +66,15 @@ class ReviewSection extends React.Component {
           <Col>
             <h1 className="formTitle">{name}</h1>
             <h2 className="sectionTitle">Review Response</h2>
-            <hr className="divider"></hr>
+            <hr className="divider" />
             {answers.map((answer) => (
               <div key={answer.questionID}>
                 <div className="question">
                   {this.getQuestionName(answer.questionID)}
                 </div>
-                {answer.answer === "" || answer.answer === null ||
-                (Array.isArray(answer.answer) && answer.answer.length == 0) ? (
+                {answer.answer === "" ||
+                answer.answer === null ||
+                (Array.isArray(answer.answer) && answer.answer.length === 0) ? (
                   <div className="unanswered">Unanswered</div>
                 ) : (
                   <div className="answer">

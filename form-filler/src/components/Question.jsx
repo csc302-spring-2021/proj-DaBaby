@@ -1,15 +1,6 @@
 import React, { Component } from "react";
 import { Field } from "react-final-form";
-import {
-  Container,
-  Row,
-  Col,
-  Button,
-  FormGroup,
-  FormLabel,
-  FormControl,
-  FormText,
-} from "react-bootstrap";
+import { FormControl, FormGroup, FormLabel, FormText } from "react-bootstrap";
 import "./SDCSection.scss";
 import "./Question.scss";
 
@@ -39,14 +30,15 @@ class Question extends Component {
   required = (value) => {
     return value ? undefined : "Required";
   };
+
   render() {
     const { question } = this.props;
     // If the question controller answer is *, change it to a regular expression that accepts
     // at least one or more alphanumeric character
-    if (question.controllerAnswerEnabler == "*")
+    if (question.controllerAnswerEnabler === "*")
       question.controllerAnswerEnabler = "[0-9A-Za-z]+";
 
-    if (question.controllerAnswerEnabler == true)
+    if (question.controllerAnswerEnabler === true)
       question.controllerAnswerEnabler = "true";
 
     // Depending on type of question render different ways
@@ -80,63 +72,63 @@ class Question extends Component {
                         />{" "}
                         {option.text}
                         {/* If the choice has an optionalfieldinputtype, render it below  */}
-                      {option.optionalFieldInputType ? (
-                        <ConditionSpecify
-                          when={"filler" + question.id}
-                          is={option.text}
-                        >
-                          {/* If the optionalFieldInput type is str, render it this way */}
-                          {option.optionalFieldInputType === "str" ? (
-                            <Field
-                              validate={this.required}
-                              name={
-                                "optionalFieldInputType" +
-                                question.id +
-                                "*" +
-                                option.text
-                              }
-                              type="text"
-                              component="input"
-                              placeholder="Specify"
-                            >
-                              {({ input, meta }) => (
-                                <FormGroup controlId={this.key}>
-                                  <FormControl
-                                    {...input}
-                                    type="text"
-                                    placeholder="Specify"
-                                    isInvalid={meta.error && meta.touched}
-                                  />
-                                  <FormText data-testid="caseIdValidation">
-                                    {meta.error && meta.touched && (
-                                      <span>{meta.error}</span>
-                                    )}
-                                  </FormText>
-                                </FormGroup>
-                              )}
-                            </Field>
-                          ) : (
-                            // Otherwise render it this way (when the optionalFieldInput type is int)
-                            <div className="integer">
-                              <FormLabel>
-                                <Field
-                                  name={
-                                    "optionalFieldInputType" +
-                                    question.id +
-                                    "*" +
-                                    option.text
-                                  }
-                                  component="input"
-                                  type="number"
-                                  validate={this.required}
-                                />{" "}
-                              </FormLabel>
-                            </div>
-                          )}
-                        </ConditionSpecify>
-                      ) : (
-                        ""
-                      )}
+                        {option.optionalFieldInputType ? (
+                          <ConditionSpecify
+                            when={"filler" + question.id}
+                            is={option.text}
+                          >
+                            {/* If the optionalFieldInput type is str, render it this way */}
+                            {option.optionalFieldInputType === "str" ? (
+                              <Field
+                                validate={this.required}
+                                name={
+                                  "optionalFieldInputType" +
+                                  question.id +
+                                  "*" +
+                                  option.text
+                                }
+                                type="text"
+                                component="input"
+                                placeholder="Specify"
+                              >
+                                {({ input, meta }) => (
+                                  <FormGroup controlId={this.key}>
+                                    <FormControl
+                                      {...input}
+                                      type="text"
+                                      placeholder="Specify"
+                                      isInvalid={meta.error && meta.touched}
+                                    />
+                                    <FormText data-testid="caseIdValidation">
+                                      {meta.error && meta.touched && (
+                                        <span>{meta.error}</span>
+                                      )}
+                                    </FormText>
+                                  </FormGroup>
+                                )}
+                              </Field>
+                            ) : (
+                              // Otherwise render it this way (when the optionalFieldInput type is int)
+                              <div className="integer">
+                                <FormLabel>
+                                  <Field
+                                    name={
+                                      "optionalFieldInputType" +
+                                      question.id +
+                                      "*" +
+                                      option.text
+                                    }
+                                    component="input"
+                                    type="number"
+                                    validate={this.required}
+                                  />{" "}
+                                </FormLabel>
+                              </div>
+                            )}
+                          </ConditionSpecify>
+                        ) : (
+                          ""
+                        )}
                       </FormLabel>
                     </div>
                   ))}
@@ -226,7 +218,6 @@ class Question extends Component {
             </div>
           );
         }
-        break;
 
       // Multiple Choice Option ------------------------------------------------------------------------------------------------------------------------------------------
       case "multiple-choice":
@@ -254,62 +245,62 @@ class Question extends Component {
                         />{" "}
                         {option.text}
                         {/* If the choice has an optionalfieldinputtype, render it below  */}
-                      {option.optionalFieldInputType ? (
-                        <ConditionSpecify
-                          when={"filler" + question.id}
-                          is={option.text}
-                        >
-                          {/* If the optionalFieldInput type is str, render it this way */}
-                          {option.optionalFieldInputType === "str" ? (
-                            <Field
-                              validate={this.required}
-                              name={
-                                "optionalFieldInputType" +
-                                question.id +
-                                "*" +
-                                option.text
-                              }
-                              type="text"
-                              component="input"
-                              placeholder="Specify"
-                            >
-                              {({ input, meta }) => (
-                                <FormGroup controlId={this.key}>
-                                  <FormControl
-                                    {...input}
-                                    type="text"
-                                    placeholder="Specify"
-                                    isInvalid={meta.error && meta.touched}
-                                  />
-                                  <FormText data-testid="caseIdValidation">
-                                    {meta.error && meta.touched && (
-                                      <span>{meta.error}</span>
-                                    )}
-                                  </FormText>
-                                </FormGroup>
-                              )}
-                            </Field>
-                          ) : (
-                            // Otherwise render it this way (when the optionalFieldInput type is int)
-                            <div className="integer">
-                              <FormLabel>
-                                <Field
-                                  name={
-                                    "optionalFieldInputType" +
-                                    question.id +
-                                    "*" +
-                                    option.text
-                                  }
-                                  component="input"
-                                  type="number"
-                                />{" "}
-                              </FormLabel>
-                            </div>
-                          )}
-                        </ConditionSpecify>
-                      ) : (
-                        ""
-                      )}
+                        {option.optionalFieldInputType ? (
+                          <ConditionSpecify
+                            when={"filler" + question.id}
+                            is={option.text}
+                          >
+                            {/* If the optionalFieldInput type is str, render it this way */}
+                            {option.optionalFieldInputType === "str" ? (
+                              <Field
+                                validate={this.required}
+                                name={
+                                  "optionalFieldInputType" +
+                                  question.id +
+                                  "*" +
+                                  option.text
+                                }
+                                type="text"
+                                component="input"
+                                placeholder="Specify"
+                              >
+                                {({ input, meta }) => (
+                                  <FormGroup controlId={this.key}>
+                                    <FormControl
+                                      {...input}
+                                      type="text"
+                                      placeholder="Specify"
+                                      isInvalid={meta.error && meta.touched}
+                                    />
+                                    <FormText data-testid="caseIdValidation">
+                                      {meta.error && meta.touched && (
+                                        <span>{meta.error}</span>
+                                      )}
+                                    </FormText>
+                                  </FormGroup>
+                                )}
+                              </Field>
+                            ) : (
+                              // Otherwise render it this way (when the optionalFieldInput type is int)
+                              <div className="integer">
+                                <FormLabel>
+                                  <Field
+                                    name={
+                                      "optionalFieldInputType" +
+                                      question.id +
+                                      "*" +
+                                      option.text
+                                    }
+                                    component="input"
+                                    type="number"
+                                  />{" "}
+                                </FormLabel>
+                              </div>
+                            )}
+                          </ConditionSpecify>
+                        ) : (
+                          ""
+                        )}
                       </FormLabel>
                     </div>
                   ))}
@@ -397,7 +388,6 @@ class Question extends Component {
             </div>
           );
         }
-        break;
 
       // Free text option ------------------------------------------------------------------------------------------------------------------------------------------
       case "free-text":
@@ -453,7 +443,6 @@ class Question extends Component {
             </Field>
           );
         }
-        break;
 
       // Integer Option ------------------------------------------------------------------------------------------------------------------------------------------
       case "integer":
@@ -502,7 +491,6 @@ class Question extends Component {
             </div>
           );
         }
-        break;
 
       // True/false option ------------------------------------------------------------------------------------------------------------------------------------------
       case "true-false":
@@ -548,7 +536,6 @@ class Question extends Component {
             </div>
           );
         }
-        break;
     }
   }
 }
