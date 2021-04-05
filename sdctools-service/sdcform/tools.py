@@ -49,10 +49,10 @@ def parse_question(question_dict, section, controller=None,
         text = ""
 
     if "ResponseField" in question_dict:
-        if "Response" not in question_dict["ResponseField"]:
+        try:
+            type_key_lst = list(question_dict["ResponseField"]["Response"].keys())
+        except KeyError:
             raise ParseError("Invalid XML format! Expected <ResponseField> to have child <Response>")
-
-        type_key_lst = list(question_dict["ResponseField"]["Response"].keys())
         while type_key_lst[0][0] == "@":
             del type_key_lst[0]
 
@@ -69,7 +69,11 @@ def parse_question(question_dict, section, controller=None,
     elif "ListField" in question_dict:
         # Single vs multiple choice
         list_field = question_dict["ListField"]
-        list_item = list_field["List"]["ListItem"]
+        try:
+            list_item = list_field["List"]["ListItem"]
+        except KeyError:
+            raise ParseError("Invalid XML format! Expected <ListField> to contain tag <List>, which should contain"
+                             "tag <ListItem>.")
         if isinstance(list_item, list):
             if "@maxSelections" in list_field and str(list_field["@maxSelections"]) == "0":
                 q_type = "multiple-choice"
@@ -77,7 +81,10 @@ def parse_question(question_dict, section, controller=None,
                 q_type = "single-choice"
         else:
             q_type = "true-false"
-            text = list_item["@title"]
+            if "@title" in list_item:
+                text = list_item["@title"]
+            else:
+                text = ""
     else:
         raise ParseError("Invalid XML Format! Expected <Question> to have child <ResponseField> or <ListField>.")
 
@@ -89,22 +96,29 @@ def parse_question(question_dict, section, controller=None,
 
     # Answer independent controller
     if "ChildItems" in question_dict:
-        children = question_dict["ChildItems"]["Question"]
+        try:
+            children = question_dict["ChildItems"]["Question"]
+        except KeyError:
+            raise ParseError("Invalid XML format! Expected <ChildItems> tag in a question to contain tag <Question>.")
         if not isinstance(children, list):
             children = [children]
         for child in children:
             parse_question(child, section, sdc_question, "*")
 
     if q_type in {"single-choice", "multiple-choice"}:
-        choice_dicts = question_dict["ListField"]["List"]["ListItem"]
+        try:
+            choice_dicts = question_dict["ListField"]["List"]["ListItem"]
+        except KeyError:
+            raise ParseError("Invalid XML format! Expected a single choice/multiple choice question to have tag"
+                             "<ListField>, which should have tag <List>, which should have tag <ListItem>.")
         if not isinstance(choice_dicts, list):
             choice_dicts = [choice_dicts]
         for choice_dict in choice_dicts:
             if "ListItemResponseField" in choice_dict:
-                if "Response" not in choice_dict["ListItemResponseField"]:
+                try:
+                    type_key_lst = list(choice_dict["ListItemResponseField"]["Response"].keys())
+                except KeyError:
                     raise ParseError("Invalid XML Format! Expected <ListItemResponseField> to have child <Response>")
-
-                type_key_lst = list(choice_dict["ListItemResponseField"]["Response"].keys())
                 while type_key_lst[0][0] == "@":
                     del type_key_lst[0]
 
@@ -129,7 +143,11 @@ def parse_question(question_dict, section, controller=None,
 
             # Register option-specific dependencies:
             if "ChildItems" in choice_dict:
-                children = choice_dict["ChildItems"]["Question"]
+                try:
+                    children = choice_dict["ChildItems"]["Question"]
+                except KeyError:
+                    raise ParseError("Invalid XML Format! Expected <ChildItems> in an option-specific dependency to "
+                                     "contain tag <Question>.")
                 if not isinstance(children, list):
                     children = [children]
                 for child in children:
