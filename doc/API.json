@@ -94,7 +94,7 @@
             }
           },
           "400": {
-            "description": "DiagnosticProcedureID already used.",
+            "description": "DiagnosticProcedureID already used, or the XML uploaded either is corrupted or has the wrong format.",
             "content": {
               "application/json": {
                 "schema": {
@@ -184,6 +184,16 @@
           },
           "404": {
             "description": "The given SDCFormID does not exist.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServerMessage"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The uploaded XML either is corrupted or has the wrong format.",
             "content": {
               "application/json": {
                 "schema": {

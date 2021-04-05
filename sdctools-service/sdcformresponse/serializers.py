@@ -85,8 +85,13 @@ class SDCFormResponseSerializer(serializers.ModelSerializer):
 
     def to_representation(self, obj):
         r = super().to_representation(obj)
-
         sdcformresponse = SDCFormResponse.objects.get(id=getattr(obj, "id"))
+
+        if sdcformresponse.sdcform.diagnostic_procedure_id is None:
+            r["outdated"] = True
+        else:
+            r["outdated"] = False
+
         answers = list(sdcformresponse.freetextanswer_set.all()) + \
             list(sdcformresponse.integeranswer_set.all()) + \
             list(sdcformresponse.truefalseanswer_set.all()) + \
@@ -112,6 +117,32 @@ class SDCFormResponseSerializer(serializers.ModelSerializer):
                 answer_serializer = MultipleChoiceAnswerSerializer(
                     instance=answer, read_only=True)
             r["answers"].append(answer_serializer.to_representation(answer))
+
+        return r
+
+
+class SDCFormResponseMetadataSerializer(serializers.ModelSerializer):
+    patientID = serializers.CharField(source="patient_id.ohip",
+                                      read_only=True)
+    clinicianID = serializers.CharField(source="clinician_id.identifier",
+                                        read_only=True)
+    sdcFormID = serializers.IntegerField(source="sdcform.id", read_only=True)
+    diagnosticProcedureID = serializers.CharField(
+        source="diagnostic_procedure_id.code", read_only=True)
+
+    class Meta:
+        model = SDCFormResponse
+        fields = ["id", "patientID", "clinicianID", "sdcFormID",
+                  "diagnosticProcedureID", "timestamp"]
+
+    def to_representation(self, obj):
+        r = super().to_representation(obj)
+        sdcformresponse = SDCFormResponse.objects.get(id=getattr(obj, "id"))
+
+        if sdcformresponse.sdcform.diagnostic_procedure_id is None:
+            r["outdated"] = True
+        else:
+            r["outdated"] = False
 
         return r
 

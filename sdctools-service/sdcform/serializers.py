@@ -49,4 +49,14 @@ class SDCFormSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = SDCForm
-        fields = ["id", "name", "timestamp", "diagnosticProcedureID", "sections"]
+        fields = ["id", "name", "timestamp", "diagnosticProcedureID",
+                  "sections"]
+
+
+class SDCFormMetadataSerializer(serializers.ModelSerializer):
+    diagnosticProcedureID = serializers.CharField(
+        source="diagnostic_procedure_id.code", read_only=True, allow_null=True)
+
+    class Meta:
+        model = SDCForm
+        fields = ["id", "name", "timestamp", "diagnosticProcedureID"]

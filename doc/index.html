@@ -3979,6 +3979,54 @@ except ApiException as e:
                                 </div>
                             </div>
 
+                            <h3> Status: 400 - The uploaded XML either is corrupted or has the wrong format. </h3>
+
+                            <ul class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-updateSDCForm-400-schema">Schema</a>
+                                </li>
+
+                            </ul>
+
+                            <div class="tab-content" style='margin-bottom: 10px;'>
+                                <div class="tab-pane active" id="responses-updateSDCForm-400-schema">
+                                  <div id='responses-updateSDCForm-400-schema-400' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
+                                    <script>
+                                      $(document).ready(function() {
+                                        var schemaWrapper = {
+  "description" : "The uploaded XML either is corrupted or has the wrong format.",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/ServerMessage"
+      }
+    }
+  }
+};
+                                        var schema = schemaWrapper.content["application/json"].schema;
+                                        if (schema.$ref != null) {
+                                          schema = defsParser.$refs.get(schema.$ref);
+                                        } else {
+                                          schemaWrapper.components = {};
+                                          schemaWrapper.components.schemas = Object.assign({}, defs);
+                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                            console.log(err);
+                                          });
+                                        }
+
+                                        //console.log(JSON.stringify(schema));
+                                        var view = new JSONSchemaView(schema, 3);
+                                        $('#responses-updateSDCForm-400-schema-data').val(stringify(schema));
+                                        var result = $('#responses-updateSDCForm-400-schema-400');
+                                        result.empty();
+                                        result.append(view.render());
+                                      });
+                                    </script>
+                                  </div>
+                                  <input id='responses-updateSDCForm-400-schema-data' type='hidden' value=''></input>
+                                </div>
+                            </div>
+
                             <h3> Status: 404 - The given SDCFormID does not exist. </h3>
 
                             <ul class="nav nav-tabs nav-tabs-examples" >
@@ -4692,18 +4740,18 @@ except ApiException as e:
 
 
                           <h2>Responses</h2>
-                            <h3> Status: 200 - The XML is uploaded successfully. Response contains the SDCForm object represented by the XML. </h3>
+                            <h3> Status: 201 - The XML is uploaded successfully. Response contains the SDCForm object represented by the XML. </h3>
 
                             <ul class="nav nav-tabs nav-tabs-examples" >
                                 <li class="active">
-                                  <a data-toggle="tab" href="#responses-uploadSDCFormXML-200-schema">Schema</a>
+                                  <a data-toggle="tab" href="#responses-uploadSDCFormXML-201-schema">Schema</a>
                                 </li>
 
                             </ul>
 
                             <div class="tab-content" style='margin-bottom: 10px;'>
-                                <div class="tab-pane active" id="responses-uploadSDCFormXML-200-schema">
-                                  <div id='responses-uploadSDCFormXML-200-schema-200' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
+                                <div class="tab-pane active" id="responses-uploadSDCFormXML-201-schema">
+                                  <div id='responses-uploadSDCFormXML-201-schema-201' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
                                     <script>
                                       $(document).ready(function() {
                                         var schemaWrapper = {
@@ -4729,18 +4777,18 @@ except ApiException as e:
 
                                         //console.log(JSON.stringify(schema));
                                         var view = new JSONSchemaView(schema, 3);
-                                        $('#responses-uploadSDCFormXML-200-schema-data').val(stringify(schema));
-                                        var result = $('#responses-uploadSDCFormXML-200-schema-200');
+                                        $('#responses-uploadSDCFormXML-201-schema-data').val(stringify(schema));
+                                        var result = $('#responses-uploadSDCFormXML-201-schema-201');
                                         result.empty();
                                         result.append(view.render());
                                       });
                                     </script>
                                   </div>
-                                  <input id='responses-uploadSDCFormXML-200-schema-data' type='hidden' value=''></input>
+                                  <input id='responses-uploadSDCFormXML-201-schema-data' type='hidden' value=''></input>
                                 </div>
                             </div>
 
-                            <h3> Status: 400 - DiagnosticProcedureID already used. </h3>
+                            <h3> Status: 400 - DiagnosticProcedureID already used, or the XML uploaded either is corrupted or has the wrong format. </h3>
 
                             <ul class="nav nav-tabs nav-tabs-examples" >
                                 <li class="active">
@@ -4755,7 +4803,7 @@ except ApiException as e:
                                     <script>
                                       $(document).ready(function() {
                                         var schemaWrapper = {
-  "description" : "DiagnosticProcedureID already used.",
+  "description" : "DiagnosticProcedureID already used, or the XML uploaded either is corrupted or has the wrong format.",
   "content" : {
     "application/json" : {
       "schema" : {
