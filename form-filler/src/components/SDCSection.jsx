@@ -17,6 +17,7 @@ import { Link } from "react-router-dom";
 import { Form, Field } from "react-final-form";
 import Question from "./Question";
 import { Redirect } from "react-router";
+import {getSDCFormResponse} from "../actions/Actions";
 
 const SERVER_URL =
   "http://dababysdcbackendapi-env-2.eba-ybqn7as3.ca-central-1.elasticbeanstalk.com";
@@ -175,6 +176,9 @@ class SDCSection extends React.Component {
       .catch((error) => {
         console.log(error);
       });
+
+    getSDCFormResponse(this.props, this.props.sdcFormResponse.id)
+
   };
 
   /**

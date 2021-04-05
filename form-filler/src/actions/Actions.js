@@ -18,6 +18,22 @@ export const getSDCForm = (page, id) => {
 		});
 };
 
+/* GET SDC form response */
+export const getSDCFormResponse = (page, id) => {
+	axios
+		.get(`${SERVER_URL}/api/sdcformresponse/${id}/`)
+		.then((res) => {
+			if (res.data) {
+				page.setState({sdcResponse: res.data.responseObject});
+			} else {
+				alert("GET SDC FORM RESPONSE FAILED");
+			}
+		})
+		.catch((err) => {
+			alert(err.response.data);
+		});
+};
+
 /* GET all resps */
 export const getAllResps = (page, data) => {
 	console.log(data)
