@@ -79,11 +79,13 @@ class Question extends Component {
                         />{" "}
                         {option.text}
                         {/* If the choice has an optionalfieldinputtype, render it below  */}
-                        {option.optionalFieldInputType ? (
-                          <ConditionSpecify
-                            when={"filler" + question.id}
-                            is={option.text}
-                          >
+                      {option.optionalFieldInputType ? (
+                        <ConditionSpecify
+                          when={"filler" + question.id}
+                          is={option.text}
+                        >
+                          {/* If the optionalFieldInput type is str, render it this way */}
+                          {option.optionalFieldInputType === "str" ? (
                             <Field
                               validate={this.required}
                               name={
@@ -112,10 +114,27 @@ class Question extends Component {
                                 </FormGroup>
                               )}
                             </Field>
-                          </ConditionSpecify>
-                        ) : (
-                          ""
-                        )}
+                          ) : (
+                            // Otherwise render it this way (when the optionalFieldInput type is int)
+                            <div className="integer">
+                              <FormLabel>
+                                <Field
+                                  name={
+                                    "optionalFieldInputType" +
+                                    question.id +
+                                    "*" +
+                                    option.text
+                                  }
+                                  component="input"
+                                  type="number"
+                                />{" "}
+                              </FormLabel>
+                            </div>
+                          )}
+                        </ConditionSpecify>
+                      ) : (
+                        ""
+                      )}
                       </FormLabel>
                     </div>
                   ))}
@@ -175,23 +194,21 @@ class Question extends Component {
                                 </FormGroup>
                               )}
                             </Field>
-                          ) : 
-                          // Otherwise render it this way (when the optionalFieldInput type is int)
-                          (
+                          ) : (
+                            // Otherwise render it this way (when the optionalFieldInput type is int)
                             <div className="integer">
-                            <FormLabel>
-                              <Field
-                                name={
-                                  "optionalFieldInputType" +
-                                  question.id +
-                                  "*" +
-                                  option.text
-                                }
-                                component="input"
-                                type="number"
-                                min="0"
-                              />{" "}
-                            </FormLabel>
+                              <FormLabel>
+                                <Field
+                                  name={
+                                    "optionalFieldInputType" +
+                                    question.id +
+                                    "*" +
+                                    option.text
+                                  }
+                                  component="input"
+                                  type="number"
+                                />{" "}
+                              </FormLabel>
                             </div>
                           )}
                         </ConditionSpecify>
@@ -233,11 +250,13 @@ class Question extends Component {
                         />{" "}
                         {option.text}
                         {/* If the choice has an optionalfieldinputtype, render it below  */}
-                        {option.optionalFieldInputType ? (
-                          <ConditionSpecify
-                            when={"filler" + question.id}
-                            is={option.text}
-                          >
+                      {option.optionalFieldInputType ? (
+                        <ConditionSpecify
+                          when={"filler" + question.id}
+                          is={option.text}
+                        >
+                          {/* If the optionalFieldInput type is str, render it this way */}
+                          {option.optionalFieldInputType === "str" ? (
                             <Field
                               validate={this.required}
                               name={
@@ -266,10 +285,27 @@ class Question extends Component {
                                 </FormGroup>
                               )}
                             </Field>
-                          </ConditionSpecify>
-                        ) : (
-                          ""
-                        )}
+                          ) : (
+                            // Otherwise render it this way (when the optionalFieldInput type is int)
+                            <div className="integer">
+                              <FormLabel>
+                                <Field
+                                  name={
+                                    "optionalFieldInputType" +
+                                    question.id +
+                                    "*" +
+                                    option.text
+                                  }
+                                  component="input"
+                                  type="number"
+                                />{" "}
+                              </FormLabel>
+                            </div>
+                          )}
+                        </ConditionSpecify>
+                      ) : (
+                        ""
+                      )}
                       </FormLabel>
                     </div>
                   ))}
@@ -299,34 +335,53 @@ class Question extends Component {
                           when={"filler" + question.id}
                           is={option.text}
                         >
-                          <Field
-                            validate={this.required}
-                            name={
-                              "optionalFieldInputType" +
-                              question.id +
-                              "*" +
-                              option.text
-                            }
-                            type="text"
-                            component="input"
-                            placeholder="Specify"
-                          >
-                            {({ input, meta }) => (
-                              <FormGroup controlId={this.key}>
-                                <FormControl
-                                  {...input}
-                                  type="text"
-                                  placeholder="Specify"
-                                  isInvalid={meta.error && meta.touched}
-                                />
-                                <FormText data-testid="caseIdValidation">
-                                  {meta.error && meta.touched && (
-                                    <span>{meta.error}</span>
-                                  )}
-                                </FormText>
-                              </FormGroup>
-                            )}
-                          </Field>
+                          {/* If the optionalFieldInput type is str, render it this way */}
+                          {option.optionalFieldInputType === "str" ? (
+                            <Field
+                              validate={this.required}
+                              name={
+                                "optionalFieldInputType" +
+                                question.id +
+                                "*" +
+                                option.text
+                              }
+                              type="text"
+                              component="input"
+                              placeholder="Specify"
+                            >
+                              {({ input, meta }) => (
+                                <FormGroup controlId={this.key}>
+                                  <FormControl
+                                    {...input}
+                                    type="text"
+                                    placeholder="Specify"
+                                    isInvalid={meta.error && meta.touched}
+                                  />
+                                  <FormText data-testid="caseIdValidation">
+                                    {meta.error && meta.touched && (
+                                      <span>{meta.error}</span>
+                                    )}
+                                  </FormText>
+                                </FormGroup>
+                              )}
+                            </Field>
+                          ) : (
+                            // Otherwise render it this way (when the optionalFieldInput type is int)
+                            <div className="integer">
+                              <FormLabel>
+                                <Field
+                                  name={
+                                    "optionalFieldInputType" +
+                                    question.id +
+                                    "*" +
+                                    option.text
+                                  }
+                                  component="input"
+                                  type="number"
+                                />{" "}
+                              </FormLabel>
+                            </div>
+                          )}
                         </ConditionSpecify>
                       ) : (
                         ""
@@ -416,7 +471,6 @@ class Question extends Component {
                       component="input"
                       type="number"
                       value={question.text}
-                      min="0"
                     />{" "}
                     {question.text}
                   </FormLabel>
@@ -435,7 +489,6 @@ class Question extends Component {
                     component="input"
                     type="number"
                     value={question.text}
-                    min="0"
                   />{" "}
                   {question.text}
                 </FormLabel>
