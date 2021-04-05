@@ -16,7 +16,7 @@ class SDCSidebar extends React.Component {
   };
 
   render() {
-    const { sections, curr_section } = this.props; 
+    const { sections, curr_section, reviewIndex } = this.props;
     return (
       <Container fluid>
         <Row>
@@ -33,6 +33,16 @@ class SDCSidebar extends React.Component {
                 {section.name}
               </Button>
             ))}
+            <Button
+              className={`sdc-btn ${
+                curr_section == reviewIndex ? "active" : ""
+              } sdc-container`}
+              variant="outline-dark"
+              key={10000000000000000}
+              onClick={() => this.handleSection(reviewIndex)}
+            >
+              Review
+            </Button>
           </Col>
         </Row>
       </Container>
