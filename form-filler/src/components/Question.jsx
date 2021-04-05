@@ -18,7 +18,7 @@ import "./Question.scss";
 const Condition = ({ when, is, children }) => (
   <Field name={when} subscription={{ value: true }}>
     {/* Use value.match(is) because controlleranswer could be * meaning it could be anything so we will use a regex to express this */}
-    {({ input: { value } }) => (String(value).match(is[0]) || (Array.isArray(value) ? value.includes(is[1]) : false) ? children : null)}
+    {({ input: { value } }) => (String(value).match(is[0]) || value === is[1] || (Array.isArray(value) ? value.includes(is[1]) : false) ? children : null)}
   </Field>
 );
 
