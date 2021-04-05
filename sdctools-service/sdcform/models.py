@@ -22,6 +22,9 @@ class Section(models.Model):
                                 on_delete=models.CASCADE)
     order = models.IntegerField()
 
+    class Meta:
+        ordering = ['order']
+
 
 class SDCQuestion(models.Model):
     type = models.CharField(max_length=15)
