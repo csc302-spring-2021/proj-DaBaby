@@ -76,6 +76,7 @@ class Question extends Component {
                           component="input"
                           type="radio"
                           value={option.text}
+                          validate={this.required}
                         />{" "}
                         {option.text}
                         {/* If the choice has an optionalfieldinputtype, render it below  */}
@@ -127,6 +128,7 @@ class Question extends Component {
                                   }
                                   component="input"
                                   type="number"
+                                  validate={this.required}
                                 />{" "}
                               </FormLabel>
                             </div>
@@ -156,6 +158,7 @@ class Question extends Component {
                         component="input"
                         type="radio"
                         value={option.text}
+                        validate={this.required}
                       />{" "}
                       {option.text}
                       {/* If the choice has an optionalfieldinputtype, render it below  */}
@@ -207,6 +210,7 @@ class Question extends Component {
                                   }
                                   component="input"
                                   type="number"
+                                  validate={this.required}
                                 />{" "}
                               </FormLabel>
                             </div>
@@ -471,6 +475,7 @@ class Question extends Component {
                       component="input"
                       type="number"
                       value={question.text}
+                      validate={this.required}
                     />{" "}
                     {question.text}
                   </FormLabel>
@@ -489,6 +494,7 @@ class Question extends Component {
                     component="input"
                     type="number"
                     value={question.text}
+                    validate={this.required}
                   />{" "}
                   {question.text}
                 </FormLabel>
