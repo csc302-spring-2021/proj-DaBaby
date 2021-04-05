@@ -1,55 +1,87 @@
 import axios from "axios";
-/* hard-coded forms */
-let forms = [
 
-]
+const SERVER_URL = "http://dababysdcbackendapi-env-2.eba-ybqn7as3.ca-central-1.elasticbeanstalk.com";
 
 /* GET all forms */
 export const getAllForms = (page) => {
-	page.setState({ forms: forms, displayedForms: forms, filter: "" });
+    axios
+        .get(`${SERVER_URL}/api/sdcform?metadata=true`)
+        .then((res) => {
+            if (res.data) {
+                let forms = res.data.sdcFormObjects.filter(form => form.diagnosticProcedureID)
+                page.setState({forms: forms, displayedForms: forms, filter: ""});
+            } else {
+                alert("GET ALL FORMS FAILED");
+            }
+        })
+        .catch((err) => {
+            alert(err.response.data);
+        });
 };
 
 /* POST a new form */
-export const uploadForm = async (page, data) => {
-	axios
-		.post(`/api/sdcform/`, data )
-		.then((res) => {
-			console.log(res.data)
-			if (res.data) {
-				forms.push({
-					formId: res.data.sdcFormObject.id,
-					formName: res.data.sdcFormObject.name,
-					procedureId: res.data.sdcFormObject.diagnosticProcedureID,
-					lastUpdated: data.lastUpdated,
-					sdcFormObject: res.data.sdcFormObject
-				})
-				getAllForms(page)
-			} else {
-				alert("NO ITEMS DATA");
-			}
-		})
-		.catch((err) => {
-			alert(err.response.data.message);
-		});
-	getAllForms(page)
+export const uploadForm = (page, data) => {
+    axios
+        .post(`${SERVER_URL}/api/sdcform/`, data)
+        .then((res) => {
+            if (res.data) {
+                page.setState({newForm: null, newId: "", newName: "", updateForm: null, isUpdate: false});
+                getAllForms(page);
+            } else {
+                alert("UPLOAD FORM FAILED");
+            }
+        })
+        .catch((err) => {
+            console.log(err.response.data)
+            alert(err.response.data.message);
+        });
 };
 
 /* DELETE a form */
-export const deleteForm = (page, data) => {
-	const index = forms.indexOf(data);
-	if (index > -1) {
-		forms.splice(index, 1);
-	}
-	getAllForms(page)
+export const deleteForm = (page, id) => {
+    axios
+        .delete(`${SERVER_URL}/api/sdcform/${id}/`)
+        .then((res) => {
+            if (res.data) {
+                getAllForms(page)
+            } else {
+                alert("DELETE FORM FAILED");
+            }
+        })
+        .catch((err) => {
+            alert(err.response.data.message);
+        });
 };
 
 /* PUT a form */
 export const updateForm = (page, data) => {
-	const index = forms.indexOf(data.updateForm);
-	if (index > -1) {
-		forms[index].formName = data.formName
-		forms[index].lastUpdated = data.lastUpdated
-		forms[index].file = data.file
-	}
-	getAllForms(page)
+    axios
+        .put(`${SERVER_URL}/api/sdcform/${data.id}/`, {xmlString: data.xmlString, name: data.name})
+        .then((res) => {
+            if (res.data) {
+                page.setState({newForm: null, newId: "", newName: "", updateForm: null, isUpdate: false})
+                getAllForms(page)
+            } else {
+                alert("UPDATE FORM FAILED");
+            }
+        })
+        .catch((err) => {
+            alert(err.response.data.message);
+        });
+};
+
+/* GET SDC forms */
+export const getSDCForm = (page, id) => {
+    axios
+        .get(`${SERVER_URL}/api/sdcform/${id}/`)
+        .then((res) => {
+            if (res.data) {
+                page.setState({form: res.data.sdcFormObject});
+            } else {
+                alert("GET SDC FORM FAILED");
+            }
+        })
+        .catch((err) => {
+            alert(err.response.data);
+        });
 };

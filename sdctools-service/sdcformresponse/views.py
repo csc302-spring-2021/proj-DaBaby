@@ -1,6 +1,3 @@
-from django.http import HttpResponse
-
-from django.shortcuts import render, redirect
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
 
 from rest_framework.decorators import api_view
@@ -9,10 +6,7 @@ from rest_framework import status
 
 from dateutil import parser
 
-from .models import *
 from .serializers import *
-
-# Create your views here.
 
 
 @api_view(['GET', 'POST'])
@@ -61,6 +55,8 @@ def sdcformresponses(request):
         }
         return Response(json)
     else:
+        models_to_save = []
+
         try:
             sdc_form = SDCForm.objects.get(id=request.data["sdcFormID"])
         except SDCForm.DoesNotExist:
@@ -91,7 +87,7 @@ def sdcformresponses(request):
                            '10'
             }
             return Response(content, status=status.HTTP_400_BAD_REQUEST)
-        patient_id.save()
+        models_to_save.append(patient_id)
 
         clinician_id = FormFillerID(identifier=request.data["clinicianID"])
         try:
@@ -102,12 +98,12 @@ def sdcformresponses(request):
                            'of 12'
             }
             return Response(content, status=status.HTTP_400_BAD_REQUEST)
-        clinician_id.save()
+        models_to_save.append(clinician_id)
 
         sdc_form_response = SDCFormResponse(
             patient_id=patient_id, clinician_id=clinician_id, sdcform=sdc_form,
             diagnostic_procedure_id=diagnostic_procedure_id)
-        sdc_form_response.save()
+        models_to_save.append(sdc_form_response)
 
         sections = sdc_form.sections.all()
 
@@ -130,7 +126,10 @@ def sdcformresponses(request):
                 else:
                     answer = MultipleChoiceAnswer(
                         sdcformresponse=sdc_form_response, sdcquestion=question)
-                answer.save()
+                models_to_save.append(answer)
+
+        for model_ in models_to_save:
+            model_.save()
 
         serializer = SDCFormResponseSerializer(instance=sdc_form_response)
         json = {
@@ -159,6 +158,8 @@ def sdcformresponse(request, response_id):
         }
         return Response(json)
     elif request.method == "PUT":
+        models_to_save = []
+
         try:
             sdc_form_response = SDCFormResponse.objects.get(id=response_id)
         except SDCFormResponse.DoesNotExist:
@@ -194,7 +195,7 @@ def sdcformresponse(request, response_id):
 
                 try:
                     answer.full_clean()
-                    answer.save()
+                    models_to_save.append(answer)
                 except ValidationError:
                     invalid_input = InvalidInput(
                         sdcquestion=question, message="Not a valid text answer")
@@ -206,7 +207,7 @@ def sdcformresponse(request, response_id):
 
                 try:
                     answer.full_clean()
-                    answer.save()
+                    models_to_save.append(answer)
                 except ValidationError:
                     invalid_input = InvalidInput(
                         sdcquestion=question, message="Not a valid integer "
@@ -219,7 +220,7 @@ def sdcformresponse(request, response_id):
 
                 try:
                     answer.full_clean()
-                    answer.save()
+                    models_to_save.append(answer)
                 except ValidationError:
                     invalid_input = InvalidInput(
                         sdcquestion=question, message="Not a valid true-false"
@@ -247,7 +248,7 @@ def sdcformresponse(request, response_id):
                         # addition fields are good, depending on
                         # optionalFieldInputType of the choice object
                         single_choice.full_clean()
-                        single_choice.save()
+                        models_to_save.append(single_choice)
                     except ValidationError:
                         invalid_input = InvalidInput(
                             sdcquestion=question,
@@ -268,7 +269,7 @@ def sdcformresponse(request, response_id):
 
                     try:
                         multiple_choice.full_clean()
-                        multiple_choice.save()
+                        models_to_save.append(multiple_choice)
                     except ValidationError:
                         invalid_input = InvalidInput(
                             sdcquestion=question,
@@ -280,6 +281,10 @@ def sdcformresponse(request, response_id):
             instance=sdc_form_response)
         invalid_inputs_serializer = InvalidInputSerializer(invalid_inputs,
                                                            many=True)
+
+        for model_ in models_to_save:
+            model_.save()
+
         json = {
             "message": "Success",
             "responseObject": response_serializer.data,

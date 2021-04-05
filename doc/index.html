@@ -689,6 +689,14 @@
   <script>
     // Script section to load models into a JS Var
     var defs = {}
+            defs["inline_response_200"] = {
+  "oneOf" : [ {
+    "$ref" : "#/components/schemas/SDCFormQueryResponse"
+  }, {
+    "$ref" : "#/components/schemas/SDCFormMetadataQueryResponse"
+  } ]
+};
+            defs["OneOfinline_response_200"] = {};
             defs["SDCFormAnswerObject"] = {
   "required" : [ "answer", "questionID" ],
   "type" : "object",
@@ -700,7 +708,7 @@
     },
     "answer" : {
       "type" : "string",
-      "example" : "non-null example answer"
+      "example" : "example answer"
     }
   }
 };
@@ -718,8 +726,8 @@
     }
   }
 };
-            defs["SDCFormObject"] = {
-  "required" : [ "id", "name", "sections" ],
+            defs["SDCFormMetadataObject"] = {
+  "required" : [ "diagnosticProcedureID", "id", "name", "timestamp" ],
   "type" : "object",
   "properties" : {
     "id" : {
@@ -730,6 +738,52 @@
     "name" : {
       "type" : "string",
       "example" : "example sdc form"
+    },
+    "diagnosticProcedureID" : {
+      "type" : "string",
+      "example" : "id1"
+    },
+    "timestamp" : {
+      "type" : "string",
+      "format" : "date-time"
+    }
+  }
+};
+            defs["SDCFormMetadataQueryResponse"] = {
+  "required" : [ "message", "sdcFormObjects" ],
+  "type" : "object",
+  "properties" : {
+    "message" : {
+      "type" : "string"
+    },
+    "sdcFormObjects" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/components/schemas/SDCFormMetadataObject"
+      }
+    }
+  }
+};
+            defs["SDCFormObject"] = {
+  "required" : [ "diagnosticProcedureID", "id", "name", "sections", "timestamp" ],
+  "type" : "object",
+  "properties" : {
+    "id" : {
+      "type" : "integer",
+      "format" : "int32",
+      "example" : 1
+    },
+    "name" : {
+      "type" : "string",
+      "example" : "example sdc form"
+    },
+    "diagnosticProcedureID" : {
+      "type" : "string",
+      "example" : "id1"
+    },
+    "timestamp" : {
+      "type" : "string",
+      "format" : "date-time"
     },
     "sections" : {
       "type" : "array",
@@ -751,6 +805,21 @@
     }
   }
 };
+            defs["SDCFormQueryResponse"] = {
+  "required" : [ "message", "sdcFormObjects" ],
+  "type" : "object",
+  "properties" : {
+    "message" : {
+      "type" : "string"
+    },
+    "sdcFormObjects" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/components/schemas/SDCFormObject"
+      }
+    }
+  }
+};
             defs["SDCFormQuestionObject"] = {
   "required" : [ "id", "questionText", "type" ],
   "type" : "object",
@@ -762,7 +831,7 @@
     },
     "type" : {
       "type" : "string",
-      "example" : "single-choice"
+      "example" : "single-choice / multiple-choice / free-text / integer / true-false"
     },
     "questionText" : {
       "type" : "string",
@@ -797,34 +866,15 @@
     }
   }
 };
-            defs["SDCFormResponseObject"] = {
-  "required" : [ "answers", "id", "patientID", "sdcFormID", "timestamp" ],
+            defs["SDCFormResponseObjectResponse"] = {
+  "required" : [ "message", "responseObject" ],
   "type" : "object",
   "properties" : {
-    "id" : {
-      "type" : "integer",
-      "format" : "int32",
-      "example" : 1
+    "message" : {
+      "type" : "string"
     },
-    "patientID" : {
-      "type" : "integer",
-      "format" : "int32",
-      "example" : 1
-    },
-    "sdcFormID" : {
-      "type" : "integer",
-      "format" : "int32",
-      "example" : 1
-    },
-    "timestamp" : {
-      "type" : "string",
-      "format" : "date-time"
-    },
-    "answers" : {
-      "type" : "array",
-      "items" : {
-        "$ref" : "#/components/schemas/SDCFormAnswerObject"
-      }
+    "responseObject" : {
+      "$ref" : "#/components/schemas/SDCFormResponseServerObject"
     }
   }
 };
@@ -838,7 +888,45 @@
     "sdcFormResponses" : {
       "type" : "array",
       "items" : {
-        "$ref" : "#/components/schemas/SDCFormResponseObject"
+        "$ref" : "#/components/schemas/SDCFormResponseServerObject"
+      }
+    }
+  }
+};
+            defs["SDCFormResponseServerObject"] = {
+  "required" : [ "answers", "clinicianID", "diagnosticProcedureID", "id", "patientID", "sdcFormID", "timestamp" ],
+  "type" : "object",
+  "properties" : {
+    "id" : {
+      "type" : "integer",
+      "format" : "int32",
+      "example" : 1
+    },
+    "patientID" : {
+      "type" : "string",
+      "example" : "patient1"
+    },
+    "clinicianID" : {
+      "type" : "string",
+      "example" : "clinician1"
+    },
+    "sdcFormID" : {
+      "type" : "integer",
+      "format" : "int32",
+      "example" : 1
+    },
+    "diagnosticProcedureID" : {
+      "type" : "string",
+      "example" : "procedure1"
+    },
+    "timestamp" : {
+      "type" : "string",
+      "format" : "date-time"
+    },
+    "answers" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/components/schemas/SDCFormAnswerObject"
       }
     }
   }
@@ -851,13 +939,32 @@
       "type" : "string"
     },
     "responseObject" : {
-      "$ref" : "#/components/schemas/SDCFormResponseObject"
+      "$ref" : "#/components/schemas/SDCFormResponseServerObject"
     },
     "invalidInputs" : {
       "type" : "array",
       "items" : {
         "$ref" : "#/components/schemas/SDCFormInvalidInputObject"
       }
+    }
+  }
+};
+            defs["SDCFormResponseUploadObject"] = {
+  "required" : [ "clinicianID", "patientID", "sdcFormID" ],
+  "type" : "object",
+  "properties" : {
+    "patientID" : {
+      "type" : "string",
+      "example" : "patient1"
+    },
+    "clinicianID" : {
+      "type" : "string",
+      "example" : "clinician1"
+    },
+    "sdcFormID" : {
+      "type" : "integer",
+      "format" : "int32",
+      "example" : 1
     }
   }
 };
@@ -886,34 +993,11 @@
   "required" : [ "xmlString" ],
   "type" : "object",
   "properties" : {
+    "name" : {
+      "type" : "string"
+    },
     "xmlString" : {
       "type" : "string"
-    }
-  }
-};
-            defs["SDCPartialFormResponseObject"] = {
-  "required" : [ "answers", "patientID", "sdcFormID", "timestamp" ],
-  "type" : "object",
-  "properties" : {
-    "patientID" : {
-      "type" : "integer",
-      "format" : "int32",
-      "example" : 1
-    },
-    "sdcFormID" : {
-      "type" : "integer",
-      "format" : "int32",
-      "example" : 1
-    },
-    "timestamp" : {
-      "type" : "string",
-      "format" : "date-time"
-    },
-    "answers" : {
-      "type" : "array",
-      "items" : {
-        "$ref" : "#/components/schemas/SDCFormAnswerObject"
-      }
     }
   }
 };
@@ -970,8 +1054,14 @@
                     <li data-group="Default" data-name="getSDCFormResponse" class="">
                       <a href="#api-Default-getSDCFormResponse">getSDCFormResponse</a>
                     </li>
-                    <li data-group="Default" data-name="savePartialSDCFormResponse" class="">
-                      <a href="#api-Default-savePartialSDCFormResponse">savePartialSDCFormResponse</a>
+                    <li data-group="Default" data-name="querySDCFormResponses" class="">
+                      <a href="#api-Default-querySDCFormResponses">querySDCFormResponses</a>
+                    </li>
+                    <li data-group="Default" data-name="querySDCForms" class="">
+                      <a href="#api-Default-querySDCForms">querySDCForms</a>
+                    </li>
+                    <li data-group="Default" data-name="startNewSDCFormResponse" class="">
+                      <a href="#api-Default-startNewSDCFormResponse">startNewSDCFormResponse</a>
                     </li>
                     <li data-group="Default" data-name="updateSDCForm" class="">
                       <a href="#api-Default-updateSDCForm">updateSDCForm</a>
@@ -995,7 +1085,7 @@
         <div id="header">
           <div id="api-_">
             <h2 id="welcome-to-apidoc">API and SDK Documentation</h2>
-              <div class="app-desc">Version: 1.0.0</div>
+              <div class="app-desc">Version: 2.0.0</div>
             <hr>
             <div>A SDC Form filler/manager web application</div>
           </div>
@@ -1015,7 +1105,7 @@
                         <p class="marked"></p>
                         <p></p>
                         <br />
-                        <pre class="prettyprint language-html prettyprinted" data-type="delete"><code><span class="pln">/api/sdcform/{sdcform-id}</span></code></pre>
+                        <pre class="prettyprint language-html prettyprinted" data-type="delete"><code><span class="pln">/api/sdcform/{procedure-id}</span></code></pre>
                         <p>
                           <h3>Usage and SDK Samples</h3>
                         </p>
@@ -1037,7 +1127,7 @@
                           <div class="tab-pane active" id="examples-Default-deleteSDCForm-0-curl">
                            <pre class="prettyprint"><code class="language-bsh">curl -X DELETE\
 -H "Accept: application/json"\
-"http://127.0.0.1/api/sdcform/{sdcform-id}"</code></pre>
+"http://127.0.0.1/api/sdcform/{procedure-id}"</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-Default-deleteSDCForm-0-java">
                             <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
@@ -1053,9 +1143,9 @@ public class DefaultApiExample {
     public static void main(String[] args) {
         
         DefaultApi apiInstance = new DefaultApi();
-        Integer sdcformId = 56; // Integer | The SDCFormID of the SDCForm to be deleted.
+        Integer procedureId = 56; // Integer | The procedureID that links to the sdcform to be updated.
         try {
-            ServerMessage result = apiInstance.deleteSDCForm(sdcformId);
+            ServerMessage result = apiInstance.deleteSDCForm(procedureId);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling DefaultApi#deleteSDCForm");
@@ -1072,9 +1162,9 @@ public class DefaultApiExample {
 
     public static void main(String[] args) {
         DefaultApi apiInstance = new DefaultApi();
-        Integer sdcformId = 56; // Integer | The SDCFormID of the SDCForm to be deleted.
+        Integer procedureId = 56; // Integer | The procedureID that links to the sdcform to be updated.
         try {
-            ServerMessage result = apiInstance.deleteSDCForm(sdcformId);
+            ServerMessage result = apiInstance.deleteSDCForm(procedureId);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling DefaultApi#deleteSDCForm");
@@ -1088,12 +1178,12 @@ public class DefaultApiExample {
   <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
   </div> -->
                             <div class="tab-pane" id="examples-Default-deleteSDCForm-0-objc">
-                              <pre class="prettyprint"><code class="language-cpp">Integer *sdcformId = 56; // The SDCFormID of the SDCForm to be deleted.
+                              <pre class="prettyprint"><code class="language-cpp">Integer *procedureId = 56; // The procedureID that links to the sdcform to be updated.
 
 DefaultApi *apiInstance = [[DefaultApi alloc] init];
 
 // Delete an SDCForm
-[apiInstance deleteSDCFormWith:sdcformId
+[apiInstance deleteSDCFormWith:procedureId
               completionHandler: ^(ServerMessage output, NSError* error) {
                             if (output) {
                                 NSLog(@"%@", output);
@@ -1109,7 +1199,7 @@ DefaultApi *apiInstance = [[DefaultApi alloc] init];
                               <pre class="prettyprint"><code class="language-js">var SdcFormBackendApiTeamDaBaby = require('sdc_form_backend_api___team_da_baby');
 
 var api = new SdcFormBackendApiTeamDaBaby.DefaultApi()
-var sdcformId = 56; // {{Integer}} The SDCFormID of the SDCForm to be deleted.
+var procedureId = 56; // {{Integer}} The procedureID that links to the sdcform to be updated.
 
 var callback = function(error, data, response) {
   if (error) {
@@ -1118,7 +1208,7 @@ var callback = function(error, data, response) {
     console.log('API called successfully. Returned data: ' + data);
   }
 };
-api.deleteSDCForm(sdcformId, callback);
+api.deleteSDCForm(procedureId, callback);
 </code></pre>
                             </div>
 
@@ -1140,12 +1230,12 @@ namespace Example
         {
 
             var apiInstance = new DefaultApi();
-            var sdcformId = 56;  // Integer | The SDCFormID of the SDCForm to be deleted.
+            var procedureId = 56;  // Integer | The procedureID that links to the sdcform to be updated.
 
             try
             {
                 // Delete an SDCForm
-                ServerMessage result = apiInstance.deleteSDCForm(sdcformId);
+                ServerMessage result = apiInstance.deleteSDCForm(procedureId);
                 Debug.WriteLine(result);
             }
             catch (Exception e)
@@ -1163,10 +1253,10 @@ namespace Example
 require_once(__DIR__ . '/vendor/autoload.php');
 
 $api_instance = new Swagger\Client\ApiDefaultApi();
-$sdcformId = 56; // Integer | The SDCFormID of the SDCForm to be deleted.
+$procedureId = 56; // Integer | The procedureID that links to the sdcform to be updated.
 
 try {
-    $result = $api_instance->deleteSDCForm($sdcformId);
+    $result = $api_instance->deleteSDCForm($procedureId);
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling DefaultApi->deleteSDCForm: ', $e->getMessage(), PHP_EOL;
@@ -1180,10 +1270,10 @@ use WWW::SwaggerClient::Configuration;
 use WWW::SwaggerClient::DefaultApi;
 
 my $api_instance = WWW::SwaggerClient::DefaultApi->new();
-my $sdcformId = 56; # Integer | The SDCFormID of the SDCForm to be deleted.
+my $procedureId = 56; # Integer | The procedureID that links to the sdcform to be updated.
 
 eval { 
-    my $result = $api_instance->deleteSDCForm(sdcformId => $sdcformId);
+    my $result = $api_instance->deleteSDCForm(procedureId => $procedureId);
     print Dumper($result);
 };
 if ($@) {
@@ -1200,11 +1290,11 @@ from pprint import pprint
 
 # create an instance of the API class
 api_instance = swagger_client.DefaultApi()
-sdcformId = 56 # Integer | The SDCFormID of the SDCForm to be deleted.
+procedureId = 56 # Integer | The procedureID that links to the sdcform to be updated.
 
 try: 
     # Delete an SDCForm
-    api_response = api_instance.delete_sdc_form(sdcformId)
+    api_response = api_instance.delete_sdc_form(procedureId)
     pprint(api_response)
 except ApiException as e:
     print("Exception when calling DefaultApi->deleteSDCForm: %s\n" % e)</code></pre>
@@ -1219,11 +1309,11 @@ except ApiException as e:
                                   <th width="150px">Name</th>
                                   <th>Description</th>
                                 </tr>
-                                  <tr><td style="width:150px;">sdcform-id*</td>
+                                  <tr><td style="width:150px;">procedure-id*</td>
                                   <td>
                                   
                                   
-                                      <div id="d2e199_deleteSDCForm_sdcformId">
+                                      <div id="d2e199_deleteSDCForm_procedureId">
                                           <div class="json-schema-view">
                                               <div class="primitive">
                                                   <span class="type">
@@ -1234,7 +1324,7 @@ except ApiException as e:
                                                       </span>
                                   
                                                       <div class="inner description">
-                                                          The SDCFormID of the SDCForm to be deleted.
+                                                          The procedureID that links to the sdcform to be updated.
                                                       </div>
                                               </div>
                                                   <div class="inner required">
@@ -1747,7 +1837,7 @@ public class DefaultApiExample {
     public static void main(String[] args) {
         
         DefaultApi apiInstance = new DefaultApi();
-        Integer procedureId = 56; // Integer | The procedureID of the SDCForm to be updated.
+        Integer procedureId = 56; // Integer | The procedureID that links to the sdcform to be updated.
         try {
             SDCFormObjectResponse result = apiInstance.getSDCForm(procedureId);
             System.out.println(result);
@@ -1766,7 +1856,7 @@ public class DefaultApiExample {
 
     public static void main(String[] args) {
         DefaultApi apiInstance = new DefaultApi();
-        Integer procedureId = 56; // Integer | The procedureID of the SDCForm to be updated.
+        Integer procedureId = 56; // Integer | The procedureID that links to the sdcform to be updated.
         try {
             SDCFormObjectResponse result = apiInstance.getSDCForm(procedureId);
             System.out.println(result);
@@ -1782,7 +1872,7 @@ public class DefaultApiExample {
   <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
   </div> -->
                             <div class="tab-pane" id="examples-Default-getSDCForm-0-objc">
-                              <pre class="prettyprint"><code class="language-cpp">Integer *procedureId = 56; // The procedureID of the SDCForm to be updated.
+                              <pre class="prettyprint"><code class="language-cpp">Integer *procedureId = 56; // The procedureID that links to the sdcform to be updated.
 
 DefaultApi *apiInstance = [[DefaultApi alloc] init];
 
@@ -1803,7 +1893,7 @@ DefaultApi *apiInstance = [[DefaultApi alloc] init];
                               <pre class="prettyprint"><code class="language-js">var SdcFormBackendApiTeamDaBaby = require('sdc_form_backend_api___team_da_baby');
 
 var api = new SdcFormBackendApiTeamDaBaby.DefaultApi()
-var procedureId = 56; // {{Integer}} The procedureID of the SDCForm to be updated.
+var procedureId = 56; // {{Integer}} The procedureID that links to the sdcform to be updated.
 
 var callback = function(error, data, response) {
   if (error) {
@@ -1834,7 +1924,7 @@ namespace Example
         {
 
             var apiInstance = new DefaultApi();
-            var procedureId = 56;  // Integer | The procedureID of the SDCForm to be updated.
+            var procedureId = 56;  // Integer | The procedureID that links to the sdcform to be updated.
 
             try
             {
@@ -1857,7 +1947,7 @@ namespace Example
 require_once(__DIR__ . '/vendor/autoload.php');
 
 $api_instance = new Swagger\Client\ApiDefaultApi();
-$procedureId = 56; // Integer | The procedureID of the SDCForm to be updated.
+$procedureId = 56; // Integer | The procedureID that links to the sdcform to be updated.
 
 try {
     $result = $api_instance->getSDCForm($procedureId);
@@ -1874,7 +1964,7 @@ use WWW::SwaggerClient::Configuration;
 use WWW::SwaggerClient::DefaultApi;
 
 my $api_instance = WWW::SwaggerClient::DefaultApi->new();
-my $procedureId = 56; # Integer | The procedureID of the SDCForm to be updated.
+my $procedureId = 56; # Integer | The procedureID that links to the sdcform to be updated.
 
 eval { 
     my $result = $api_instance->getSDCForm(procedureId => $procedureId);
@@ -1894,7 +1984,7 @@ from pprint import pprint
 
 # create an instance of the API class
 api_instance = swagger_client.DefaultApi()
-procedureId = 56 # Integer | The procedureID of the SDCForm to be updated.
+procedureId = 56 # Integer | The procedureID that links to the sdcform to be updated.
 
 try: 
     # Get the SDCForm object with the provided procedureID.
@@ -1928,7 +2018,7 @@ except ApiException as e:
                                                       </span>
                                   
                                                       <div class="inner description">
-                                                          The procedureID of the SDCForm to be updated.
+                                                          The procedureID that links to the sdcform to be updated.
                                                       </div>
                                               </div>
                                                   <div class="inner required">
@@ -2048,7 +2138,7 @@ except ApiException as e:
                       <article id="api-Default-getSDCFormResponse-0" data-group="User" data-name="getSDCFormResponse" data-version="0">
                         <div class="pull-left">
                           <h1>getSDCFormResponse</h1>
-                          <p>Get all SDCFormResponse objects that matches the query parameter.</p>
+                          <p>Get SDCFormResponse by responseId.</p>
                         </div>
                         <div class="pull-right"></div>
                         <div class="clearfix"></div>
@@ -2056,7 +2146,7 @@ except ApiException as e:
                         <p class="marked"></p>
                         <p></p>
                         <br />
-                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/api/sdcformresponse</span></code></pre>
+                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/api/sdcformresponse/{response-id}</span></code></pre>
                         <p>
                           <h3>Usage and SDK Samples</h3>
                         </p>
@@ -2078,7 +2168,7 @@ except ApiException as e:
                           <div class="tab-pane active" id="examples-Default-getSDCFormResponse-0-curl">
                            <pre class="prettyprint"><code class="language-bsh">curl -X GET\
 -H "Accept: application/json"\
-"http://127.0.0.1/api/sdcformresponse?patientID=&diagnosticProcedureID=&timestamp="</code></pre>
+"http://127.0.0.1/api/sdcformresponse/{response-id}"</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-Default-getSDCFormResponse-0-java">
                             <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
@@ -2094,11 +2184,9 @@ public class DefaultApiExample {
     public static void main(String[] args) {
         
         DefaultApi apiInstance = new DefaultApi();
-        Integer patientID = 56; // Integer | Query for all responses with the given patientID.
-        Integer diagnosticProcedureID = 56; // Integer | Query for all responses with the given DiagnosticProcedureID
-        Date timestamp = 2013-10-20T19:20:30+01:00; // Date | Query for all responses with the given timestamp
+        Integer responseId = 56; // Integer | The id of the SDCFormResponse to be updated/deleted.
         try {
-            SDCFormResponseQueryResponse result = apiInstance.getSDCFormResponse(patientID, diagnosticProcedureID, timestamp);
+            SDCFormResponseObjectResponse result = apiInstance.getSDCFormResponse(responseId);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling DefaultApi#getSDCFormResponse");
@@ -2115,11 +2203,9 @@ public class DefaultApiExample {
 
     public static void main(String[] args) {
         DefaultApi apiInstance = new DefaultApi();
-        Integer patientID = 56; // Integer | Query for all responses with the given patientID.
-        Integer diagnosticProcedureID = 56; // Integer | Query for all responses with the given DiagnosticProcedureID
-        Date timestamp = 2013-10-20T19:20:30+01:00; // Date | Query for all responses with the given timestamp
+        Integer responseId = 56; // Integer | The id of the SDCFormResponse to be updated/deleted.
         try {
-            SDCFormResponseQueryResponse result = apiInstance.getSDCFormResponse(patientID, diagnosticProcedureID, timestamp);
+            SDCFormResponseObjectResponse result = apiInstance.getSDCFormResponse(responseId);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling DefaultApi#getSDCFormResponse");
@@ -2133,17 +2219,13 @@ public class DefaultApiExample {
   <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
   </div> -->
                             <div class="tab-pane" id="examples-Default-getSDCFormResponse-0-objc">
-                              <pre class="prettyprint"><code class="language-cpp">Integer *patientID = 56; // Query for all responses with the given patientID. (optional)
-Integer *diagnosticProcedureID = 56; // Query for all responses with the given DiagnosticProcedureID (optional)
-Date *timestamp = 2013-10-20T19:20:30+01:00; // Query for all responses with the given timestamp (optional)
+                              <pre class="prettyprint"><code class="language-cpp">Integer *responseId = 56; // The id of the SDCFormResponse to be updated/deleted.
 
 DefaultApi *apiInstance = [[DefaultApi alloc] init];
 
-// Get all SDCFormResponse objects that matches the query parameter.
-[apiInstance getSDCFormResponseWith:patientID
-    diagnosticProcedureID:diagnosticProcedureID
-    timestamp:timestamp
-              completionHandler: ^(SDCFormResponseQueryResponse output, NSError* error) {
+// Get SDCFormResponse by responseId.
+[apiInstance getSDCFormResponseWith:responseId
+              completionHandler: ^(SDCFormResponseObjectResponse output, NSError* error) {
                             if (output) {
                                 NSLog(@"%@", output);
                             }
@@ -2158,11 +2240,8 @@ DefaultApi *apiInstance = [[DefaultApi alloc] init];
                               <pre class="prettyprint"><code class="language-js">var SdcFormBackendApiTeamDaBaby = require('sdc_form_backend_api___team_da_baby');
 
 var api = new SdcFormBackendApiTeamDaBaby.DefaultApi()
-var opts = { 
-  'patientID': 56, // {{Integer}} Query for all responses with the given patientID.
-  'diagnosticProcedureID': 56, // {{Integer}} Query for all responses with the given DiagnosticProcedureID
-  'timestamp': 2013-10-20T19:20:30+01:00 // {{Date}} Query for all responses with the given timestamp
-};
+var responseId = 56; // {{Integer}} The id of the SDCFormResponse to be updated/deleted.
+
 var callback = function(error, data, response) {
   if (error) {
     console.error(error);
@@ -2170,7 +2249,7 @@ var callback = function(error, data, response) {
     console.log('API called successfully. Returned data: ' + data);
   }
 };
-api.getSDCFormResponse(opts, callback);
+api.getSDCFormResponse(responseId, callback);
 </code></pre>
                             </div>
 
@@ -2192,14 +2271,12 @@ namespace Example
         {
 
             var apiInstance = new DefaultApi();
-            var patientID = 56;  // Integer | Query for all responses with the given patientID. (optional) 
-            var diagnosticProcedureID = 56;  // Integer | Query for all responses with the given DiagnosticProcedureID (optional) 
-            var timestamp = 2013-10-20T19:20:30+01:00;  // Date | Query for all responses with the given timestamp (optional) 
+            var responseId = 56;  // Integer | The id of the SDCFormResponse to be updated/deleted.
 
             try
             {
-                // Get all SDCFormResponse objects that matches the query parameter.
-                SDCFormResponseQueryResponse result = apiInstance.getSDCFormResponse(patientID, diagnosticProcedureID, timestamp);
+                // Get SDCFormResponse by responseId.
+                SDCFormResponseObjectResponse result = apiInstance.getSDCFormResponse(responseId);
                 Debug.WriteLine(result);
             }
             catch (Exception e)
@@ -2217,12 +2294,10 @@ namespace Example
 require_once(__DIR__ . '/vendor/autoload.php');
 
 $api_instance = new Swagger\Client\ApiDefaultApi();
-$patientID = 56; // Integer | Query for all responses with the given patientID.
-$diagnosticProcedureID = 56; // Integer | Query for all responses with the given DiagnosticProcedureID
-$timestamp = 2013-10-20T19:20:30+01:00; // Date | Query for all responses with the given timestamp
+$responseId = 56; // Integer | The id of the SDCFormResponse to be updated/deleted.
 
 try {
-    $result = $api_instance->getSDCFormResponse($patientID, $diagnosticProcedureID, $timestamp);
+    $result = $api_instance->getSDCFormResponse($responseId);
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling DefaultApi->getSDCFormResponse: ', $e->getMessage(), PHP_EOL;
@@ -2236,12 +2311,10 @@ use WWW::SwaggerClient::Configuration;
 use WWW::SwaggerClient::DefaultApi;
 
 my $api_instance = WWW::SwaggerClient::DefaultApi->new();
-my $patientID = 56; # Integer | Query for all responses with the given patientID.
-my $diagnosticProcedureID = 56; # Integer | Query for all responses with the given DiagnosticProcedureID
-my $timestamp = 2013-10-20T19:20:30+01:00; # Date | Query for all responses with the given timestamp
+my $responseId = 56; # Integer | The id of the SDCFormResponse to be updated/deleted.
 
 eval { 
-    my $result = $api_instance->getSDCFormResponse(patientID => $patientID, diagnosticProcedureID => $diagnosticProcedureID, timestamp => $timestamp);
+    my $result = $api_instance->getSDCFormResponse(responseId => $responseId);
     print Dumper($result);
 };
 if ($@) {
@@ -2258,13 +2331,11 @@ from pprint import pprint
 
 # create an instance of the API class
 api_instance = swagger_client.DefaultApi()
-patientID = 56 # Integer | Query for all responses with the given patientID. (optional)
-diagnosticProcedureID = 56 # Integer | Query for all responses with the given DiagnosticProcedureID (optional)
-timestamp = 2013-10-20T19:20:30+01:00 # Date | Query for all responses with the given timestamp (optional)
+responseId = 56 # Integer | The id of the SDCFormResponse to be updated/deleted.
 
 try: 
-    # Get all SDCFormResponse objects that matches the query parameter.
-    api_response = api_instance.get_sdc_form_response(patientID=patientID, diagnosticProcedureID=diagnosticProcedureID, timestamp=timestamp)
+    # Get SDCFormResponse by responseId.
+    api_response = api_instance.get_sdc_form_response(responseId)
     pprint(api_response)
 except ApiException as e:
     print("Exception when calling DefaultApi->getSDCFormResponse: %s\n" % e)</code></pre>
@@ -2273,86 +2344,45 @@ except ApiException as e:
 
                           <h2>Parameters</h2>
 
-
-
-
-
-                            <div class="methodsubtabletitle">Query parameters</div>
+                            <div class="methodsubtabletitle">Path parameters</div>
                             <table id="methodsubtable">
-                              <tr>
-                                <th width="150px">Name</th>
-                                <th>Description</th>
-                              </tr>
-                                <tr><td style="width:150px;">patientID</td>
-                                <td>
-                                
-                                
-                                    <div id="d2e199_getSDCFormResponse_patientID">
-                                        <div class="json-schema-view">
-                                            <div class="primitive">
-                                                <span class="type">
-                                                    Integer
-                                                </span>
-                                                    <span class="format">
-                                                        (int32)
-                                                    </span>
-                                
-                                                    <div class="inner description">
-                                                        Query for all responses with the given patientID.
-                                                    </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </td>
+                                <tr>
+                                  <th width="150px">Name</th>
+                                  <th>Description</th>
                                 </tr>
-                                <tr><td style="width:150px;">diagnosticProcedureID</td>
-                                <td>
-                                
-                                
-                                    <div id="d2e199_getSDCFormResponse_diagnosticProcedureID">
-                                        <div class="json-schema-view">
-                                            <div class="primitive">
-                                                <span class="type">
-                                                    Integer
-                                                </span>
-                                                    <span class="format">
-                                                        (int32)
-                                                    </span>
-                                
-                                                    <div class="inner description">
-                                                        Query for all responses with the given DiagnosticProcedureID
-                                                    </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </td>
-                                </tr>
-                                <tr><td style="width:150px;">timestamp</td>
-                                <td>
-                                
-                                
-                                    <div id="d2e199_getSDCFormResponse_timestamp">
-                                        <div class="json-schema-view">
-                                            <div class="primitive">
-                                                <span class="type">
-                                                    Date
-                                                </span>
-                                                    <span class="format">
-                                                        (date-time)
-                                                    </span>
-                                
-                                                    <div class="inner description">
-                                                        Query for all responses with the given timestamp
-                                                    </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </td>
-                                </tr>
+                                  <tr><td style="width:150px;">response-id*</td>
+                                  <td>
+                                  
+                                  
+                                      <div id="d2e199_getSDCFormResponse_responseId">
+                                          <div class="json-schema-view">
+                                              <div class="primitive">
+                                                  <span class="type">
+                                                      Integer
+                                                  </span>
+                                                      <span class="format">
+                                                          (int32)
+                                                      </span>
+                                  
+                                                      <div class="inner description">
+                                                          The id of the SDCFormResponse to be updated/deleted.
+                                                      </div>
+                                              </div>
+                                                  <div class="inner required">
+                                                      Required
+                                                  </div>
+                                          </div>
+                                      </div>
+                                  </td>
+                                  </tr>
                             </table>
 
+
+
+
+
                           <h2>Responses</h2>
-                            <h3> Status: 200 - All SDCForms matching the query conditions are fetched successfully. </h3>
+                            <h3> Status: 200 - The SDCFormResponse object with the given responseId </h3>
 
                             <ul class="nav nav-tabs nav-tabs-examples" >
                                 <li class="active">
@@ -2367,11 +2397,11 @@ except ApiException as e:
                                     <script>
                                       $(document).ready(function() {
                                         var schemaWrapper = {
-  "description" : "All SDCForms matching the query conditions are fetched successfully.",
+  "description" : "The SDCFormResponse object with the given responseId",
   "content" : {
     "application/json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/SDCFormResponseQueryResponse"
+        "$ref" : "#/components/schemas/SDCFormResponseObjectResponse"
       }
     }
   }
@@ -2400,14 +2430,62 @@ except ApiException as e:
                                 </div>
                             </div>
 
+                            <h3> Status: 404 - The responseId has no corresponding SDCFormResponse. </h3>
+
+                            <ul class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-getSDCFormResponse-404-schema">Schema</a>
+                                </li>
+
+                            </ul>
+
+                            <div class="tab-content" style='margin-bottom: 10px;'>
+                                <div class="tab-pane active" id="responses-getSDCFormResponse-404-schema">
+                                  <div id='responses-getSDCFormResponse-404-schema-404' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
+                                    <script>
+                                      $(document).ready(function() {
+                                        var schemaWrapper = {
+  "description" : "The responseId has no corresponding SDCFormResponse.",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/ServerMessage"
+      }
+    }
+  }
+};
+                                        var schema = schemaWrapper.content["application/json"].schema;
+                                        if (schema.$ref != null) {
+                                          schema = defsParser.$refs.get(schema.$ref);
+                                        } else {
+                                          schemaWrapper.components = {};
+                                          schemaWrapper.components.schemas = Object.assign({}, defs);
+                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                            console.log(err);
+                                          });
+                                        }
+
+                                        //console.log(JSON.stringify(schema));
+                                        var view = new JSONSchemaView(schema, 3);
+                                        $('#responses-getSDCFormResponse-404-schema-data').val(stringify(schema));
+                                        var result = $('#responses-getSDCFormResponse-404-schema-404');
+                                        result.empty();
+                                        result.append(view.render());
+                                      });
+                                    </script>
+                                  </div>
+                                  <input id='responses-getSDCFormResponse-404-schema-data' type='hidden' value=''></input>
+                                </div>
+                            </div>
+
                         </article>
                       </div>
                       <hr>
-                    <div id="api-Default-savePartialSDCFormResponse">
-                      <article id="api-Default-savePartialSDCFormResponse-0" data-group="User" data-name="savePartialSDCFormResponse" data-version="0">
+                    <div id="api-Default-querySDCFormResponses">
+                      <article id="api-Default-querySDCFormResponses-0" data-group="User" data-name="querySDCFormResponses" data-version="0">
                         <div class="pull-left">
-                          <h1>savePartialSDCFormResponse</h1>
-                          <p>Saving a new “partially complete” response</p>
+                          <h1>querySDCFormResponses</h1>
+                          <p>Get all SDCFormResponse objects that matches the query parameter. If no query parameter is define, all response objects are returned.</p>
                         </div>
                         <div class="pull-right"></div>
                         <div class="clearfix"></div>
@@ -2415,32 +2493,31 @@ except ApiException as e:
                         <p class="marked"></p>
                         <p></p>
                         <br />
-                        <pre class="prettyprint language-html prettyprinted" data-type="post"><code><span class="pln">/api/sdcformresponse</span></code></pre>
+                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/api/sdcformresponse</span></code></pre>
                         <p>
                           <h3>Usage and SDK Samples</h3>
                         </p>
                         <ul class="nav nav-tabs nav-tabs-examples">
-                          <li class="active"><a href="#examples-Default-savePartialSDCFormResponse-0-curl">Curl</a></li>
-                          <li class=""><a href="#examples-Default-savePartialSDCFormResponse-0-java">Java</a></li>
-                          <li class=""><a href="#examples-Default-savePartialSDCFormResponse-0-android">Android</a></li>
-                          <!--<li class=""><a href="#examples-Default-savePartialSDCFormResponse-0-groovy">Groovy</a></li>-->
-                          <li class=""><a href="#examples-Default-savePartialSDCFormResponse-0-objc">Obj-C</a></li>
-                          <li class=""><a href="#examples-Default-savePartialSDCFormResponse-0-javascript">JavaScript</a></li>
-                          <!--<li class=""><a href="#examples-Default-savePartialSDCFormResponse-0-angular">Angular</a></li>-->
-                          <li class=""><a href="#examples-Default-savePartialSDCFormResponse-0-csharp">C#</a></li>
-                          <li class=""><a href="#examples-Default-savePartialSDCFormResponse-0-php">PHP</a></li>
-                          <li class=""><a href="#examples-Default-savePartialSDCFormResponse-0-perl">Perl</a></li>
-                          <li class=""><a href="#examples-Default-savePartialSDCFormResponse-0-python">Python</a></li>
+                          <li class="active"><a href="#examples-Default-querySDCFormResponses-0-curl">Curl</a></li>
+                          <li class=""><a href="#examples-Default-querySDCFormResponses-0-java">Java</a></li>
+                          <li class=""><a href="#examples-Default-querySDCFormResponses-0-android">Android</a></li>
+                          <!--<li class=""><a href="#examples-Default-querySDCFormResponses-0-groovy">Groovy</a></li>-->
+                          <li class=""><a href="#examples-Default-querySDCFormResponses-0-objc">Obj-C</a></li>
+                          <li class=""><a href="#examples-Default-querySDCFormResponses-0-javascript">JavaScript</a></li>
+                          <!--<li class=""><a href="#examples-Default-querySDCFormResponses-0-angular">Angular</a></li>-->
+                          <li class=""><a href="#examples-Default-querySDCFormResponses-0-csharp">C#</a></li>
+                          <li class=""><a href="#examples-Default-querySDCFormResponses-0-php">PHP</a></li>
+                          <li class=""><a href="#examples-Default-querySDCFormResponses-0-perl">Perl</a></li>
+                          <li class=""><a href="#examples-Default-querySDCFormResponses-0-python">Python</a></li>
                         </ul>
 
                         <div class="tab-content">
-                          <div class="tab-pane active" id="examples-Default-savePartialSDCFormResponse-0-curl">
-                           <pre class="prettyprint"><code class="language-bsh">curl -X POST\
+                          <div class="tab-pane active" id="examples-Default-querySDCFormResponses-0-curl">
+                           <pre class="prettyprint"><code class="language-bsh">curl -X GET\
 -H "Accept: application/json"\
--H "Content-Type: application/json"\
-"http://127.0.0.1/api/sdcformresponse"</code></pre>
+"http://127.0.0.1/api/sdcformresponse?patientID=&diagnosticProcedureID=&starttime=&endtime=&metadata="</code></pre>
                           </div>
-                          <div class="tab-pane" id="examples-Default-savePartialSDCFormResponse-0-java">
+                          <div class="tab-pane" id="examples-Default-querySDCFormResponses-0-java">
                             <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
 import io.swagger.client.auth.*;
 import io.swagger.client.model.*;
@@ -2454,48 +2531,64 @@ public class DefaultApiExample {
     public static void main(String[] args) {
         
         DefaultApi apiInstance = new DefaultApi();
-        SDCPartialFormResponseObject body = ; // SDCPartialFormResponseObject | The partially completed response object.
+        String patientID = patientID_example; // String | Query for all responses with the given patientID.
+        String diagnosticProcedureID = diagnosticProcedureID_example; // String | Query for all responses with the given DiagnosticProcedureID
+        Date starttime = 2013-10-20T19:20:30+01:00; // Date | Query for all responses after starttime.
+        Date endtime = 2013-10-20T19:20:30+01:00; // Date | Query for all responses before endtime.
+        Boolean metadata = true; // Boolean | Query for responses' metadata only.
         try {
-            SDCFormResponseUpdateResponse result = apiInstance.savePartialSDCFormResponse(body);
+            SDCFormResponseQueryResponse result = apiInstance.querySDCFormResponses(patientID, diagnosticProcedureID, starttime, endtime, metadata);
             System.out.println(result);
         } catch (ApiException e) {
-            System.err.println("Exception when calling DefaultApi#savePartialSDCFormResponse");
+            System.err.println("Exception when calling DefaultApi#querySDCFormResponses");
             e.printStackTrace();
         }
     }
 }</code></pre>
                           </div>
 
-                          <div class="tab-pane" id="examples-Default-savePartialSDCFormResponse-0-android">
+                          <div class="tab-pane" id="examples-Default-querySDCFormResponses-0-android">
                             <pre class="prettyprint"><code class="language-java">import io.swagger.client.api.DefaultApi;
 
 public class DefaultApiExample {
 
     public static void main(String[] args) {
         DefaultApi apiInstance = new DefaultApi();
-        SDCPartialFormResponseObject body = ; // SDCPartialFormResponseObject | The partially completed response object.
+        String patientID = patientID_example; // String | Query for all responses with the given patientID.
+        String diagnosticProcedureID = diagnosticProcedureID_example; // String | Query for all responses with the given DiagnosticProcedureID
+        Date starttime = 2013-10-20T19:20:30+01:00; // Date | Query for all responses after starttime.
+        Date endtime = 2013-10-20T19:20:30+01:00; // Date | Query for all responses before endtime.
+        Boolean metadata = true; // Boolean | Query for responses' metadata only.
         try {
-            SDCFormResponseUpdateResponse result = apiInstance.savePartialSDCFormResponse(body);
+            SDCFormResponseQueryResponse result = apiInstance.querySDCFormResponses(patientID, diagnosticProcedureID, starttime, endtime, metadata);
             System.out.println(result);
         } catch (ApiException e) {
-            System.err.println("Exception when calling DefaultApi#savePartialSDCFormResponse");
+            System.err.println("Exception when calling DefaultApi#querySDCFormResponses");
             e.printStackTrace();
         }
     }
 }</code></pre>
                           </div>
   <!--
-  <div class="tab-pane" id="examples-Default-savePartialSDCFormResponse-0-groovy">
+  <div class="tab-pane" id="examples-Default-querySDCFormResponses-0-groovy">
   <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
   </div> -->
-                            <div class="tab-pane" id="examples-Default-savePartialSDCFormResponse-0-objc">
-                              <pre class="prettyprint"><code class="language-cpp">SDCPartialFormResponseObject *body = ; // The partially completed response object.
+                            <div class="tab-pane" id="examples-Default-querySDCFormResponses-0-objc">
+                              <pre class="prettyprint"><code class="language-cpp">String *patientID = patientID_example; // Query for all responses with the given patientID. (optional)
+String *diagnosticProcedureID = diagnosticProcedureID_example; // Query for all responses with the given DiagnosticProcedureID (optional)
+Date *starttime = 2013-10-20T19:20:30+01:00; // Query for all responses after starttime. (optional)
+Date *endtime = 2013-10-20T19:20:30+01:00; // Query for all responses before endtime. (optional)
+Boolean *metadata = true; // Query for responses' metadata only. (optional)
 
 DefaultApi *apiInstance = [[DefaultApi alloc] init];
 
-// Saving a new “partially complete” response
-[apiInstance savePartialSDCFormResponseWith:body
-              completionHandler: ^(SDCFormResponseUpdateResponse output, NSError* error) {
+// Get all SDCFormResponse objects that matches the query parameter. If no query parameter is define, all response objects are returned.
+[apiInstance querySDCFormResponsesWith:patientID
+    diagnosticProcedureID:diagnosticProcedureID
+    starttime:starttime
+    endtime:endtime
+    metadata:metadata
+              completionHandler: ^(SDCFormResponseQueryResponse output, NSError* error) {
                             if (output) {
                                 NSLog(@"%@", output);
                             }
@@ -2506,12 +2599,17 @@ DefaultApi *apiInstance = [[DefaultApi alloc] init];
 </code></pre>
                             </div>
 
-                            <div class="tab-pane" id="examples-Default-savePartialSDCFormResponse-0-javascript">
+                            <div class="tab-pane" id="examples-Default-querySDCFormResponses-0-javascript">
                               <pre class="prettyprint"><code class="language-js">var SdcFormBackendApiTeamDaBaby = require('sdc_form_backend_api___team_da_baby');
 
 var api = new SdcFormBackendApiTeamDaBaby.DefaultApi()
-var body = ; // {{SDCPartialFormResponseObject}} The partially completed response object.
-
+var opts = { 
+  'patientID': patientID_example, // {{String}} Query for all responses with the given patientID.
+  'diagnosticProcedureID': diagnosticProcedureID_example, // {{String}} Query for all responses with the given DiagnosticProcedureID
+  'starttime': 2013-10-20T19:20:30+01:00, // {{Date}} Query for all responses after starttime.
+  'endtime': 2013-10-20T19:20:30+01:00, // {{Date}} Query for all responses before endtime.
+  'metadata': true // {{Boolean}} Query for responses' metadata only.
+};
 var callback = function(error, data, response) {
   if (error) {
     console.error(error);
@@ -2519,14 +2617,14 @@ var callback = function(error, data, response) {
     console.log('API called successfully. Returned data: ' + data);
   }
 };
-api.savePartialSDCFormResponse(body, callback);
+api.querySDCFormResponses(opts, callback);
 </code></pre>
                             </div>
 
-                            <!--<div class="tab-pane" id="examples-Default-savePartialSDCFormResponse-0-angular">
+                            <!--<div class="tab-pane" id="examples-Default-querySDCFormResponses-0-angular">
               <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
             </div>-->
-                            <div class="tab-pane" id="examples-Default-savePartialSDCFormResponse-0-csharp">
+                            <div class="tab-pane" id="examples-Default-querySDCFormResponses-0-csharp">
                               <pre class="prettyprint"><code class="language-cs">using System;
 using System.Diagnostics;
 using IO.Swagger.Api;
@@ -2535,23 +2633,27 @@ using IO.Swagger.Model;
 
 namespace Example
 {
-    public class savePartialSDCFormResponseExample
+    public class querySDCFormResponsesExample
     {
         public void main()
         {
 
             var apiInstance = new DefaultApi();
-            var body = new SDCPartialFormResponseObject(); // SDCPartialFormResponseObject | The partially completed response object.
+            var patientID = patientID_example;  // String | Query for all responses with the given patientID. (optional) 
+            var diagnosticProcedureID = diagnosticProcedureID_example;  // String | Query for all responses with the given DiagnosticProcedureID (optional) 
+            var starttime = 2013-10-20T19:20:30+01:00;  // Date | Query for all responses after starttime. (optional) 
+            var endtime = 2013-10-20T19:20:30+01:00;  // Date | Query for all responses before endtime. (optional) 
+            var metadata = true;  // Boolean | Query for responses' metadata only. (optional) 
 
             try
             {
-                // Saving a new “partially complete” response
-                SDCFormResponseUpdateResponse result = apiInstance.savePartialSDCFormResponse(body);
+                // Get all SDCFormResponse objects that matches the query parameter. If no query parameter is define, all response objects are returned.
+                SDCFormResponseQueryResponse result = apiInstance.querySDCFormResponses(patientID, diagnosticProcedureID, starttime, endtime, metadata);
                 Debug.WriteLine(result);
             }
             catch (Exception e)
             {
-                Debug.Print("Exception when calling DefaultApi.savePartialSDCFormResponse: " + e.Message );
+                Debug.Print("Exception when calling DefaultApi.querySDCFormResponses: " + e.Message );
             }
         }
     }
@@ -2559,40 +2661,48 @@ namespace Example
 </code></pre>
                             </div>
 
-                            <div class="tab-pane" id="examples-Default-savePartialSDCFormResponse-0-php">
+                            <div class="tab-pane" id="examples-Default-querySDCFormResponses-0-php">
                               <pre class="prettyprint"><code class="language-php"><&#63;php
 require_once(__DIR__ . '/vendor/autoload.php');
 
 $api_instance = new Swagger\Client\ApiDefaultApi();
-$body = ; // SDCPartialFormResponseObject | The partially completed response object.
+$patientID = patientID_example; // String | Query for all responses with the given patientID.
+$diagnosticProcedureID = diagnosticProcedureID_example; // String | Query for all responses with the given DiagnosticProcedureID
+$starttime = 2013-10-20T19:20:30+01:00; // Date | Query for all responses after starttime.
+$endtime = 2013-10-20T19:20:30+01:00; // Date | Query for all responses before endtime.
+$metadata = true; // Boolean | Query for responses' metadata only.
 
 try {
-    $result = $api_instance->savePartialSDCFormResponse($body);
+    $result = $api_instance->querySDCFormResponses($patientID, $diagnosticProcedureID, $starttime, $endtime, $metadata);
     print_r($result);
 } catch (Exception $e) {
-    echo 'Exception when calling DefaultApi->savePartialSDCFormResponse: ', $e->getMessage(), PHP_EOL;
+    echo 'Exception when calling DefaultApi->querySDCFormResponses: ', $e->getMessage(), PHP_EOL;
 }
 ?></code></pre>
                             </div>
 
-                            <div class="tab-pane" id="examples-Default-savePartialSDCFormResponse-0-perl">
+                            <div class="tab-pane" id="examples-Default-querySDCFormResponses-0-perl">
                               <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
 use WWW::SwaggerClient::Configuration;
 use WWW::SwaggerClient::DefaultApi;
 
 my $api_instance = WWW::SwaggerClient::DefaultApi->new();
-my $body = WWW::SwaggerClient::Object::SDCPartialFormResponseObject->new(); # SDCPartialFormResponseObject | The partially completed response object.
+my $patientID = patientID_example; # String | Query for all responses with the given patientID.
+my $diagnosticProcedureID = diagnosticProcedureID_example; # String | Query for all responses with the given DiagnosticProcedureID
+my $starttime = 2013-10-20T19:20:30+01:00; # Date | Query for all responses after starttime.
+my $endtime = 2013-10-20T19:20:30+01:00; # Date | Query for all responses before endtime.
+my $metadata = true; # Boolean | Query for responses' metadata only.
 
 eval { 
-    my $result = $api_instance->savePartialSDCFormResponse(body => $body);
+    my $result = $api_instance->querySDCFormResponses(patientID => $patientID, diagnosticProcedureID => $diagnosticProcedureID, starttime => $starttime, endtime => $endtime, metadata => $metadata);
     print Dumper($result);
 };
 if ($@) {
-    warn "Exception when calling DefaultApi->savePartialSDCFormResponse: $@\n";
+    warn "Exception when calling DefaultApi->querySDCFormResponses: $@\n";
 }</code></pre>
                             </div>
 
-                            <div class="tab-pane" id="examples-Default-savePartialSDCFormResponse-0-python">
+                            <div class="tab-pane" id="examples-Default-querySDCFormResponses-0-python">
                               <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
 import time
 import swagger_client
@@ -2601,14 +2711,770 @@ from pprint import pprint
 
 # create an instance of the API class
 api_instance = swagger_client.DefaultApi()
-body =  # SDCPartialFormResponseObject | The partially completed response object.
+patientID = patientID_example # String | Query for all responses with the given patientID. (optional)
+diagnosticProcedureID = diagnosticProcedureID_example # String | Query for all responses with the given DiagnosticProcedureID (optional)
+starttime = 2013-10-20T19:20:30+01:00 # Date | Query for all responses after starttime. (optional)
+endtime = 2013-10-20T19:20:30+01:00 # Date | Query for all responses before endtime. (optional)
+metadata = true # Boolean | Query for responses' metadata only. (optional)
 
 try: 
-    # Saving a new “partially complete” response
-    api_response = api_instance.save_partial_sdc_form_response(body)
+    # Get all SDCFormResponse objects that matches the query parameter. If no query parameter is define, all response objects are returned.
+    api_response = api_instance.query_sdc_form_responses(patientID=patientID, diagnosticProcedureID=diagnosticProcedureID, starttime=starttime, endtime=endtime, metadata=metadata)
     pprint(api_response)
 except ApiException as e:
-    print("Exception when calling DefaultApi->savePartialSDCFormResponse: %s\n" % e)</code></pre>
+    print("Exception when calling DefaultApi->querySDCFormResponses: %s\n" % e)</code></pre>
+                            </div>
+                          </div>
+
+                          <h2>Parameters</h2>
+
+
+
+
+
+                            <div class="methodsubtabletitle">Query parameters</div>
+                            <table id="methodsubtable">
+                              <tr>
+                                <th width="150px">Name</th>
+                                <th>Description</th>
+                              </tr>
+                                <tr><td style="width:150px;">patientID</td>
+                                <td>
+                                
+                                
+                                    <div id="d2e199_querySDCFormResponses_patientID">
+                                        <div class="json-schema-view">
+                                            <div class="primitive">
+                                                <span class="type">
+                                                    String
+                                                </span>
+                                
+                                                    <div class="inner description">
+                                                        Query for all responses with the given patientID.
+                                                    </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                </tr>
+                                <tr><td style="width:150px;">diagnosticProcedureID</td>
+                                <td>
+                                
+                                
+                                    <div id="d2e199_querySDCFormResponses_diagnosticProcedureID">
+                                        <div class="json-schema-view">
+                                            <div class="primitive">
+                                                <span class="type">
+                                                    String
+                                                </span>
+                                
+                                                    <div class="inner description">
+                                                        Query for all responses with the given DiagnosticProcedureID
+                                                    </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                </tr>
+                                <tr><td style="width:150px;">starttime</td>
+                                <td>
+                                
+                                
+                                    <div id="d2e199_querySDCFormResponses_starttime">
+                                        <div class="json-schema-view">
+                                            <div class="primitive">
+                                                <span class="type">
+                                                    Date
+                                                </span>
+                                                    <span class="format">
+                                                        (date-time)
+                                                    </span>
+                                
+                                                    <div class="inner description">
+                                                        Query for all responses after starttime.
+                                                    </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                </tr>
+                                <tr><td style="width:150px;">endtime</td>
+                                <td>
+                                
+                                
+                                    <div id="d2e199_querySDCFormResponses_endtime">
+                                        <div class="json-schema-view">
+                                            <div class="primitive">
+                                                <span class="type">
+                                                    Date
+                                                </span>
+                                                    <span class="format">
+                                                        (date-time)
+                                                    </span>
+                                
+                                                    <div class="inner description">
+                                                        Query for all responses before endtime.
+                                                    </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                </tr>
+                                <tr><td style="width:150px;">metadata</td>
+                                <td>
+                                
+                                
+                                    <div id="d2e199_querySDCFormResponses_metadata">
+                                        <div class="json-schema-view">
+                                            <div class="primitive">
+                                                <span class="type">
+                                                    Boolean
+                                                </span>
+                                
+                                                    <div class="inner description">
+                                                        Query for responses&#x27; metadata only.
+                                                    </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                </tr>
+                            </table>
+
+                          <h2>Responses</h2>
+                            <h3> Status: 200 - All SDCForms matching the query conditions are fetched successfully. </h3>
+
+                            <ul class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-querySDCFormResponses-200-schema">Schema</a>
+                                </li>
+
+                            </ul>
+
+                            <div class="tab-content" style='margin-bottom: 10px;'>
+                                <div class="tab-pane active" id="responses-querySDCFormResponses-200-schema">
+                                  <div id='responses-querySDCFormResponses-200-schema-200' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
+                                    <script>
+                                      $(document).ready(function() {
+                                        var schemaWrapper = {
+  "description" : "All SDCForms matching the query conditions are fetched successfully.",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/SDCFormResponseQueryResponse"
+      }
+    }
+  }
+};
+                                        var schema = schemaWrapper.content["application/json"].schema;
+                                        if (schema.$ref != null) {
+                                          schema = defsParser.$refs.get(schema.$ref);
+                                        } else {
+                                          schemaWrapper.components = {};
+                                          schemaWrapper.components.schemas = Object.assign({}, defs);
+                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                            console.log(err);
+                                          });
+                                        }
+
+                                        //console.log(JSON.stringify(schema));
+                                        var view = new JSONSchemaView(schema, 3);
+                                        $('#responses-querySDCFormResponses-200-schema-data').val(stringify(schema));
+                                        var result = $('#responses-querySDCFormResponses-200-schema-200');
+                                        result.empty();
+                                        result.append(view.render());
+                                      });
+                                    </script>
+                                  </div>
+                                  <input id='responses-querySDCFormResponses-200-schema-data' type='hidden' value=''></input>
+                                </div>
+                            </div>
+
+                        </article>
+                      </div>
+                      <hr>
+                    <div id="api-Default-querySDCForms">
+                      <article id="api-Default-querySDCForms-0" data-group="User" data-name="querySDCForms" data-version="0">
+                        <div class="pull-left">
+                          <h1>querySDCForms</h1>
+                          <p>Endpoint for getting a list of all sdcforms</p>
+                        </div>
+                        <div class="pull-right"></div>
+                        <div class="clearfix"></div>
+                        <p></p>
+                        <p class="marked">If neither metadata&#x3D;true nor historyID appears as a query param, then will return all sdcforms including their non-metadata
+If only metadata&#x3D;true appears, then will return all sdcforms with only their metadata
+If only historyID appears, then will return a list with only one element which will be the sdcform with id &lt;int:sdcform_id&gt;
+If both query params appear, then will return the list with one element where the sdcform inside it only includes metadata</p>
+                        <p></p>
+                        <br />
+                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/api/sdcform</span></code></pre>
+                        <p>
+                          <h3>Usage and SDK Samples</h3>
+                        </p>
+                        <ul class="nav nav-tabs nav-tabs-examples">
+                          <li class="active"><a href="#examples-Default-querySDCForms-0-curl">Curl</a></li>
+                          <li class=""><a href="#examples-Default-querySDCForms-0-java">Java</a></li>
+                          <li class=""><a href="#examples-Default-querySDCForms-0-android">Android</a></li>
+                          <!--<li class=""><a href="#examples-Default-querySDCForms-0-groovy">Groovy</a></li>-->
+                          <li class=""><a href="#examples-Default-querySDCForms-0-objc">Obj-C</a></li>
+                          <li class=""><a href="#examples-Default-querySDCForms-0-javascript">JavaScript</a></li>
+                          <!--<li class=""><a href="#examples-Default-querySDCForms-0-angular">Angular</a></li>-->
+                          <li class=""><a href="#examples-Default-querySDCForms-0-csharp">C#</a></li>
+                          <li class=""><a href="#examples-Default-querySDCForms-0-php">PHP</a></li>
+                          <li class=""><a href="#examples-Default-querySDCForms-0-perl">Perl</a></li>
+                          <li class=""><a href="#examples-Default-querySDCForms-0-python">Python</a></li>
+                        </ul>
+
+                        <div class="tab-content">
+                          <div class="tab-pane active" id="examples-Default-querySDCForms-0-curl">
+                           <pre class="prettyprint"><code class="language-bsh">curl -X GET\
+-H "Accept: application/json"\
+"http://127.0.0.1/api/sdcform?metadata=&historyID="</code></pre>
+                          </div>
+                          <div class="tab-pane" id="examples-Default-querySDCForms-0-java">
+                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
+import io.swagger.client.auth.*;
+import io.swagger.client.model.*;
+import io.swagger.client.api.DefaultApi;
+
+import java.io.File;
+import java.util.*;
+
+public class DefaultApiExample {
+
+    public static void main(String[] args) {
+        
+        DefaultApi apiInstance = new DefaultApi();
+        Boolean metadata = true; // Boolean | Set to true to only return sdcforms with their metadata (ignore sections).
+        Integer historyID = 56; // Integer | Return data of the sdcform with its sdcform-id = historyID.
+        try {
+            inline_response_200 result = apiInstance.querySDCForms(metadata, historyID);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling DefaultApi#querySDCForms");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+
+                          <div class="tab-pane" id="examples-Default-querySDCForms-0-android">
+                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.api.DefaultApi;
+
+public class DefaultApiExample {
+
+    public static void main(String[] args) {
+        DefaultApi apiInstance = new DefaultApi();
+        Boolean metadata = true; // Boolean | Set to true to only return sdcforms with their metadata (ignore sections).
+        Integer historyID = 56; // Integer | Return data of the sdcform with its sdcform-id = historyID.
+        try {
+            inline_response_200 result = apiInstance.querySDCForms(metadata, historyID);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling DefaultApi#querySDCForms");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+  <!--
+  <div class="tab-pane" id="examples-Default-querySDCForms-0-groovy">
+  <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+  </div> -->
+                            <div class="tab-pane" id="examples-Default-querySDCForms-0-objc">
+                              <pre class="prettyprint"><code class="language-cpp">Boolean *metadata = true; // Set to true to only return sdcforms with their metadata (ignore sections). (optional)
+Integer *historyID = 56; // Return data of the sdcform with its sdcform-id = historyID. (optional)
+
+DefaultApi *apiInstance = [[DefaultApi alloc] init];
+
+// Endpoint for getting a list of all sdcforms
+[apiInstance querySDCFormsWith:metadata
+    historyID:historyID
+              completionHandler: ^(inline_response_200 output, NSError* error) {
+                            if (output) {
+                                NSLog(@"%@", output);
+                            }
+                            if (error) {
+                                NSLog(@"Error: %@", error);
+                            }
+                        }];
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-querySDCForms-0-javascript">
+                              <pre class="prettyprint"><code class="language-js">var SdcFormBackendApiTeamDaBaby = require('sdc_form_backend_api___team_da_baby');
+
+var api = new SdcFormBackendApiTeamDaBaby.DefaultApi()
+var opts = { 
+  'metadata': true, // {{Boolean}} Set to true to only return sdcforms with their metadata (ignore sections).
+  'historyID': 56 // {{Integer}} Return data of the sdcform with its sdcform-id = historyID.
+};
+var callback = function(error, data, response) {
+  if (error) {
+    console.error(error);
+  } else {
+    console.log('API called successfully. Returned data: ' + data);
+  }
+};
+api.querySDCForms(opts, callback);
+</code></pre>
+                            </div>
+
+                            <!--<div class="tab-pane" id="examples-Default-querySDCForms-0-angular">
+              <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+            </div>-->
+                            <div class="tab-pane" id="examples-Default-querySDCForms-0-csharp">
+                              <pre class="prettyprint"><code class="language-cs">using System;
+using System.Diagnostics;
+using IO.Swagger.Api;
+using IO.Swagger.Client;
+using IO.Swagger.Model;
+
+namespace Example
+{
+    public class querySDCFormsExample
+    {
+        public void main()
+        {
+
+            var apiInstance = new DefaultApi();
+            var metadata = true;  // Boolean | Set to true to only return sdcforms with their metadata (ignore sections). (optional) 
+            var historyID = 56;  // Integer | Return data of the sdcform with its sdcform-id = historyID. (optional) 
+
+            try
+            {
+                // Endpoint for getting a list of all sdcforms
+                inline_response_200 result = apiInstance.querySDCForms(metadata, historyID);
+                Debug.WriteLine(result);
+            }
+            catch (Exception e)
+            {
+                Debug.Print("Exception when calling DefaultApi.querySDCForms: " + e.Message );
+            }
+        }
+    }
+}
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-querySDCForms-0-php">
+                              <pre class="prettyprint"><code class="language-php"><&#63;php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+$api_instance = new Swagger\Client\ApiDefaultApi();
+$metadata = true; // Boolean | Set to true to only return sdcforms with their metadata (ignore sections).
+$historyID = 56; // Integer | Return data of the sdcform with its sdcform-id = historyID.
+
+try {
+    $result = $api_instance->querySDCForms($metadata, $historyID);
+    print_r($result);
+} catch (Exception $e) {
+    echo 'Exception when calling DefaultApi->querySDCForms: ', $e->getMessage(), PHP_EOL;
+}
+?></code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-querySDCForms-0-perl">
+                              <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
+use WWW::SwaggerClient::Configuration;
+use WWW::SwaggerClient::DefaultApi;
+
+my $api_instance = WWW::SwaggerClient::DefaultApi->new();
+my $metadata = true; # Boolean | Set to true to only return sdcforms with their metadata (ignore sections).
+my $historyID = 56; # Integer | Return data of the sdcform with its sdcform-id = historyID.
+
+eval { 
+    my $result = $api_instance->querySDCForms(metadata => $metadata, historyID => $historyID);
+    print Dumper($result);
+};
+if ($@) {
+    warn "Exception when calling DefaultApi->querySDCForms: $@\n";
+}</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-querySDCForms-0-python">
+                              <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
+import time
+import swagger_client
+from swagger_client.rest import ApiException
+from pprint import pprint
+
+# create an instance of the API class
+api_instance = swagger_client.DefaultApi()
+metadata = true # Boolean | Set to true to only return sdcforms with their metadata (ignore sections). (optional)
+historyID = 56 # Integer | Return data of the sdcform with its sdcform-id = historyID. (optional)
+
+try: 
+    # Endpoint for getting a list of all sdcforms
+    api_response = api_instance.query_sdc_forms(metadata=metadata, historyID=historyID)
+    pprint(api_response)
+except ApiException as e:
+    print("Exception when calling DefaultApi->querySDCForms: %s\n" % e)</code></pre>
+                            </div>
+                          </div>
+
+                          <h2>Parameters</h2>
+
+
+
+
+
+                            <div class="methodsubtabletitle">Query parameters</div>
+                            <table id="methodsubtable">
+                              <tr>
+                                <th width="150px">Name</th>
+                                <th>Description</th>
+                              </tr>
+                                <tr><td style="width:150px;">metadata</td>
+                                <td>
+                                
+                                
+                                    <div id="d2e199_querySDCForms_metadata">
+                                        <div class="json-schema-view">
+                                            <div class="primitive">
+                                                <span class="type">
+                                                    Boolean
+                                                </span>
+                                
+                                                    <div class="inner description">
+                                                        Set to true to only return sdcforms with their metadata (ignore sections).
+                                                    </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                </tr>
+                                <tr><td style="width:150px;">historyID</td>
+                                <td>
+                                
+                                
+                                    <div id="d2e199_querySDCForms_historyID">
+                                        <div class="json-schema-view">
+                                            <div class="primitive">
+                                                <span class="type">
+                                                    Integer
+                                                </span>
+                                                    <span class="format">
+                                                        (int32)
+                                                    </span>
+                                
+                                                    <div class="inner description">
+                                                        Return data of the sdcform with its sdcform-id &#x3D; historyID.
+                                                    </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                </tr>
+                            </table>
+
+                          <h2>Responses</h2>
+                            <h3> Status: 200 - The list of sdcform(s) queried for. </h3>
+
+                            <ul class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-querySDCForms-200-schema">Schema</a>
+                                </li>
+
+                            </ul>
+
+                            <div class="tab-content" style='margin-bottom: 10px;'>
+                                <div class="tab-pane active" id="responses-querySDCForms-200-schema">
+                                  <div id='responses-querySDCForms-200-schema-200' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
+                                    <script>
+                                      $(document).ready(function() {
+                                        var schemaWrapper = {
+  "description" : "The list of sdcform(s) queried for.",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/inline_response_200"
+      }
+    }
+  }
+};
+                                        var schema = schemaWrapper.content["application/json"].schema;
+                                        if (schema.$ref != null) {
+                                          schema = defsParser.$refs.get(schema.$ref);
+                                        } else {
+                                          schemaWrapper.components = {};
+                                          schemaWrapper.components.schemas = Object.assign({}, defs);
+                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                            console.log(err);
+                                          });
+                                        }
+
+                                        //console.log(JSON.stringify(schema));
+                                        var view = new JSONSchemaView(schema, 3);
+                                        $('#responses-querySDCForms-200-schema-data').val(stringify(schema));
+                                        var result = $('#responses-querySDCForms-200-schema-200');
+                                        result.empty();
+                                        result.append(view.render());
+                                      });
+                                    </script>
+                                  </div>
+                                  <input id='responses-querySDCForms-200-schema-data' type='hidden' value=''></input>
+                                </div>
+                            </div>
+
+                            <h3> Status: 404 - There is no sdcform with id equals the given historyID. </h3>
+
+                            <ul class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-querySDCForms-404-schema">Schema</a>
+                                </li>
+
+                            </ul>
+
+                            <div class="tab-content" style='margin-bottom: 10px;'>
+                                <div class="tab-pane active" id="responses-querySDCForms-404-schema">
+                                  <div id='responses-querySDCForms-404-schema-404' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
+                                    <script>
+                                      $(document).ready(function() {
+                                        var schemaWrapper = {
+  "description" : "There is no sdcform with id equals the given historyID.",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/ServerMessage"
+      }
+    }
+  }
+};
+                                        var schema = schemaWrapper.content["application/json"].schema;
+                                        if (schema.$ref != null) {
+                                          schema = defsParser.$refs.get(schema.$ref);
+                                        } else {
+                                          schemaWrapper.components = {};
+                                          schemaWrapper.components.schemas = Object.assign({}, defs);
+                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                            console.log(err);
+                                          });
+                                        }
+
+                                        //console.log(JSON.stringify(schema));
+                                        var view = new JSONSchemaView(schema, 3);
+                                        $('#responses-querySDCForms-404-schema-data').val(stringify(schema));
+                                        var result = $('#responses-querySDCForms-404-schema-404');
+                                        result.empty();
+                                        result.append(view.render());
+                                      });
+                                    </script>
+                                  </div>
+                                  <input id='responses-querySDCForms-404-schema-data' type='hidden' value=''></input>
+                                </div>
+                            </div>
+
+                        </article>
+                      </div>
+                      <hr>
+                    <div id="api-Default-startNewSDCFormResponse">
+                      <article id="api-Default-startNewSDCFormResponse-0" data-group="User" data-name="startNewSDCFormResponse" data-version="0">
+                        <div class="pull-left">
+                          <h1>startNewSDCFormResponse</h1>
+                          <p>Endpoint for starting a new response.</p>
+                        </div>
+                        <div class="pull-right"></div>
+                        <div class="clearfix"></div>
+                        <p></p>
+                        <p class="marked"></p>
+                        <p></p>
+                        <br />
+                        <pre class="prettyprint language-html prettyprinted" data-type="post"><code><span class="pln">/api/sdcformresponse</span></code></pre>
+                        <p>
+                          <h3>Usage and SDK Samples</h3>
+                        </p>
+                        <ul class="nav nav-tabs nav-tabs-examples">
+                          <li class="active"><a href="#examples-Default-startNewSDCFormResponse-0-curl">Curl</a></li>
+                          <li class=""><a href="#examples-Default-startNewSDCFormResponse-0-java">Java</a></li>
+                          <li class=""><a href="#examples-Default-startNewSDCFormResponse-0-android">Android</a></li>
+                          <!--<li class=""><a href="#examples-Default-startNewSDCFormResponse-0-groovy">Groovy</a></li>-->
+                          <li class=""><a href="#examples-Default-startNewSDCFormResponse-0-objc">Obj-C</a></li>
+                          <li class=""><a href="#examples-Default-startNewSDCFormResponse-0-javascript">JavaScript</a></li>
+                          <!--<li class=""><a href="#examples-Default-startNewSDCFormResponse-0-angular">Angular</a></li>-->
+                          <li class=""><a href="#examples-Default-startNewSDCFormResponse-0-csharp">C#</a></li>
+                          <li class=""><a href="#examples-Default-startNewSDCFormResponse-0-php">PHP</a></li>
+                          <li class=""><a href="#examples-Default-startNewSDCFormResponse-0-perl">Perl</a></li>
+                          <li class=""><a href="#examples-Default-startNewSDCFormResponse-0-python">Python</a></li>
+                        </ul>
+
+                        <div class="tab-content">
+                          <div class="tab-pane active" id="examples-Default-startNewSDCFormResponse-0-curl">
+                           <pre class="prettyprint"><code class="language-bsh">curl -X POST\
+-H "Accept: application/json"\
+-H "Content-Type: application/json"\
+"http://127.0.0.1/api/sdcformresponse"</code></pre>
+                          </div>
+                          <div class="tab-pane" id="examples-Default-startNewSDCFormResponse-0-java">
+                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
+import io.swagger.client.auth.*;
+import io.swagger.client.model.*;
+import io.swagger.client.api.DefaultApi;
+
+import java.io.File;
+import java.util.*;
+
+public class DefaultApiExample {
+
+    public static void main(String[] args) {
+        
+        DefaultApi apiInstance = new DefaultApi();
+        SDCFormResponseUploadObject body = ; // SDCFormResponseUploadObject | The partially completed response object.
+        try {
+            SDCFormResponseServerObject result = apiInstance.startNewSDCFormResponse(body);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling DefaultApi#startNewSDCFormResponse");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+
+                          <div class="tab-pane" id="examples-Default-startNewSDCFormResponse-0-android">
+                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.api.DefaultApi;
+
+public class DefaultApiExample {
+
+    public static void main(String[] args) {
+        DefaultApi apiInstance = new DefaultApi();
+        SDCFormResponseUploadObject body = ; // SDCFormResponseUploadObject | The partially completed response object.
+        try {
+            SDCFormResponseServerObject result = apiInstance.startNewSDCFormResponse(body);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling DefaultApi#startNewSDCFormResponse");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+  <!--
+  <div class="tab-pane" id="examples-Default-startNewSDCFormResponse-0-groovy">
+  <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+  </div> -->
+                            <div class="tab-pane" id="examples-Default-startNewSDCFormResponse-0-objc">
+                              <pre class="prettyprint"><code class="language-cpp">SDCFormResponseUploadObject *body = ; // The partially completed response object.
+
+DefaultApi *apiInstance = [[DefaultApi alloc] init];
+
+// Endpoint for starting a new response.
+[apiInstance startNewSDCFormResponseWith:body
+              completionHandler: ^(SDCFormResponseServerObject output, NSError* error) {
+                            if (output) {
+                                NSLog(@"%@", output);
+                            }
+                            if (error) {
+                                NSLog(@"Error: %@", error);
+                            }
+                        }];
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-startNewSDCFormResponse-0-javascript">
+                              <pre class="prettyprint"><code class="language-js">var SdcFormBackendApiTeamDaBaby = require('sdc_form_backend_api___team_da_baby');
+
+var api = new SdcFormBackendApiTeamDaBaby.DefaultApi()
+var body = ; // {{SDCFormResponseUploadObject}} The partially completed response object.
+
+var callback = function(error, data, response) {
+  if (error) {
+    console.error(error);
+  } else {
+    console.log('API called successfully. Returned data: ' + data);
+  }
+};
+api.startNewSDCFormResponse(body, callback);
+</code></pre>
+                            </div>
+
+                            <!--<div class="tab-pane" id="examples-Default-startNewSDCFormResponse-0-angular">
+              <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+            </div>-->
+                            <div class="tab-pane" id="examples-Default-startNewSDCFormResponse-0-csharp">
+                              <pre class="prettyprint"><code class="language-cs">using System;
+using System.Diagnostics;
+using IO.Swagger.Api;
+using IO.Swagger.Client;
+using IO.Swagger.Model;
+
+namespace Example
+{
+    public class startNewSDCFormResponseExample
+    {
+        public void main()
+        {
+
+            var apiInstance = new DefaultApi();
+            var body = new SDCFormResponseUploadObject(); // SDCFormResponseUploadObject | The partially completed response object.
+
+            try
+            {
+                // Endpoint for starting a new response.
+                SDCFormResponseServerObject result = apiInstance.startNewSDCFormResponse(body);
+                Debug.WriteLine(result);
+            }
+            catch (Exception e)
+            {
+                Debug.Print("Exception when calling DefaultApi.startNewSDCFormResponse: " + e.Message );
+            }
+        }
+    }
+}
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-startNewSDCFormResponse-0-php">
+                              <pre class="prettyprint"><code class="language-php"><&#63;php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+$api_instance = new Swagger\Client\ApiDefaultApi();
+$body = ; // SDCFormResponseUploadObject | The partially completed response object.
+
+try {
+    $result = $api_instance->startNewSDCFormResponse($body);
+    print_r($result);
+} catch (Exception $e) {
+    echo 'Exception when calling DefaultApi->startNewSDCFormResponse: ', $e->getMessage(), PHP_EOL;
+}
+?></code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-startNewSDCFormResponse-0-perl">
+                              <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
+use WWW::SwaggerClient::Configuration;
+use WWW::SwaggerClient::DefaultApi;
+
+my $api_instance = WWW::SwaggerClient::DefaultApi->new();
+my $body = WWW::SwaggerClient::Object::SDCFormResponseUploadObject->new(); # SDCFormResponseUploadObject | The partially completed response object.
+
+eval { 
+    my $result = $api_instance->startNewSDCFormResponse(body => $body);
+    print Dumper($result);
+};
+if ($@) {
+    warn "Exception when calling DefaultApi->startNewSDCFormResponse: $@\n";
+}</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-startNewSDCFormResponse-0-python">
+                              <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
+import time
+import swagger_client
+from swagger_client.rest import ApiException
+from pprint import pprint
+
+# create an instance of the API class
+api_instance = swagger_client.DefaultApi()
+body =  # SDCFormResponseUploadObject | The partially completed response object.
+
+try: 
+    # Endpoint for starting a new response.
+    api_response = api_instance.start_new_sdc_form_response(body)
+    pprint(api_response)
+except ApiException as e:
+    print("Exception when calling DefaultApi->startNewSDCFormResponse: %s\n" % e)</code></pre>
                             </div>
                           </div>
 
@@ -2633,7 +3499,7 @@ except ApiException as e:
   "content" : {
     "application/json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/SDCPartialFormResponseObject"
+        "$ref" : "#/components/schemas/SDCFormResponseUploadObject"
       }
     }
   },
@@ -2651,12 +3517,12 @@ except ApiException as e:
                                   }
                                 
                                   var view = new JSONSchemaView(schema,2,{isBodyParam: true});
-                                  var result = $('#d2e199_savePartialSDCFormResponse_body');
+                                  var result = $('#d2e199_startNewSDCFormResponse_body');
                                   result.empty();
                                   result.append(view.render());
                                 });
                                 </script>
-                                <div id="d2e199_savePartialSDCFormResponse_body"></div>
+                                <div id="d2e199_startNewSDCFormResponse_body"></div>
                                 </td>
                                 </tr>
                             </table>
@@ -2664,26 +3530,26 @@ except ApiException as e:
 
 
                           <h2>Responses</h2>
-                            <h3> Status: 200 - The partial SDCForm response is saved successfully. Response contains the SDCFormResponse object containing the partial response object. </h3>
+                            <h3> Status: 201 - The SDCForm response is saved successfully. Response contains the saved SDCFormResponse object. </h3>
 
                             <ul class="nav nav-tabs nav-tabs-examples" >
                                 <li class="active">
-                                  <a data-toggle="tab" href="#responses-savePartialSDCFormResponse-200-schema">Schema</a>
+                                  <a data-toggle="tab" href="#responses-startNewSDCFormResponse-201-schema">Schema</a>
                                 </li>
 
                             </ul>
 
                             <div class="tab-content" style='margin-bottom: 10px;'>
-                                <div class="tab-pane active" id="responses-savePartialSDCFormResponse-200-schema">
-                                  <div id='responses-savePartialSDCFormResponse-200-schema-200' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
+                                <div class="tab-pane active" id="responses-startNewSDCFormResponse-201-schema">
+                                  <div id='responses-startNewSDCFormResponse-201-schema-201' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
                                     <script>
                                       $(document).ready(function() {
                                         var schemaWrapper = {
-  "description" : "The partial SDCForm response is saved successfully. Response contains the SDCFormResponse object containing the partial response object.",
+  "description" : "The SDCForm response is saved successfully. Response contains the saved SDCFormResponse object.",
   "content" : {
     "application/json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/SDCFormResponseUpdateResponse"
+        "$ref" : "#/components/schemas/SDCFormResponseServerObject"
       }
     }
   }
@@ -2701,14 +3567,62 @@ except ApiException as e:
 
                                         //console.log(JSON.stringify(schema));
                                         var view = new JSONSchemaView(schema, 3);
-                                        $('#responses-savePartialSDCFormResponse-200-schema-data').val(stringify(schema));
-                                        var result = $('#responses-savePartialSDCFormResponse-200-schema-200');
+                                        $('#responses-startNewSDCFormResponse-201-schema-data').val(stringify(schema));
+                                        var result = $('#responses-startNewSDCFormResponse-201-schema-201');
                                         result.empty();
                                         result.append(view.render());
                                       });
                                     </script>
                                   </div>
-                                  <input id='responses-savePartialSDCFormResponse-200-schema-data' type='hidden' value=''></input>
+                                  <input id='responses-startNewSDCFormResponse-201-schema-data' type='hidden' value=''></input>
+                                </div>
+                            </div>
+
+                            <h3> Status: 400 - Request object invalid. </h3>
+
+                            <ul class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-startNewSDCFormResponse-400-schema">Schema</a>
+                                </li>
+
+                            </ul>
+
+                            <div class="tab-content" style='margin-bottom: 10px;'>
+                                <div class="tab-pane active" id="responses-startNewSDCFormResponse-400-schema">
+                                  <div id='responses-startNewSDCFormResponse-400-schema-400' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
+                                    <script>
+                                      $(document).ready(function() {
+                                        var schemaWrapper = {
+  "description" : "Request object invalid.",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/ServerMessage"
+      }
+    }
+  }
+};
+                                        var schema = schemaWrapper.content["application/json"].schema;
+                                        if (schema.$ref != null) {
+                                          schema = defsParser.$refs.get(schema.$ref);
+                                        } else {
+                                          schemaWrapper.components = {};
+                                          schemaWrapper.components.schemas = Object.assign({}, defs);
+                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                            console.log(err);
+                                          });
+                                        }
+
+                                        //console.log(JSON.stringify(schema));
+                                        var view = new JSONSchemaView(schema, 3);
+                                        $('#responses-startNewSDCFormResponse-400-schema-data').val(stringify(schema));
+                                        var result = $('#responses-startNewSDCFormResponse-400-schema-400');
+                                        result.empty();
+                                        result.append(view.render());
+                                      });
+                                    </script>
+                                  </div>
+                                  <input id='responses-startNewSDCFormResponse-400-schema-data' type='hidden' value=''></input>
                                 </div>
                             </div>
 
@@ -2727,7 +3641,7 @@ except ApiException as e:
                         <p class="marked"></p>
                         <p></p>
                         <br />
-                        <pre class="prettyprint language-html prettyprinted" data-type="put"><code><span class="pln">/api/sdcform/{sdcform-id}</span></code></pre>
+                        <pre class="prettyprint language-html prettyprinted" data-type="put"><code><span class="pln">/api/sdcform/{procedure-id}</span></code></pre>
                         <p>
                           <h3>Usage and SDK Samples</h3>
                         </p>
@@ -2750,7 +3664,7 @@ except ApiException as e:
                            <pre class="prettyprint"><code class="language-bsh">curl -X PUT\
 -H "Accept: application/json"\
 -H "Content-Type: application/json"\
-"http://127.0.0.1/api/sdcform/{sdcform-id}"</code></pre>
+"http://127.0.0.1/api/sdcform/{procedure-id}"</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-Default-updateSDCForm-0-java">
                             <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
@@ -2767,9 +3681,9 @@ public class DefaultApiExample {
         
         DefaultApi apiInstance = new DefaultApi();
         SDCFormUpdateBody body = ; // SDCFormUpdateBody | The XML string of the updated SDCForm
-        Integer sdcformId = 56; // Integer | The SDCFormID of the SDCForm to be updated.
+        Integer procedureId = 56; // Integer | The procedureID that links to the sdcform to be updated.
         try {
-            SDCFormObjectResponse result = apiInstance.updateSDCForm(body, sdcformId);
+            SDCFormObjectResponse result = apiInstance.updateSDCForm(body, procedureId);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling DefaultApi#updateSDCForm");
@@ -2787,9 +3701,9 @@ public class DefaultApiExample {
     public static void main(String[] args) {
         DefaultApi apiInstance = new DefaultApi();
         SDCFormUpdateBody body = ; // SDCFormUpdateBody | The XML string of the updated SDCForm
-        Integer sdcformId = 56; // Integer | The SDCFormID of the SDCForm to be updated.
+        Integer procedureId = 56; // Integer | The procedureID that links to the sdcform to be updated.
         try {
-            SDCFormObjectResponse result = apiInstance.updateSDCForm(body, sdcformId);
+            SDCFormObjectResponse result = apiInstance.updateSDCForm(body, procedureId);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling DefaultApi#updateSDCForm");
@@ -2804,13 +3718,13 @@ public class DefaultApiExample {
   </div> -->
                             <div class="tab-pane" id="examples-Default-updateSDCForm-0-objc">
                               <pre class="prettyprint"><code class="language-cpp">SDCFormUpdateBody *body = ; // The XML string of the updated SDCForm
-Integer *sdcformId = 56; // The SDCFormID of the SDCForm to be updated.
+Integer *procedureId = 56; // The procedureID that links to the sdcform to be updated.
 
 DefaultApi *apiInstance = [[DefaultApi alloc] init];
 
 // Update an SDCForm
 [apiInstance updateSDCFormWith:body
-    sdcformId:sdcformId
+    procedureId:procedureId
               completionHandler: ^(SDCFormObjectResponse output, NSError* error) {
                             if (output) {
                                 NSLog(@"%@", output);
@@ -2827,7 +3741,7 @@ DefaultApi *apiInstance = [[DefaultApi alloc] init];
 
 var api = new SdcFormBackendApiTeamDaBaby.DefaultApi()
 var body = ; // {{SDCFormUpdateBody}} The XML string of the updated SDCForm
-var sdcformId = 56; // {{Integer}} The SDCFormID of the SDCForm to be updated.
+var procedureId = 56; // {{Integer}} The procedureID that links to the sdcform to be updated.
 
 var callback = function(error, data, response) {
   if (error) {
@@ -2836,7 +3750,7 @@ var callback = function(error, data, response) {
     console.log('API called successfully. Returned data: ' + data);
   }
 };
-api.updateSDCForm(bodysdcformId, callback);
+api.updateSDCForm(bodyprocedureId, callback);
 </code></pre>
                             </div>
 
@@ -2859,12 +3773,12 @@ namespace Example
 
             var apiInstance = new DefaultApi();
             var body = new SDCFormUpdateBody(); // SDCFormUpdateBody | The XML string of the updated SDCForm
-            var sdcformId = 56;  // Integer | The SDCFormID of the SDCForm to be updated.
+            var procedureId = 56;  // Integer | The procedureID that links to the sdcform to be updated.
 
             try
             {
                 // Update an SDCForm
-                SDCFormObjectResponse result = apiInstance.updateSDCForm(body, sdcformId);
+                SDCFormObjectResponse result = apiInstance.updateSDCForm(body, procedureId);
                 Debug.WriteLine(result);
             }
             catch (Exception e)
@@ -2883,10 +3797,10 @@ require_once(__DIR__ . '/vendor/autoload.php');
 
 $api_instance = new Swagger\Client\ApiDefaultApi();
 $body = ; // SDCFormUpdateBody | The XML string of the updated SDCForm
-$sdcformId = 56; // Integer | The SDCFormID of the SDCForm to be updated.
+$procedureId = 56; // Integer | The procedureID that links to the sdcform to be updated.
 
 try {
-    $result = $api_instance->updateSDCForm($body, $sdcformId);
+    $result = $api_instance->updateSDCForm($body, $procedureId);
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling DefaultApi->updateSDCForm: ', $e->getMessage(), PHP_EOL;
@@ -2901,10 +3815,10 @@ use WWW::SwaggerClient::DefaultApi;
 
 my $api_instance = WWW::SwaggerClient::DefaultApi->new();
 my $body = WWW::SwaggerClient::Object::SDCFormUpdateBody->new(); # SDCFormUpdateBody | The XML string of the updated SDCForm
-my $sdcformId = 56; # Integer | The SDCFormID of the SDCForm to be updated.
+my $procedureId = 56; # Integer | The procedureID that links to the sdcform to be updated.
 
 eval { 
-    my $result = $api_instance->updateSDCForm(body => $body, sdcformId => $sdcformId);
+    my $result = $api_instance->updateSDCForm(body => $body, procedureId => $procedureId);
     print Dumper($result);
 };
 if ($@) {
@@ -2922,11 +3836,11 @@ from pprint import pprint
 # create an instance of the API class
 api_instance = swagger_client.DefaultApi()
 body =  # SDCFormUpdateBody | The XML string of the updated SDCForm
-sdcformId = 56 # Integer | The SDCFormID of the SDCForm to be updated.
+procedureId = 56 # Integer | The procedureID that links to the sdcform to be updated.
 
 try: 
     # Update an SDCForm
-    api_response = api_instance.update_sdc_form(body, sdcformId)
+    api_response = api_instance.update_sdc_form(body, procedureId)
     pprint(api_response)
 except ApiException as e:
     print("Exception when calling DefaultApi->updateSDCForm: %s\n" % e)</code></pre>
@@ -2941,11 +3855,11 @@ except ApiException as e:
                                   <th width="150px">Name</th>
                                   <th>Description</th>
                                 </tr>
-                                  <tr><td style="width:150px;">sdcform-id*</td>
+                                  <tr><td style="width:150px;">procedure-id*</td>
                                   <td>
                                   
                                   
-                                      <div id="d2e199_updateSDCForm_sdcformId">
+                                      <div id="d2e199_updateSDCForm_procedureId">
                                           <div class="json-schema-view">
                                               <div class="primitive">
                                                   <span class="type">
@@ -2956,7 +3870,7 @@ except ApiException as e:
                                                       </span>
                                   
                                                       <div class="inner description">
-                                                          The SDCFormID of the SDCForm to be updated.
+                                                          The procedureID that links to the sdcform to be updated.
                                                       </div>
                                               </div>
                                                   <div class="inner required">
@@ -3065,6 +3979,54 @@ except ApiException as e:
                                 </div>
                             </div>
 
+                            <h3> Status: 400 - The uploaded XML either is corrupted or has the wrong format. </h3>
+
+                            <ul class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-updateSDCForm-400-schema">Schema</a>
+                                </li>
+
+                            </ul>
+
+                            <div class="tab-content" style='margin-bottom: 10px;'>
+                                <div class="tab-pane active" id="responses-updateSDCForm-400-schema">
+                                  <div id='responses-updateSDCForm-400-schema-400' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
+                                    <script>
+                                      $(document).ready(function() {
+                                        var schemaWrapper = {
+  "description" : "The uploaded XML either is corrupted or has the wrong format.",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/ServerMessage"
+      }
+    }
+  }
+};
+                                        var schema = schemaWrapper.content["application/json"].schema;
+                                        if (schema.$ref != null) {
+                                          schema = defsParser.$refs.get(schema.$ref);
+                                        } else {
+                                          schemaWrapper.components = {};
+                                          schemaWrapper.components.schemas = Object.assign({}, defs);
+                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                            console.log(err);
+                                          });
+                                        }
+
+                                        //console.log(JSON.stringify(schema));
+                                        var view = new JSONSchemaView(schema, 3);
+                                        $('#responses-updateSDCForm-400-schema-data').val(stringify(schema));
+                                        var result = $('#responses-updateSDCForm-400-schema-400');
+                                        result.empty();
+                                        result.append(view.render());
+                                      });
+                                    </script>
+                                  </div>
+                                  <input id='responses-updateSDCForm-400-schema-data' type='hidden' value=''></input>
+                                </div>
+                            </div>
+
                             <h3> Status: 404 - The given SDCFormID does not exist. </h3>
 
                             <ul class="nav nav-tabs nav-tabs-examples" >
@@ -3167,7 +4129,7 @@ public class DefaultApiExample {
     public static void main(String[] args) {
         
         DefaultApi apiInstance = new DefaultApi();
-        SDCFormResponseObject body = ; // SDCFormResponseObject | The updated response object.
+        SDCFormResponseServerObject body = ; // SDCFormResponseServerObject | The updated response object.
         Integer responseId = 56; // Integer | The id of the SDCFormResponse to be updated/deleted.
         try {
             SDCFormResponseUpdateResponse result = apiInstance.updateSDCFormResponse(body, responseId);
@@ -3187,7 +4149,7 @@ public class DefaultApiExample {
 
     public static void main(String[] args) {
         DefaultApi apiInstance = new DefaultApi();
-        SDCFormResponseObject body = ; // SDCFormResponseObject | The updated response object.
+        SDCFormResponseServerObject body = ; // SDCFormResponseServerObject | The updated response object.
         Integer responseId = 56; // Integer | The id of the SDCFormResponse to be updated/deleted.
         try {
             SDCFormResponseUpdateResponse result = apiInstance.updateSDCFormResponse(body, responseId);
@@ -3204,7 +4166,7 @@ public class DefaultApiExample {
   <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
   </div> -->
                             <div class="tab-pane" id="examples-Default-updateSDCFormResponse-0-objc">
-                              <pre class="prettyprint"><code class="language-cpp">SDCFormResponseObject *body = ; // The updated response object.
+                              <pre class="prettyprint"><code class="language-cpp">SDCFormResponseServerObject *body = ; // The updated response object.
 Integer *responseId = 56; // The id of the SDCFormResponse to be updated/deleted.
 
 DefaultApi *apiInstance = [[DefaultApi alloc] init];
@@ -3227,7 +4189,7 @@ DefaultApi *apiInstance = [[DefaultApi alloc] init];
                               <pre class="prettyprint"><code class="language-js">var SdcFormBackendApiTeamDaBaby = require('sdc_form_backend_api___team_da_baby');
 
 var api = new SdcFormBackendApiTeamDaBaby.DefaultApi()
-var body = ; // {{SDCFormResponseObject}} The updated response object.
+var body = ; // {{SDCFormResponseServerObject}} The updated response object.
 var responseId = 56; // {{Integer}} The id of the SDCFormResponse to be updated/deleted.
 
 var callback = function(error, data, response) {
@@ -3259,7 +4221,7 @@ namespace Example
         {
 
             var apiInstance = new DefaultApi();
-            var body = new SDCFormResponseObject(); // SDCFormResponseObject | The updated response object.
+            var body = new SDCFormResponseServerObject(); // SDCFormResponseServerObject | The updated response object.
             var responseId = 56;  // Integer | The id of the SDCFormResponse to be updated/deleted.
 
             try
@@ -3283,7 +4245,7 @@ namespace Example
 require_once(__DIR__ . '/vendor/autoload.php');
 
 $api_instance = new Swagger\Client\ApiDefaultApi();
-$body = ; // SDCFormResponseObject | The updated response object.
+$body = ; // SDCFormResponseServerObject | The updated response object.
 $responseId = 56; // Integer | The id of the SDCFormResponse to be updated/deleted.
 
 try {
@@ -3301,7 +4263,7 @@ use WWW::SwaggerClient::Configuration;
 use WWW::SwaggerClient::DefaultApi;
 
 my $api_instance = WWW::SwaggerClient::DefaultApi->new();
-my $body = WWW::SwaggerClient::Object::SDCFormResponseObject->new(); # SDCFormResponseObject | The updated response object.
+my $body = WWW::SwaggerClient::Object::SDCFormResponseServerObject->new(); # SDCFormResponseServerObject | The updated response object.
 my $responseId = 56; # Integer | The id of the SDCFormResponse to be updated/deleted.
 
 eval { 
@@ -3322,7 +4284,7 @@ from pprint import pprint
 
 # create an instance of the API class
 api_instance = swagger_client.DefaultApi()
-body =  # SDCFormResponseObject | The updated response object.
+body =  # SDCFormResponseServerObject | The updated response object.
 responseId = 56 # Integer | The id of the SDCFormResponse to be updated/deleted.
 
 try: 
@@ -3387,7 +4349,7 @@ except ApiException as e:
   "content" : {
     "application/json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/SDCFormResponseObject"
+        "$ref" : "#/components/schemas/SDCFormResponseServerObject"
       }
     }
   },
@@ -3466,22 +4428,22 @@ except ApiException as e:
                                 </div>
                             </div>
 
-                            <h3> Status: 404 - The given responseID does not exist. </h3>
+                            <h3> Status: 400 - The response does not exist or is not editable </h3>
 
                             <ul class="nav nav-tabs nav-tabs-examples" >
                                 <li class="active">
-                                  <a data-toggle="tab" href="#responses-updateSDCFormResponse-404-schema">Schema</a>
+                                  <a data-toggle="tab" href="#responses-updateSDCFormResponse-400-schema">Schema</a>
                                 </li>
 
                             </ul>
 
                             <div class="tab-content" style='margin-bottom: 10px;'>
-                                <div class="tab-pane active" id="responses-updateSDCFormResponse-404-schema">
-                                  <div id='responses-updateSDCFormResponse-404-schema-404' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
+                                <div class="tab-pane active" id="responses-updateSDCFormResponse-400-schema">
+                                  <div id='responses-updateSDCFormResponse-400-schema-400' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
                                     <script>
                                       $(document).ready(function() {
                                         var schemaWrapper = {
-  "description" : "The given responseID does not exist.",
+  "description" : "The response does not exist or is not editable",
   "content" : {
     "application/json" : {
       "schema" : {
@@ -3503,14 +4465,14 @@ except ApiException as e:
 
                                         //console.log(JSON.stringify(schema));
                                         var view = new JSONSchemaView(schema, 3);
-                                        $('#responses-updateSDCFormResponse-404-schema-data').val(stringify(schema));
-                                        var result = $('#responses-updateSDCFormResponse-404-schema-404');
+                                        $('#responses-updateSDCFormResponse-400-schema-data').val(stringify(schema));
+                                        var result = $('#responses-updateSDCFormResponse-400-schema-400');
                                         result.empty();
                                         result.append(view.render());
                                       });
                                     </script>
                                   </div>
-                                  <input id='responses-updateSDCFormResponse-404-schema-data' type='hidden' value=''></input>
+                                  <input id='responses-updateSDCFormResponse-400-schema-data' type='hidden' value=''></input>
                                 </div>
                             </div>
 
@@ -3778,18 +4740,18 @@ except ApiException as e:
 
 
                           <h2>Responses</h2>
-                            <h3> Status: 200 - The XML is uploaded successfully. Response contains the SDCForm object represented by the XML. </h3>
+                            <h3> Status: 201 - The XML is uploaded successfully. Response contains the SDCForm object represented by the XML. </h3>
 
                             <ul class="nav nav-tabs nav-tabs-examples" >
                                 <li class="active">
-                                  <a data-toggle="tab" href="#responses-uploadSDCFormXML-200-schema">Schema</a>
+                                  <a data-toggle="tab" href="#responses-uploadSDCFormXML-201-schema">Schema</a>
                                 </li>
 
                             </ul>
 
                             <div class="tab-content" style='margin-bottom: 10px;'>
-                                <div class="tab-pane active" id="responses-uploadSDCFormXML-200-schema">
-                                  <div id='responses-uploadSDCFormXML-200-schema-200' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
+                                <div class="tab-pane active" id="responses-uploadSDCFormXML-201-schema">
+                                  <div id='responses-uploadSDCFormXML-201-schema-201' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
                                     <script>
                                       $(document).ready(function() {
                                         var schemaWrapper = {
@@ -3815,18 +4777,18 @@ except ApiException as e:
 
                                         //console.log(JSON.stringify(schema));
                                         var view = new JSONSchemaView(schema, 3);
-                                        $('#responses-uploadSDCFormXML-200-schema-data').val(stringify(schema));
-                                        var result = $('#responses-uploadSDCFormXML-200-schema-200');
+                                        $('#responses-uploadSDCFormXML-201-schema-data').val(stringify(schema));
+                                        var result = $('#responses-uploadSDCFormXML-201-schema-201');
                                         result.empty();
                                         result.append(view.render());
                                       });
                                     </script>
                                   </div>
-                                  <input id='responses-uploadSDCFormXML-200-schema-data' type='hidden' value=''></input>
+                                  <input id='responses-uploadSDCFormXML-201-schema-data' type='hidden' value=''></input>
                                 </div>
                             </div>
 
-                            <h3> Status: 400 - DiagnosticProcedureID already used. </h3>
+                            <h3> Status: 400 - DiagnosticProcedureID already used, or the XML uploaded either is corrupted or has the wrong format. </h3>
 
                             <ul class="nav nav-tabs nav-tabs-examples" >
                                 <li class="active">
@@ -3841,7 +4803,7 @@ except ApiException as e:
                                     <script>
                                       $(document).ready(function() {
                                         var schemaWrapper = {
-  "description" : "DiagnosticProcedureID already used.",
+  "description" : "DiagnosticProcedureID already used, or the XML uploaded either is corrupted or has the wrong format.",
   "content" : {
     "application/json" : {
       "schema" : {
