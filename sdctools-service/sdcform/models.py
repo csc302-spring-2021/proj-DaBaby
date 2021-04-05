@@ -1,5 +1,6 @@
 from django.db import models
 
+
 # Create your models here.
 
 
@@ -19,6 +20,7 @@ class Section(models.Model):
     name = models.CharField(max_length=100)
     sdcform = models.ForeignKey(SDCForm, related_name="sections",
                                 on_delete=models.CASCADE)
+    order = models.IntegerField()
 
 
 class SDCQuestion(models.Model):
@@ -30,6 +32,7 @@ class SDCQuestion(models.Model):
                                                  null=True)
     section = models.ForeignKey(Section, related_name="questions",
                                 on_delete=models.CASCADE)
+    order = models.IntegerField()
 
     def save(self, *args, **kwargs):
         types = {"single-choice", "multiple-choice", "free-text", "integer",
@@ -40,6 +43,9 @@ class SDCQuestion(models.Model):
             raise ValueError('The type field can only be one of the following '
                              'strings: ' + f'{", ".join(types)}')
 
+    class Meta:
+        ordering = ['order']
+
 
 class Choice(models.Model):
     text = models.TextField()
@@ -47,6 +53,7 @@ class Choice(models.Model):
                                   null=True)
     sdcquestion = models.ForeignKey(SDCQuestion, related_name="choices",
                                     on_delete=models.CASCADE)
+    order = models.IntegerField()
 
     def save(self, *args, **kwargs):
         input_types = {"int", "str"}
@@ -58,3 +65,4 @@ class Choice(models.Model):
 
     class Meta:
         unique_together = (('text', 'sdcquestion'),)
+        ordering = ['order']

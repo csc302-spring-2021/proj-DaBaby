@@ -84,7 +84,7 @@ def parse_question(question_dict, section, controller=None,
     sdc_question = SDCQuestion(type=q_type, text=text,
                                controller=controller,
                                controller_answer_enabler=controller_answer_enabler,
-                               section=section)
+                               section=section, order=question_dict["@order"])
     models.append(sdc_question)
 
     # Answer independent controller
@@ -124,7 +124,7 @@ def parse_question(question_dict, section, controller=None,
             else:
                 text = ""
             choice = Choice(text=text, input_type=input_type,
-                            sdcquestion=sdc_question)
+                            sdcquestion=sdc_question, order=choice_dict["@order"])
             models.append(choice)
 
             # Register option-specific dependencies:
@@ -145,7 +145,7 @@ def parse_section(section_dict, sdc_form):
     else:
         name = ""
 
-    section = Section(name=name, sdcform=sdc_form)
+    section = Section(name=name, sdcform=sdc_form, order=section_dict["@order"])
     models.append(section)
     try:
         question_dicts = section_dict["ChildItems"]["Question"]
