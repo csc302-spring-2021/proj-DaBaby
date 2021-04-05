@@ -84,7 +84,7 @@ class ReviewSection extends React.Component {
                 <div className="question">
                   {this.getQuestionName(answer.questionID)}
                 </div>
-                {!answer.answer ||
+                {answer.answer === "" || answer.answer === null ||
                 (Array.isArray(answer.answer) && answer.answer.length == 0) ? (
                   <div className="unanswered">Unanswered</div>
                 ) : (
