@@ -4,17 +4,17 @@ import React from "react";
 
 import {
   Alert,
-  Container,
   Button,
   Col,
-  Table,
-  Row,
-  InputGroup,
-  FormControl,
-  Modal,
+  Container,
   Form,
-  Spinner,
+  FormControl,
+  InputGroup,
+  Modal,
   Pagination,
+  Row,
+  Spinner,
+  Table,
 } from "react-bootstrap";
 import { SERVER_URL } from "../utils/constants";
 import { withRouter } from "react-router";
@@ -150,9 +150,7 @@ class SDCSearchComponent extends React.Component {
       return;
     }
 
-    const sdcFormData = await sdcFormDataResponse.json();
-
-    responseData["sdcFormData"] = sdcFormData;
+    responseData["sdcFormData"] = await sdcFormDataResponse.json();
 
     this.props.sdcResponseHandler(responseData);
 
@@ -182,9 +180,7 @@ class SDCSearchComponent extends React.Component {
 
     const filteredData = formData.filter((form) => {
       if (form.name.includes(searchQuery)) return true;
-      if (form.diagnosticProcedureID.includes(searchQuery)) return true;
-
-      return false;
+      return !!form.diagnosticProcedureID.includes(searchQuery);
     });
 
     this.setState({
@@ -206,7 +202,7 @@ class SDCSearchComponent extends React.Component {
     return (
       <Col>
         <Row>
-          <Col></Col>
+          <Col />
           <Col className="text-center" md={6}>
             {hasError ? <Alert variant="danger">{errorMsg}</Alert> : null}
             <h2 className="search-input">Start Filling New Form</h2>
@@ -227,10 +223,10 @@ class SDCSearchComponent extends React.Component {
               </InputGroup.Append>
             </InputGroup>
           </Col>
-          <Col></Col>
+          <Col />
         </Row>
         <Row>
-          <Col></Col>
+          <Col />
           {!isLoading ? (
             <Col md={8}>
               <p>
@@ -242,7 +238,7 @@ class SDCSearchComponent extends React.Component {
                   <tr>
                     <th>Diagnostic Procedure ID</th>
                     <th>Procedure Name</th>
-                    <th></th>
+                    <th />
                   </tr>
                 </thead>
                 <tbody>
@@ -269,12 +265,12 @@ class SDCSearchComponent extends React.Component {
               </Table>
             </Col>
           ) : (
-            <Spinner />
+            <Spinner animation="border" />
           )}
-          <Col></Col>
+          <Col />
         </Row>
         <Row>
-          <Col></Col>
+          <Col />
           <Col className="text-center" md={6}>
             <Pagination>
               {filteredData.map((item, i) => {
@@ -294,7 +290,7 @@ class SDCSearchComponent extends React.Component {
               })}
             </Pagination>
           </Col>
-          <Col></Col>
+          <Col />
         </Row>
         <Modal
           show={showNewFormModal}
@@ -341,7 +337,7 @@ class SDCSearchComponent extends React.Component {
                 <Button onClick={async () => await this.startNewResponse()}>
                   Continue
                 </Button>
-                or
+
                 <Button
                   variant="link"
                   size="small"

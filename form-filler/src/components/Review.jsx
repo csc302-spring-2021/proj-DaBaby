@@ -8,7 +8,7 @@ import { Link } from "react-router-dom";
 import ReviewSection from "./ReviewSection";
 import ReviewMetaData from "./ReviewMetaData";
 import "./Review.scss";
-import {deleteResp} from "../actions/Actions";
+import { deleteResp } from "../actions/Actions";
 
 class Review extends React.Component {
   constructor(props) {
@@ -37,7 +37,7 @@ class Review extends React.Component {
 
   handleDelete = () => {
     console.log("delete button clicked");
-    deleteResp(this, this.state.sdcResponse.id)
+    deleteResp(this, this.state.sdcResponse.id);
   };
 
   render() {
@@ -87,11 +87,7 @@ class Review extends React.Component {
           </Row>
         </Col>
       </Container>
-    ) : (
-      <div>
-        <h1>SDCForm is invalid</h1>
-      </div>
-    );
+    ) : null;
   }
 }
 
