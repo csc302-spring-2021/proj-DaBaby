@@ -106,6 +106,7 @@ class ResponseDashboard extends React.Component {
 							<th>Procedure ID</th>
 							<th>Patient ID</th>
 							<th>Last Edited</th>
+							<th>Outdated</th>
 							<th/>
 							<th/>
 						</tr>
@@ -116,6 +117,7 @@ class ResponseDashboard extends React.Component {
 								<td>{resp.diagnosticProcedureID}</td>
 								<td>{resp.patientID}</td>
 								<td>{resp.timestamp}</td>
+								<td>{resp.outdated.toString()}</td>
 								<td>
 									<Dropdown as={NavItem}>
 										<Dropdown.Toggle as={NavLink}>Edit</Dropdown.Toggle>
@@ -131,7 +133,7 @@ class ResponseDashboard extends React.Component {
 										state: {
 											response: resp
 										}
-									}}>Update</Link>
+									}}>View</Link>
 								</td>
 							</tr>
 						))}
