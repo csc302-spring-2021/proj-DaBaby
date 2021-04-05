@@ -85,8 +85,13 @@ class SDCFormResponseSerializer(serializers.ModelSerializer):
 
     def to_representation(self, obj):
         r = super().to_representation(obj)
-
         sdcformresponse = SDCFormResponse.objects.get(id=getattr(obj, "id"))
+
+        if sdcformresponse.sdcform.diagnostic_procedure_id is None:
+            r["outdated"] = True
+        else:
+            r["outdated"] = False
+
         answers = list(sdcformresponse.freetextanswer_set.all()) + \
             list(sdcformresponse.integeranswer_set.all()) + \
             list(sdcformresponse.truefalseanswer_set.all()) + \
@@ -129,6 +134,17 @@ class SDCFormResponseMetadataSerializer(serializers.ModelSerializer):
         model = SDCFormResponse
         fields = ["id", "patientID", "clinicianID", "sdcFormID",
                   "diagnosticProcedureID", "timestamp"]
+
+    def to_representation(self, obj):
+        r = super().to_representation(obj)
+        sdcformresponse = SDCFormResponse.objects.get(id=getattr(obj, "id"))
+
+        if sdcformresponse.sdcform.diagnostic_procedure_id is None:
+            r["outdated"] = True
+        else:
+            r["outdated"] = False
+
+        return r
 
 
 class InvalidInputSerializer(serializers.ModelSerializer):
