@@ -165,7 +165,7 @@ class SDCSearchComponent extends React.Component {
         hasError: false,
         showNewFormModal: false,
       },
-      history.push("/edit-response")
+      history.push("/responses")
     );
   };
 

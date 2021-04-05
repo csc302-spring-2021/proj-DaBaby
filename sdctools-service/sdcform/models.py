@@ -55,3 +55,6 @@ class Choice(models.Model):
         else:
             raise ValueError('The input_type field can only be one of the '
                              'following strings: int, str')
+
+    class Meta:
+        unique_together = (('text', 'sdcquestion'),)

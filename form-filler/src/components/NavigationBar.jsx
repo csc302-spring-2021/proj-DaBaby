@@ -1,8 +1,11 @@
 import "./NavigationBar.scss";
 
 import React from "react";
-import { Navbar, Nav } from "react-bootstrap";
-import { withRouter } from "react-router";
+import { Nav, Navbar } from "react-bootstrap";
+import { Link, Route, Switch } from "react-router-dom";
+import ResponseDashboard from "./SDCResponseDashboard";
+import Form from "./Form";
+import Review from "./Review";
 
 class NavigationBar extends React.Component {
   constructor(props) {
@@ -10,22 +13,25 @@ class NavigationBar extends React.Component {
   }
 
   render() {
-    const { history } = this.props;
     return (
-      <Navbar bg="sdc">
-        <Navbar.Brand>SDCFiller</Navbar.Brand>
-        <Nav>
-          <Nav.Link onClick={() => history.push("/new-form")}>
-            Start New Form
-          </Nav.Link>
-
-          <Nav.Link onClick={() => history.push("/edit-response")}>
-            Edit Previous Response
-          </Nav.Link>
-        </Nav>
-      </Navbar>
+      <div>
+        <Navbar bg="sdc">
+          <Navbar.Brand>SDCFiller</Navbar.Brand>
+          <Nav>
+            <Nav.Link href="/">Start New Form</Nav.Link>
+            <Nav.Link as={Link} to={"/responses"}>
+              Edit Previous Response
+            </Nav.Link>
+          </Nav>
+        </Navbar>
+        <Switch>
+        <Route exact path="/review/:procedureId" component={Review} />
+          <Route exact path="/forms/:procedureId" component={Form} />
+          <Route exact path="/responses" component={ResponseDashboard} />
+        </Switch>
+      </div>
     );
   }
 }
 
-export default withRouter(NavigationBar);
+export default NavigationBar;

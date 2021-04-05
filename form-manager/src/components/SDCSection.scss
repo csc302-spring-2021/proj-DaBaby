@@ -19,6 +19,24 @@
   padding-bottom: 1rem;
 }
 
+.formTitle {
+  /* Heading */
+
+  font-family: Inter, sans-serif;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 36px;
+  line-height: 150%;
+  /* identical to box height, or 54px */
+
+  display: flex;
+  align-items: center;
+  letter-spacing: 0.01em;
+  padding-bottom: 1rem;
+
+  color: #3b4256;
+}
+
 .sectionTitle {
   font-family: Inter, sans-serif;
   font-style: normal;
