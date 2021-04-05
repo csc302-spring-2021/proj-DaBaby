@@ -13,22 +13,27 @@ import {
 import "./SDCSection.scss";
 import "./Question.scss";
 
-// Check when value (what the user inputs on the form), matches with is (the controllerAnswerEnabler), 
+// Check when value (what the user inputs on the form), matches with is (the controllerAnswerEnabler),
 // if they do match, render the dependent question from the sdcForm
 const Condition = ({ when, is, children }) => (
   <Field name={when} subscription={{ value: true }}>
     {/* Use value.match(is) because controlleranswer could be * meaning it could be anything so we will use a regex to express this */}
-    {({ input: { value } }) => (String(value).match(is[0]) || value === is[1] || (Array.isArray(value) ? value.includes(is[1]) : false) ? children : null)}
+    {({ input: { value } }) =>
+      String(value).match(is[0]) ||
+      value === is[1] ||
+      (Array.isArray(value) ? value.includes(is[1]) : false)
+        ? children
+        : null
+    }
   </Field>
 );
 
 const ConditionSpecify = ({ when, is, children }) => (
   <Field name={when} subscription={{ value: true }}>
     {/* Use value.includes because multiple choice value is an array and we need to see if the value includes it */}
-    {({ input: { value } }) => (value.includes(is) ? children : null)} 
+    {({ input: { value } }) => (value.includes(is) ? children : null)}
   </Field>
 );
-
 
 class Question extends Component {
   required = (value) => {
@@ -54,7 +59,10 @@ class Question extends Component {
             // Multiple choice values, so we need to handle regex option or the list option for the controlleranswerenabler
             <Condition
               when={"filler" + question.controllerID}
-              is={[new RegExp(question.controllerAnswerEnabler), question.controllerAnswerEnabler]}
+              is={[
+                new RegExp(question.controllerAnswerEnabler),
+                question.controllerAnswerEnabler,
+              ]}
             >
               <div>
                 <FormLabel className="title">{question.questionText}</FormLabel>
@@ -78,7 +86,12 @@ class Question extends Component {
                           >
                             <Field
                               validate={this.required}
-                              name={"optionalFieldInputType" + question.id + "*" + option.text}
+                              name={
+                                "optionalFieldInputType" +
+                                question.id +
+                                "*" +
+                                option.text
+                              }
                               type="text"
                               component="input"
                               placeholder="Specify"
@@ -132,29 +145,55 @@ class Question extends Component {
                           when={"filler" + question.id}
                           is={option.text}
                         >
-                          <Field
-                            validate={this.required}
-                            name={"optionalFieldInputType" + question.id + "*" + option.text}
-                            type="text"
-                            component="input"
-                            placeholder="Specify"
-                          >
-                            {({ input, meta }) => (
-                              <FormGroup controlId={this.key}>
-                                <FormControl
-                                  {...input}
-                                  type="text"
-                                  placeholder="Specify"
-                                  isInvalid={meta.error && meta.touched}
-                                />
-                                <FormText data-testid="caseIdValidation">
-                                  {meta.error && meta.touched && (
-                                    <span>{meta.error}</span>
-                                  )}
-                                </FormText>
-                              </FormGroup>
-                            )}
-                          </Field>
+                          {/* If the optionalFieldInput type is str, render it this way */}
+                          {option.optionalFieldInputType === "str" ? (
+                            <Field
+                              validate={this.required}
+                              name={
+                                "optionalFieldInputType" +
+                                question.id +
+                                "*" +
+                                option.text
+                              }
+                              type="text"
+                              component="input"
+                              placeholder="Specify"
+                            >
+                              {({ input, meta }) => (
+                                <FormGroup controlId={this.key}>
+                                  <FormControl
+                                    {...input}
+                                    type="text"
+                                    placeholder="Specify"
+                                    isInvalid={meta.error && meta.touched}
+                                  />
+                                  <FormText data-testid="caseIdValidation">
+                                    {meta.error && meta.touched && (
+                                      <span>{meta.error}</span>
+                                    )}
+                                  </FormText>
+                                </FormGroup>
+                              )}
+                            </Field>
+                          ) : 
+                          // Otherwise render it this way (when the optionalFieldInput type is int)
+                          (
+                            <div className="integer">
+                            <FormLabel>
+                              <Field
+                                name={
+                                  "optionalFieldInputType" +
+                                  question.id +
+                                  "*" +
+                                  option.text
+                                }
+                                component="input"
+                                type="number"
+                                min="0"
+                              />{" "}
+                            </FormLabel>
+                            </div>
+                          )}
                         </ConditionSpecify>
                       ) : (
                         ""
@@ -174,7 +213,10 @@ class Question extends Component {
           return (
             <Condition
               when={"filler" + question.controllerID}
-              is={[new RegExp(question.controllerAnswerEnabler), question.controllerAnswerEnabler]}
+              is={[
+                new RegExp(question.controllerAnswerEnabler),
+                question.controllerAnswerEnabler,
+              ]}
             >
               <div>
                 <FormLabel className="title">{question.questionText}</FormLabel>
@@ -198,7 +240,12 @@ class Question extends Component {
                           >
                             <Field
                               validate={this.required}
-                              name={"optionalFieldInputType" + question.id + "*" + option.text}
+                              name={
+                                "optionalFieldInputType" +
+                                question.id +
+                                "*" +
+                                option.text
+                              }
                               type="text"
                               component="input"
                               placeholder="Specify"
@@ -254,7 +301,12 @@ class Question extends Component {
                         >
                           <Field
                             validate={this.required}
-                            name={"optionalFieldInputType" + question.id + "*" + option.text}
+                            name={
+                              "optionalFieldInputType" +
+                              question.id +
+                              "*" +
+                              option.text
+                            }
                             type="text"
                             component="input"
                             placeholder="Specify"
@@ -295,7 +347,10 @@ class Question extends Component {
           return (
             <Condition
               when={"filler" + question.controllerID}
-              is={[new RegExp(question.controllerAnswerEnabler), question.controllerAnswerEnabler]}
+              is={[
+                new RegExp(question.controllerAnswerEnabler),
+                question.controllerAnswerEnabler,
+              ]}
             >
               <Field name={"filler" + question.id} validate={this.required}>
                 {({ input, meta }) => (
@@ -347,7 +402,10 @@ class Question extends Component {
           return (
             <Condition
               when={"filler" + question.controllerID}
-              is={[new RegExp(question.controllerAnswerEnabler), question.controllerAnswerEnabler]}
+              is={[
+                new RegExp(question.controllerAnswerEnabler),
+                question.controllerAnswerEnabler,
+              ]}
             >
               <div>
                 <FormLabel className="title">{question.questionText}</FormLabel>
@@ -393,7 +451,10 @@ class Question extends Component {
           return (
             <Condition
               when={"filler" + question.controllerID}
-              is={[new RegExp(question.controllerAnswerEnabler), question.controllerAnswerEnabler]}
+              is={[
+                new RegExp(question.controllerAnswerEnabler),
+                question.controllerAnswerEnabler,
+              ]}
             >
               <div>
                 <FormLabel className="title">{question.questionText}</FormLabel>
