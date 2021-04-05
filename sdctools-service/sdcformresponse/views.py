@@ -43,9 +43,9 @@ def sdcformresponses(request):
             lst = lst.filter(timestamp__lte=end_timestamp)
 
         if metadata == "true":
-            serializer = SDCFormResponseSerializer(lst, many=True)
-        else:
             serializer = SDCFormResponseMetadataSerializer(lst, many=True)
+        else:
+            serializer = SDCFormResponseSerializer(lst, many=True)
 
         data = serializer.data
         json = {
