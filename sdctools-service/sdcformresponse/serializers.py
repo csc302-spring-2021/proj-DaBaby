@@ -116,6 +116,21 @@ class SDCFormResponseSerializer(serializers.ModelSerializer):
         return r
 
 
+class SDCFormResponseMetadataSerializer(serializers.ModelSerializer):
+    patientID = serializers.CharField(source="patient_id.ohip",
+                                      read_only=True)
+    clinicianID = serializers.CharField(source="clinician_id.identifier",
+                                        read_only=True)
+    sdcFormID = serializers.IntegerField(source="sdcform.id", read_only=True)
+    diagnosticProcedureID = serializers.CharField(
+        source="diagnostic_procedure_id.code", read_only=True)
+
+    class Meta:
+        model = SDCFormResponse
+        fields = ["id", "patientID", "clinicianID", "sdcFormID",
+                  "diagnosticProcedureID", "timestamp"]
+
+
 class InvalidInputSerializer(serializers.ModelSerializer):
     questionID = serializers.IntegerField(source="sdcquestion.id",
                                           read_only=True)

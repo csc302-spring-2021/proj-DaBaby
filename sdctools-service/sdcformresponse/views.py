@@ -42,16 +42,15 @@ def sdcformresponses(request):
             end_timestamp = parser.parse(end_time)
             lst = lst.filter(timestamp__lte=end_timestamp)
 
-        serializer = SDCFormResponseSerializer(lst, many=True)
-        d = serializer.data
-
         if metadata == "true":
-            for sdc_form_response in d:
-                del sdc_form_response["answers"]
+            serializer = SDCFormResponseSerializer(lst, many=True)
+        else:
+            serializer = SDCFormResponseMetadataSerializer(lst, many=True)
 
+        data = serializer.data
         json = {
             "message": "Success",
-            "sdcFormResponses": d
+            "sdcFormResponses": data
         }
         return Response(json)
     else:

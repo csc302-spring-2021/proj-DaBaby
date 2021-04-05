@@ -42,14 +42,6 @@ class SectionSerializer(serializers.ModelSerializer):
         fields = ["id", "name", "questions"]
 
 
-class SDCFormMetadataSerializer(serializers.Serializer):
-    id = serializers.IntegerField(read_only=True)
-    name = serializers.CharField(read_only=True)
-    timestamp = serializers.DateTimeField(read_only=True)
-    diagnosticProcedureID = serializers.CharField(source="diagnostic_procedure_id.code", read_only=True,
-                                                  allow_null=True)
-
-
 class SDCFormSerializer(serializers.ModelSerializer):
     diagnosticProcedureID = serializers.CharField(
         source="diagnostic_procedure_id.code", read_only=True, allow_null=True)
@@ -57,4 +49,14 @@ class SDCFormSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = SDCForm
-        fields = ["id", "name", "timestamp", "diagnosticProcedureID", "sections"]
+        fields = ["id", "name", "timestamp", "diagnosticProcedureID",
+                  "sections"]
+
+
+class SDCFormMetadataSerializer(serializers.ModelSerializer):
+    diagnosticProcedureID = serializers.CharField(
+        source="diagnostic_procedure_id.code", read_only=True, allow_null=True)
+
+    class Meta:
+        model = SDCForm
+        fields = ["id", "name", "timestamp", "diagnosticProcedureID"]
