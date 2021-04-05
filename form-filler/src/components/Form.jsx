@@ -37,7 +37,7 @@ class Form extends React.Component {
             <Col md={8}>
               {curr_section === this.state.sdcForm.sections.length ? (
                 <ReviewSection sdcResponse={this.state.sdcResponse}
-                sdcForm={this.state.sdcForm}/>
+                sdcForm={this.state.sdcForm} submit={true}/>
               ) : (
                 <SDCSection
                   section={this.state.sdcForm.sections[curr_section]}

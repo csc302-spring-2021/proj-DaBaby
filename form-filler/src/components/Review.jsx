@@ -50,6 +50,7 @@ class Review extends React.Component {
               <ReviewSection
                 sdcResponse={this.state.sdcResponse}
                 sdcForm={this.state.sdcForm}
+                submit={false}
               />
             </Col>
             <Col md={4}>
