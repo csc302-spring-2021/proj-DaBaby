@@ -1,14 +1,11 @@
 import React from "react";
-import SDCSection from "./SDCSection";
-import { Col, Container, Row, Button } from "react-bootstrap";
-import SDCSidebar from "./SDCSidebar";
+import { Col, Container, Row } from "react-bootstrap";
 import "./Form.scss";
-import { getSDCForm } from "../actions/Actions";
+import { deleteResp, getSDCForm, getLegacySDCForm } from "../actions/Actions";
 import { Link } from "react-router-dom";
 import ReviewSection from "./ReviewSection";
 import ReviewMetaData from "./ReviewMetaData";
 import "./Review.scss";
-import {deleteResp} from "../actions/Actions";
 
 class Review extends React.Component {
   constructor(props) {
@@ -17,13 +14,17 @@ class Review extends React.Component {
       curr_section: 0,
       procedureID: this.props.location.state.response.diagnosticProcedureID,
       sdcResponse: this.props.location.state.response,
-      sdcForm: null,
+      sdcForm: null
     };
   }
 
   componentDidMount() {
     if (this.props.location) {
-      getSDCForm(this, this.state.procedureID);
+      if (!this.props.location.state.response.outdated) {
+        getSDCForm(this, this.state.procedureID);
+      } else {
+        getLegacySDCForm(this, this.props.location.state.response.sdcFormID);
+      }
     }
   }
 
@@ -37,7 +38,7 @@ class Review extends React.Component {
 
   handleDelete = () => {
     console.log("delete button clicked");
-    deleteResp(this, this.state.sdcResponse.id)
+    deleteResp(this, this.state.sdcResponse.id);
   };
 
   render() {
@@ -62,12 +63,13 @@ class Review extends React.Component {
                   </button>
                 </div>
               </Link>
+              {!this.state.sdcResponse.outdated &&
               <Link
                 to={{
                   pathname: `/forms/${this.state.procedureID}`,
                   state: {
-                    response: this.state.sdcResponse,
-                  },
+                    response: this.state.sdcResponse
+                  }
                 }}
               >
                 <div className="padding">
@@ -76,6 +78,7 @@ class Review extends React.Component {
                   </button>
                 </div>
               </Link>
+              }
               <Link to={"/"}>
                 <div className="padding">
                   <button className="buttons" onClick={this.handleDelete}>
