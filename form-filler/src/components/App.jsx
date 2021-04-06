@@ -5,6 +5,7 @@ import { BrowserRouter, Route, Switch } from "react-router-dom";
 
 import NavigationBar from "./NavigationBar";
 
+import { Helmet } from "react-helmet";
 import { Container } from "react-bootstrap";
 import SDCSearchComponent from "./SDCSearchComponent";
 import { SERVER_URL } from "../utils/constants";
@@ -53,21 +54,26 @@ class App extends React.Component {
     }
     // Once data has been loaded it is okay to then gather from the sdcForm object
     return (
-      <BrowserRouter>
-        <Container fluid className="App">
-          <NavigationBar
-            sdcFormData={sdcFormData}
-            newSDCResponse={newSDCResponse}
-          />
-          <Switch>
-            <Route exact path="/">
-              <SDCSearchComponent
-                sdcResponseHandler={this.sdcResponseHandler}
-              />
-            </Route>
-          </Switch>
-        </Container>
-      </BrowserRouter>
+      <>
+        <Helmet>
+          <title>Form Filler</title>
+        </Helmet>
+        <BrowserRouter>
+          <Container fluid className="App">
+            <NavigationBar
+              sdcFormData={sdcFormData}
+              newSDCResponse={newSDCResponse}
+            />
+            <Switch>
+              <Route exact path="/">
+                <SDCSearchComponent
+                  sdcResponseHandler={this.sdcResponseHandler}
+                />
+              </Route>
+            </Switch>
+          </Container>
+        </BrowserRouter>
+      </>
     );
   }
 }
