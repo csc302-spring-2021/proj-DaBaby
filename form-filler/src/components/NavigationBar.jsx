@@ -5,6 +5,7 @@ import { Nav, Navbar } from "react-bootstrap";
 import { Link, Route, Switch } from "react-router-dom";
 import ResponseDashboard from "./SDCResponseDashboard";
 import Form from "./Form";
+import Review from "./Review";
 
 class NavigationBar extends React.Component {
   constructor(props) {
@@ -37,6 +38,8 @@ class NavigationBar extends React.Component {
               />
             )}
           />
+          <Route exact path="/review/:procedureId" component={Review} />
+          <Route exact path="/forms/:procedureId" component={Form} />
           <Route exact path="/responses" component={ResponseDashboard} />
         </Switch>
       </div>

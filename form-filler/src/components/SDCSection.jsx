@@ -13,13 +13,19 @@ import {
   FormText,
 } from "react-bootstrap";
 
+import { Link } from "react-router-dom";
 import { Form, Field } from "react-final-form";
 import Question from "./Question";
+import { Redirect } from "react-router";
+import {getSDCFormResponse} from "../actions/Actions";
 
 const SERVER_URL =
   "http://dababysdcbackendapi-env-2.eba-ybqn7as3.ca-central-1.elasticbeanstalk.com";
 
 class SDCSection extends React.Component {
+  state = {
+    redirect: false,
+  };
   // Prepare the values into a JSON that'll be sent to the backend
   onSubmit = async (values) => {
     // This list will hold a list of questionAnswerObjects
@@ -101,7 +107,7 @@ class SDCSection extends React.Component {
       // Otherwise it is an addition
       else {
         // If the addition is a single choice question handle it this way
-
+        // debugger;
         // Use this to determine how long the id is for the question
         let k = 0;
         console.log(property);
@@ -130,7 +136,9 @@ class SDCSection extends React.Component {
             ].find((obj) => {
               return obj.selection === question;
             });
-            existingAnswerObject["addition"] = values[property]; // Add the addition field to that answer
+            if (existingAnswerObject) {
+              existingAnswerObject["addition"] = values[property]; // Add the addition field to that answer
+            }
           }
           // Otherwise do this (single-choice question)
           else {
@@ -159,12 +167,18 @@ class SDCSection extends React.Component {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(answerResponseObject),
     };
-    fetch(`${SERVER_URL}/api/sdcform/${sdcFormResponse["diagnosticProcedureID"]}/`, requestOptions)
+    await fetch(
+      `${SERVER_URL}/api/sdcformresponse/${sdcFormResponse["id"]}/`,
+      requestOptions
+    )
       .then((response) => response.json())
       .then((data) => console.log(data))
       .catch((error) => {
         console.log(error);
       });
+
+    getSDCFormResponse(this.props, this.props.sdcFormResponse.id)
+
   };
 
   /**
@@ -204,6 +218,7 @@ class SDCSection extends React.Component {
             let additionName =
               "optionalFieldInputType" +
               sdcFormResponse["answers"][i]["questionID"] +
+              "*" +
               value[j]["selection"];
             initialValues[additionName] = value[j]["addition"];
             // If first value being added, create the list
@@ -222,6 +237,7 @@ class SDCSection extends React.Component {
           let additionName =
             "optionalFieldInputType" +
             sdcFormResponse["answers"][i]["questionID"] +
+            "*" +
             value["selection"];
           initialValues[name] = value["selection"];
           initialValues[additionName] = value["addition"];
@@ -232,7 +248,15 @@ class SDCSection extends React.Component {
     return initialValues; // Return the parsed object
   };
 
+  goBack = async () => {
+    await this.onSubmit();
+    this.setState({ redirect: true });
+  };
+
   render() {
+    if (this.state.redirect) {
+      return <Redirect push to={"/"}></Redirect>;
+    }
     const { section, name, section_name } = this.props;
     const { questions } = section;
     return (
@@ -241,7 +265,7 @@ class SDCSection extends React.Component {
           <Col>
             <h1 className="formTitle">{name}</h1>
             <h2 className="sectionTitle">{section_name}</h2>
-            <hr className="divider"></hr>
+
             <Form
               onSubmit={this.onSubmit}
               initialValues={this.sdcFormResponseParser()}
@@ -257,13 +281,28 @@ class SDCSection extends React.Component {
                   {questions.map((question) => (
                     <Question question={question} key={question.id} />
                   ))}
-                  <Button
-                    type="submit"
-                    onClick={handleSubmit}
-                    disabled={submitting}
-                  >
-                    Continue
-                  </Button>
+                  <div>
+                    <div className="float-child">
+                      <button
+                        className="sdcButton"
+                        type="submit"
+                        onClick={handleSubmit}
+                        disabled={submitting}
+                      >
+                        Save
+                      </button>
+                    </div>
+                    <div className="float-child">
+                      <button
+                        className="sdcButton"
+                        type="submit"
+                        onClick={this.goBack}
+                        disabled={submitting}
+                      >
+                        Save and Exit
+                      </button>
+                    </div>
+                  </div>
                 </form>
               )}
             ></Form>

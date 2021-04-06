@@ -2,7 +2,7 @@ import axios from "axios";
 
 const SERVER_URL = "http://dababysdcbackendapi-env-2.eba-ybqn7as3.ca-central-1.elasticbeanstalk.com";
 
-/* GET SDC forms */
+/* GET SDC form */
 export const getSDCForm = (page, id) => {
 	axios
 		.get(`${SERVER_URL}/api/sdcform/${id}/`)
@@ -11,6 +11,38 @@ export const getSDCForm = (page, id) => {
 				page.setState({sdcForm: res.data.sdcFormObject});
 			} else {
 				alert("GET SDC FORM FAILED");
+			}
+		})
+		.catch((err) => {
+			alert(err.response.data);
+		});
+};
+
+/* GET legacy SDC form */
+export const getLegacySDCForm = (page, id) => {
+	axios
+	.get(`${SERVER_URL}/api/sdcform?historyID=${id}`)
+		.then((res) => {
+			if (res.data) {
+				page.setState({sdcForm: res.data.sdcFormObjects[0]});
+			} else {
+				alert("GET LEGACY SDC FORM FAILED");
+			}
+		})
+		.catch((err) => {
+			alert(err.response.data);
+		});
+};
+
+/* GET SDC form response */
+export const getSDCFormResponse = (page, id) => {
+	axios
+		.get(`${SERVER_URL}/api/sdcformresponse/${id}/`)
+		.then((res) => {
+			if (res.data) {
+				page.setState({sdcResponse: res.data.responseObject});
+			} else {
+				alert("GET SDC FORM RESPONSE FAILED");
 			}
 		})
 		.catch((err) => {

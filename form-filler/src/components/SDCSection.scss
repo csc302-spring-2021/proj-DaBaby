@@ -57,3 +57,29 @@
 .divider {
   padding-bottom: 1rem;
 }
+
+.float-child{
+  float: left;
+  padding-right: 30px;
+}
+
+.sdcButton {
+  float: left;
+
+  text-align: center;
+  font-family: IBM Plex Sans;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 150%;
+
+  width: 200px;
+  height: 62px;
+  left: 1007px;
+  top: 543px;
+
+  background: #ffffff;
+  border: 1px solid #3b4256;
+  box-sizing: border-box;
+  border-radius: 10px;
+}
