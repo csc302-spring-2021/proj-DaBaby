@@ -116,6 +116,7 @@ class SDCSection extends React.Component {
               console.log(values[property]);
               // Case 3
               if (existingAnswerObject) {
+                delete existingAnswerObject.remove
                 continue;
               }
               // Case 2
@@ -179,6 +180,7 @@ class SDCSection extends React.Component {
               existingQuestionAnswerObject["answer"].push({
                 selection: question,
                 addition: values[property],
+                remove: true,
               });
             }
           }
@@ -225,9 +227,8 @@ class SDCSection extends React.Component {
             if (values[property]) {
               questionAnswerObject["questionID"] = questionID;
               questionAnswerObject["answer"] = [
-                { selection: question, addition: values[property] },
+                { selection: question, addition: values[property], remove: true },
               ];
-
               questionAnswerList.push(questionAnswerObject); // Add multiple-choice questionID and answer to the list
             }
           } else {
@@ -239,6 +240,54 @@ class SDCSection extends React.Component {
         }
       }
     }
+
+    // Loop through questionAnswerList and fix some stuff
+    for (let i = 0; i < questionAnswerList.length; i++) {
+      console.log(questionAnswerList[i]["answer"])
+      // Loop through questionAnswerList[i]["answer"] and remove any that have the remove field
+      if (Array.isArray(questionAnswerList[i]["answer"])) {
+          for (let j = 0; j < questionAnswerList[i]["answer"].length; j++) {
+            if (questionAnswerList[i]["answer"][j]["remove"]) {
+              console.log(questionAnswerList[i]["answer"])
+              questionAnswerList[i]["answer"].splice(j, 1)
+            }
+          }
+      }
+    }
+
+
+    const questions = [];
+        const { sdcForm } = this.props;
+
+        // Get all questionids for multiple-choice questions
+        for (let i = 0; i < sdcForm["sections"].length; i++) {
+          for (let j = 0; j < sdcForm["sections"][i]["questions"].length; j++)
+            if (sdcForm["sections"][i]["questions"][j]["type"] === "multiple-choice")
+              questions.push(sdcForm["sections"][i]["questions"][j]["id"]);
+        }
+
+    let missingMCIDs = [];
+
+    for (let i = 0; i < questions.length; i++) {
+      const existingMCID = questionAnswerList.find((obj) => {
+        return obj.questionID === questions[i];
+      });
+      if (existingMCID === undefined) {
+        missingMCIDs.push(questions[i])
+      }
+    }
+
+    console.log(missingMCIDs)
+    for (let i = 0; i < missingMCIDs.length; i++) {
+      const questionObject = {}
+      questionObject["questionID"] = missingMCIDs[i]
+      questionObject["answer"] = []
+      questionAnswerList.push(questionObject)
+    }
+    
+    
+
+
     // Start building the answer response object to send to the backend
     const answerResponseObject = {};
 
@@ -253,6 +302,7 @@ class SDCSection extends React.Component {
     answerResponseObject["answers"] = questionAnswerList;
     answerResponseObject["sdcFormID"] = sdcFormResponse["sdcFormID"];
 
+    console.log(questionAnswerList)
     console.log(answerResponseObject);
 
     // Make backend call to call PUT on url
