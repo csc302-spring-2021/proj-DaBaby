@@ -30,12 +30,13 @@ class SDCSection extends React.Component {
       // Creating response object that'll be sent to the backend
       const questionAnswerObject = {};
 
-      let single_or_multiple_choice_question;
+      let single_or_multiple_choice_question = false;
 
       // If the property is filler, then it is not an addition
       if (property.slice(0, 6) === "filler") {
         const questionID = Number(property.slice(6)); // Parse the question id from the property
         // Get the object with matching questionID
+        const { section, name, section_name } = this.props;
         const questions = [];
         const { sdcForm } = this.props;
 
@@ -86,13 +87,14 @@ class SDCSection extends React.Component {
             questionAnswerList.push(questionAnswerObject); // Add single-choice questionID and answer to the list
           }
         } else if (single_or_multiple_choice_question === "multiple-choice") {
-          /* If the question is multiple choice deal with these 3 cases:
-           *
-           * Case 1: the id doesn't exist
-           * Case 2: the id does exist but the selection doesn't
-           * Case 3: the id and selection already exist from the addition
-           */
-          // Loop through array of values gotten form values[property]f
+        /* If the question is multiple choice deal with these 3 cases:
+         *
+         * Case 1: the id doesn't exist
+         * Case 2: the id does exist but the selection doesn't
+         * Case 3: the id and selection already exist from the addition
+         */
+          // Loop through array of values gotten form values[property]
+          let first = true;
           for (let i = 0; i < values[property].length; i++) {
             // Check if values[property][i] is already in the object
 
@@ -111,8 +113,14 @@ class SDCSection extends React.Component {
               ].find((obj) => {
                 return obj.selection === values[property][i];
               });
+              console.log(values[property]);
               // Case 3
-              if (!existingAnswerObject) {
+              if (existingAnswerObject) {
+                delete existingAnswerObject.remove
+                continue;
+              }
+              // Case 2
+              else {
                 existingQuestionAnswerObject["answer"].push({
                   selection: values[property][i],
                 });
@@ -136,11 +144,13 @@ class SDCSection extends React.Component {
         // debugger;
         // Use this to determine how long the id is for the question
         let k = 0;
+        console.log(property);
         // Loop through the property to find the * (thats where the id ends and the question begins)
         while (property[22 + k] !== "*") {
           k++;
         }
         const id_length = k;
+        console.log(id_length);
 
         const questionID = Number(property.slice(22, 22 + id_length)); // Parse the question id from the property
         const question = property.slice(22 + id_length + 1); // Parse the question from the property
@@ -170,6 +180,7 @@ class SDCSection extends React.Component {
               existingQuestionAnswerObject["answer"].push({
                 selection: question,
                 addition: values[property],
+                remove: true,
               });
             }
           }
@@ -184,7 +195,7 @@ class SDCSection extends React.Component {
           // Find out whether the question is single or multiple choice
           const questions = [];
           const { sdcForm } = this.props;
-          let single_or_multiple_choice_question = "";
+          let single_or_multiple_choice_question;
           // Loop through all sections and add question to list of questions
           for (let i = 0; i < sdcForm["sections"].length; i++) {
             for (let j = 0; j < sdcForm["sections"][i]["questions"].length; j++)
@@ -211,15 +222,16 @@ class SDCSection extends React.Component {
 
           // If the question is multiple choice
           if (single_or_multiple_choice_question === "multiple-choice") {
+            console.log(question);
+            console.log("weeeddeededed");
             if (values[property]) {
               questionAnswerObject["questionID"] = questionID;
               questionAnswerObject["answer"] = [
-                { selection: question, addition: values[property] },
+                { selection: question, addition: values[property], remove: true },
               ];
-
               questionAnswerList.push(questionAnswerObject); // Add multiple-choice questionID and answer to the list
             }
-          } else if (single_or_multiple_choice_question === "single-choice") {
+          } else {
             // If the question is single choice
             questionAnswerObject["questionID"] = questionID;
             questionAnswerObject["answer"] = { addition: values[property] };
@@ -228,6 +240,54 @@ class SDCSection extends React.Component {
         }
       }
     }
+
+    // Loop through questionAnswerList and fix some stuff
+    for (let i = 0; i < questionAnswerList.length; i++) {
+      console.log(questionAnswerList[i]["answer"])
+      // Loop through questionAnswerList[i]["answer"] and remove any that have the remove field
+      if (Array.isArray(questionAnswerList[i]["answer"])) {
+          for (let j = 0; j < questionAnswerList[i]["answer"].length; j++) {
+            if (questionAnswerList[i]["answer"][j]["remove"]) {
+              console.log(questionAnswerList[i]["answer"])
+              questionAnswerList[i]["answer"].splice(j, 1)
+            }
+          }
+      }
+    }
+
+
+    const questions = [];
+        const { sdcForm } = this.props;
+
+        // Get all questionids for multiple-choice questions
+        for (let i = 0; i < sdcForm["sections"].length; i++) {
+          for (let j = 0; j < sdcForm["sections"][i]["questions"].length; j++)
+            if (sdcForm["sections"][i]["questions"][j]["type"] === "multiple-choice")
+              questions.push(sdcForm["sections"][i]["questions"][j]["id"]);
+        }
+
+    let missingMCIDs = [];
+
+    for (let i = 0; i < questions.length; i++) {
+      const existingMCID = questionAnswerList.find((obj) => {
+        return obj.questionID === questions[i];
+      });
+      if (existingMCID === undefined) {
+        missingMCIDs.push(questions[i])
+      }
+    }
+
+    console.log(missingMCIDs)
+    for (let i = 0; i < missingMCIDs.length; i++) {
+      const questionObject = {}
+      questionObject["questionID"] = missingMCIDs[i]
+      questionObject["answer"] = []
+      questionAnswerList.push(questionObject)
+    }
+    
+    
+
+
     // Start building the answer response object to send to the backend
     const answerResponseObject = {};
 
@@ -242,6 +302,9 @@ class SDCSection extends React.Component {
     answerResponseObject["answers"] = questionAnswerList;
     answerResponseObject["sdcFormID"] = sdcFormResponse["sdcFormID"];
 
+    console.log(questionAnswerList)
+    console.log(answerResponseObject);
+
     // Make backend call to call PUT on url
     const requestOptions = {
       method: "PUT",
@@ -251,9 +314,12 @@ class SDCSection extends React.Component {
     await fetch(
       `${SERVER_URL}/api/sdcformresponse/${sdcFormResponse["id"]}/`,
       requestOptions
-    ).catch((error) => {
-      alert(error);
-    });
+    )
+      .then((response) => response.json())
+      .then((data) => console.log(data))
+      .catch((error) => {
+        console.log(error);
+      });
 
     getSDCFormResponse(this.props, this.props.sdcFormResponse.id);
   };
@@ -321,6 +387,7 @@ class SDCSection extends React.Component {
         }
       }
     }
+    console.log(initialValues);
     return initialValues; // Return the parsed object
   };
 
@@ -345,7 +412,13 @@ class SDCSection extends React.Component {
             <Form
               onSubmit={this.onSubmit}
               initialValues={this.sdcFormResponseParser()}
-              render={({ handleSubmit, submitting }) => (
+              render={({
+                handleSubmit,
+                form,
+                submitting,
+                pristine,
+                values,
+              }) => (
                 <form onSubmit={handleSubmit}>
                   {/* Where the questions will be rendered */}
                   {questions.map((question) => (
