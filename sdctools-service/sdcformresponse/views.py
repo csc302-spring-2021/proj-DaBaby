@@ -17,35 +17,35 @@ def sdcformresponses(request):
         start_time = request.GET.get("starttime", "")
         end_time = request.GET.get("endtime", "")
         metadata = request.GET.get("metadata", "")
-        lst = SDCFormResponse.objects.all()
+        all_responses = SDCFormResponse.objects.all()
 
         if ohip != "":
             try:
                 patient_id = PatientID.objects.get(ohip=ohip)
-                lst = lst.filter(patient_id=patient_id)
+                all_responses = all_responses.filter(patient_id=patient_id)
             except PatientID.DoesNotExist:
-                lst = SDCFormResponse.objects.none()
+                all_responses = SDCFormResponse.objects.none()
 
         if code != "":
             try:
                 diagnostic_procedure_id = DiagnosticProcedureID.objects.get(
                     code=code)
-                lst = lst.filter(diagnostic_procedure_id=diagnostic_procedure_id)
+                all_responses = all_responses.filter(diagnostic_procedure_id=diagnostic_procedure_id)
             except DiagnosticProcedureID.DoesNotExist:
-                lst = SDCFormResponse.objects.none()
+                all_responses = SDCFormResponse.objects.none()
 
         if start_time != "":
             start_timestamp = parser.parse(start_time)
-            lst = lst.filter(timestamp__gte=start_timestamp)
+            all_responses = all_responses.filter(timestamp__gte=start_timestamp)
 
         if end_time != "":
             end_timestamp = parser.parse(end_time)
-            lst = lst.filter(timestamp__lte=end_timestamp)
+            all_responses = all_responses.filter(timestamp__lte=end_timestamp)
 
         if metadata == "true":
-            serializer = SDCFormResponseMetadataSerializer(lst, many=True)
+            serializer = SDCFormResponseMetadataSerializer(all_responses, many=True)
         else:
-            serializer = SDCFormResponseSerializer(lst, many=True)
+            serializer = SDCFormResponseSerializer(all_responses, many=True)
 
         data = serializer.data
         json = {
@@ -54,9 +54,9 @@ def sdcformresponses(request):
         }
         return Response(json)
     else:
-        s = {"sdcFormID", "patientID", "clinicianID"}
-        if not s.issubset(request.data):
-            return Response({"message": str(s) + " must be in the request body"}
+        req_fields = {"sdcFormID", "patientID", "clinicianID"}
+        if not req_fields.issubset(request.data):
+            return Response({"message": ",".join(req_fields) + " must be in the request body"}
                             , status=status.HTTP_400_BAD_REQUEST)
 
         models_to_save = []
@@ -65,8 +65,7 @@ def sdcformresponses(request):
             sdc_form = SDCForm.objects.get(id=request.data["sdcFormID"])
         except SDCForm.DoesNotExist:
             content = {
-                'message':
-                    'This sdcFormID does not exist.'
+                'message': 'This sdcFormID does not exist.'
             }
             return Response(content, status=status.HTTP_404_NOT_FOUND)
 
@@ -87,8 +86,7 @@ def sdcformresponses(request):
             patient_id.clean_fields()
         except ValidationError:
             content = {
-                'message': 'The patientID string should have a fixed length of '
-                           '10'
+                'message': 'The patientID string should have a fixed length of 10'
             }
             return Response(content, status=status.HTTP_400_BAD_REQUEST)
         models_to_save.append(patient_id)
@@ -98,8 +96,7 @@ def sdcformresponses(request):
             clinician_id.clean_fields()
         except ValidationError:
             content = {
-                'message': 'The clinicianID string should have a fixed length '
-                           'of 12'
+                'message': 'The clinicianID string should have a fixed length of 12'
             }
             return Response(content, status=status.HTTP_400_BAD_REQUEST)
         models_to_save.append(clinician_id)
@@ -162,16 +159,15 @@ def sdcformresponse(request, response_id):
         }
         return Response(json)
     elif request.method == "PUT":
-        s = {"sdcFormID", "patientID", "clinicianID", "diagnosticProcedureID",
-             "responseID", "timestamp", "answers"}
-        if not s.issubset(request.data):
-            return Response({"message": str(s) + " must be in the request body"}
+        req_fields = {"sdcFormID", "patientID", "clinicianID", "diagnosticProcedureID",
+                      "responseID", "timestamp", "answers"}
+        if not req_fields.issubset(request.data):
+            return Response({"message": str(req_fields) + " must be in the request body"}
                             , status=status.HTTP_400_BAD_REQUEST)
 
         if request.data["responseID"] != response_id:
             return Response({"message": "The responseID from the URL does not"
-                                        "match the responseID from the request"
-                                        "body"},
+                                        "match the responseID from the request body"},
                             status=status.HTTP_400_BAD_REQUEST)
 
         models_to_save = []
@@ -278,7 +274,7 @@ def sdcformresponse(request, response_id):
 
                 for choice_answer in choice_answers:
                     multiple_choice = MultipleChoice(
-                            answer=answer, selection=choice_answer["selection"])
+                        answer=answer, selection=choice_answer["selection"])
 
                     if "addition" in choice_answer:
                         multiple_choice.addition = choice_answer["addition"]
@@ -312,8 +308,7 @@ def sdcformresponse(request, response_id):
             sdc_form_response = SDCFormResponse.objects.get(id=response_id)
         except SDCFormResponse.DoesNotExist:
             content = {
-                'message':
-                    'This SDCFormResponseID does not exist.'
+                'message': 'This SDCFormResponseID does not exist.'
             }
             return Response(content, status=status.HTTP_404_NOT_FOUND)
 

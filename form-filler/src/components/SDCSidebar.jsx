@@ -24,7 +24,7 @@ class SDCSidebar extends React.Component {
             {sections.map((section, index) => (
               <Button
                 className={`sdc-btn ${
-                  curr_section == index ? "active" : ""
+                  curr_section === index ? "active" : ""
                 } sdc-container`}
                 variant="outline-dark"
                 key={section.id}
@@ -35,10 +35,10 @@ class SDCSidebar extends React.Component {
             ))}
             <Button
               className={`sdc-btn ${
-                curr_section == reviewIndex ? "active" : ""
+                curr_section === reviewIndex ? "active" : ""
               } sdc-container`}
               variant="outline-dark"
-              key={10000000000000000}
+              key="sdcbutton-key"
               onClick={() => this.handleSection(reviewIndex)}
             >
               Review

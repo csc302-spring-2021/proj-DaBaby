@@ -9,10 +9,10 @@ class ChoiceAnswerSerializer(serializers.ModelSerializer):
         fields = ["selection", "addition"]
 
     def to_representation(self, obj):
-        r = super().to_representation(obj)
+        representation = super().to_representation(obj)
 
         if getattr(obj, "addition") is None:
-            r.pop("addition")
+            representation.pop("addition")
         else:
             answer = getattr(obj, "answer")
             sdcquestion = answer.sdcquestion
@@ -20,9 +20,9 @@ class ChoiceAnswerSerializer(serializers.ModelSerializer):
                                         sdcquestion=sdcquestion)
 
             if choice.input_type == "int":
-                r["addition"] = int(r["addition"])
+                representation["addition"] = int(representation["addition"])
 
-        return r
+        return representation
 
 
 class AnswerSerializer(serializers.ModelSerializer):
@@ -84,13 +84,13 @@ class SDCFormResponseSerializer(serializers.ModelSerializer):
                   "diagnosticProcedureID", "timestamp"]
 
     def to_representation(self, obj):
-        r = super().to_representation(obj)
+        representation = super().to_representation(obj)
         sdcformresponse = SDCFormResponse.objects.get(id=getattr(obj, "id"))
 
         if sdcformresponse.sdcform.diagnostic_procedure_id is None:
-            r["outdated"] = True
+            representation["outdated"] = True
         else:
-            r["outdated"] = False
+            representation["outdated"] = False
 
         answers = list(sdcformresponse.freetextanswer_set.all()) + \
             list(sdcformresponse.integeranswer_set.all()) + \
@@ -98,7 +98,7 @@ class SDCFormResponseSerializer(serializers.ModelSerializer):
             list(sdcformresponse.singlechoiceanswer_set.all()) + \
             list(sdcformresponse.multiplechoiceanswer_set.all())
         answers.sort(key=lambda x: x.sdcquestion.id)
-        r["answers"] = []
+        representation["answers"] = []
 
         for answer in answers:
             if answer.sdcquestion.type == "free-text":
@@ -116,19 +116,16 @@ class SDCFormResponseSerializer(serializers.ModelSerializer):
             else:
                 answer_serializer = MultipleChoiceAnswerSerializer(
                     instance=answer, read_only=True)
-            r["answers"].append(answer_serializer.to_representation(answer))
+            representation["answers"].append(answer_serializer.to_representation(answer))
 
-        return r
+        return representation
 
 
 class SDCFormResponseMetadataSerializer(serializers.ModelSerializer):
-    patientID = serializers.CharField(source="patient_id.ohip",
-                                      read_only=True)
-    clinicianID = serializers.CharField(source="clinician_id.identifier",
-                                        read_only=True)
+    patientID = serializers.CharField(source="patient_id.ohip",read_only=True)
+    clinicianID = serializers.CharField(source="clinician_id.identifier",read_only=True)
     sdcFormID = serializers.IntegerField(source="sdcform.id", read_only=True)
-    diagnosticProcedureID = serializers.CharField(
-        source="diagnostic_procedure_id.code", read_only=True)
+    diagnosticProcedureID = serializers.CharField(source="diagnostic_procedure_id.code", read_only=True)
 
     class Meta:
         model = SDCFormResponse
@@ -136,20 +133,19 @@ class SDCFormResponseMetadataSerializer(serializers.ModelSerializer):
                   "diagnosticProcedureID", "timestamp"]
 
     def to_representation(self, obj):
-        r = super().to_representation(obj)
+        representation = super().to_representation(obj)
         sdcformresponse = SDCFormResponse.objects.get(id=getattr(obj, "id"))
 
         if sdcformresponse.sdcform.diagnostic_procedure_id is None:
-            r["outdated"] = True
+            representation["outdated"] = True
         else:
-            r["outdated"] = False
+            representation["outdated"] = False
 
-        return r
+        return representation
 
 
 class InvalidInputSerializer(serializers.ModelSerializer):
-    questionID = serializers.IntegerField(source="sdcquestion.id",
-                                          read_only=True)
+    questionID = serializers.IntegerField(source="sdcquestion.id", read_only=True)
 
     class Meta:
         model = InvalidInput

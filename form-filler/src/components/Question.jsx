@@ -31,7 +31,7 @@ class Question extends Component {
     return value ? undefined : "Required";
   };
 
-  requireds = (value) => {
+  notRequired = (value) => {
     return false;
   };
 
@@ -246,7 +246,7 @@ class Question extends Component {
                           component="input"
                           type="checkbox"
                           value={option.text}
-                          validate={this.requireds}
+                          validate={this.notRequired}
                         />{" "}
                         {option.text}
                         {/* If the choice has an optionalfieldinputtype, render it below  */}
@@ -327,7 +327,7 @@ class Question extends Component {
                         component="input"
                         type="checkbox"
                         value={option.text}
-                        validate={this.requireds}
+                        validate={this.notRequired}
                       />{" "}
                       {option.text}
                       {/* If the choice has an optionalfieldinputtype, render it below  */}
@@ -518,7 +518,7 @@ class Question extends Component {
                       component="input"
                       type="checkbox"
                       value={question.questionText}
-                      validate={this.requireds}
+                      validate={this.notRequired}
                     />{" "}
                     {question.questionText}
                   </FormLabel>
@@ -534,7 +534,7 @@ class Question extends Component {
                 <FormLabel>
                   <Field
                     name={"filler" + question.id}
-                    validate={this.requireds}
+                    validate={this.notRequired}
                     component="input"
                     type="checkbox"
                   />{" "}
