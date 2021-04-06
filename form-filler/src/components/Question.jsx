@@ -31,6 +31,10 @@ class Question extends Component {
     return value ? undefined : "Required";
   };
 
+  requireds = (value) => {
+    return false;
+  };
+
   render() {
     const { question } = this.props;
     // If the question controller answer is *, change it to a regular expression that accepts
@@ -242,6 +246,7 @@ class Question extends Component {
                           component="input"
                           type="checkbox"
                           value={option.text}
+                          validate={this.requireds}
                         />{" "}
                         {option.text}
                         {/* If the choice has an optionalfieldinputtype, render it below  */}
@@ -322,6 +327,7 @@ class Question extends Component {
                         component="input"
                         type="checkbox"
                         value={option.text}
+                        validate={this.requireds}
                       />{" "}
                       {option.text}
                       {/* If the choice has an optionalfieldinputtype, render it below  */}
@@ -512,6 +518,7 @@ class Question extends Component {
                       component="input"
                       type="checkbox"
                       value={question.questionText}
+                      validate={this.requireds}
                     />{" "}
                     {question.questionText}
                   </FormLabel>
@@ -527,6 +534,7 @@ class Question extends Component {
                 <FormLabel>
                   <Field
                     name={"filler" + question.id}
+                    validate={this.requireds}
                     component="input"
                     type="checkbox"
                   />{" "}
