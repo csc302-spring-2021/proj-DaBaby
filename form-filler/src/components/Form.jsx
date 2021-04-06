@@ -3,7 +3,7 @@ import SDCSection from "./SDCSection";
 import { Col, Container, Row } from "react-bootstrap";
 import SDCSidebar from "./SDCSidebar";
 import "./Form.scss";
-import { getSDCForm } from "../actions/Actions";
+import { getSDCForm, getSDCFormResponse } from "../actions/Actions";
 import ReviewSection from "./ReviewSection.jsx";
 
 class Form extends React.Component {
@@ -11,15 +11,18 @@ class Form extends React.Component {
     super(props);
     this.state = {
       curr_section: 0,
-      procedureID: this.props.location.state.response.diagnosticProcedureID,
-      sdcResponse: this.props.location.state.response,
+      sdcResponse: null,
       sdcForm: null,
     };
   }
 
   componentDidMount() {
     if (this.props.location) {
-      getSDCForm(this, this.state.procedureID);
+      getSDCForm(
+        this,
+        this.props.location.state.response.diagnosticProcedureID
+      );
+      getSDCFormResponse(this, this.props.location.state.response.id);
     }
   }
 
@@ -30,7 +33,7 @@ class Form extends React.Component {
 
   render() {
     const { curr_section } = this.state;
-    return this.state.sdcForm ? (
+    return this.state.sdcForm && this.state.sdcResponse ? (
       <Container fluid className="App">
         <Col>
           <Row>
@@ -63,11 +66,7 @@ class Form extends React.Component {
           </Row>
         </Col>
       </Container>
-    ) : (
-      <div>
-        <h1>SDCForm is invalid</h1>
-      </div>
-    );
+    ) : null;
   }
 }
 

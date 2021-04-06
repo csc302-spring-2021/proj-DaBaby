@@ -1,7 +1,12 @@
 import React from "react";
 import { Col, Container, Row } from "react-bootstrap";
 import "./Form.scss";
-import { deleteResp, getSDCForm, getLegacySDCForm } from "../actions/Actions";
+import {
+  deleteResp,
+  getSDCForm,
+  getLegacySDCForm,
+  getSDCFormResponse,
+} from "../actions/Actions";
 import { Link } from "react-router-dom";
 import ReviewSection from "./ReviewSection";
 import ReviewMetaData from "./ReviewMetaData";
@@ -13,7 +18,7 @@ class Review extends React.Component {
     this.state = {
       curr_section: 0,
       procedureID: this.props.location.state.response.diagnosticProcedureID,
-      sdcResponse: this.props.location.state.response,
+      sdcResponse: null,
       sdcForm: null,
     };
   }
@@ -25,25 +30,16 @@ class Review extends React.Component {
       } else {
         getLegacySDCForm(this, this.props.location.state.response.sdcFormID);
       }
+      getSDCFormResponse(this, this.props.location.state.response.id);
     }
   }
 
-  handleReturn = () => {
-    console.log("return button clicked");
-  };
-
-  handleEdit = () => {
-    console.log("edit button clicked");
-  };
-
   handleDelete = () => {
-    console.log("delete button clicked");
     deleteResp(this, this.state.sdcResponse.id);
   };
 
   render() {
-    console.log(this.state);
-    return this.state.sdcForm ? (
+    return this.state.sdcForm && this.state.sdcResponse ? (
       <Container fluid className="App">
         <Col>
           <Row>
@@ -59,9 +55,7 @@ class Review extends React.Component {
               <div className="actions">Actions</div>
               <Link to={"/responses"}>
                 <div className="padding">
-                  <button className="buttons" onClick={this.handleReturn}>
-                    RETURN TO SEARCH
-                  </button>
+                  <button className="buttons">RETURN TO SEARCH</button>
                 </div>
               </Link>
               {!this.state.sdcResponse.outdated && (
@@ -74,9 +68,7 @@ class Review extends React.Component {
                   }}
                 >
                   <div className="padding">
-                    <button className="buttons" onClick={this.handleEdit}>
-                      EDIT RESPONSE
-                    </button>
+                    <button className="buttons">EDIT RESPONSE</button>
                   </div>
                 </Link>
               )}

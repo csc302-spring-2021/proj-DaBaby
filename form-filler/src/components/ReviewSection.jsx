@@ -2,21 +2,8 @@ import "./SDCSection.scss";
 import "./ReviewSection.scss";
 import React from "react";
 
-import {
-  Container,
-  Row,
-  Col,
-  Button,
-  FormGroup,
-  FormLabel,
-  FormControl,
-  FormText,
-} from "react-bootstrap";
+import { Button, Col, Container, Modal, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
-
-import { Form, Field } from "react-final-form";
-import Question from "./Question";
-import { Modal } from "react-bootstrap";
 
 class ReviewSection extends React.Component {
   state = {
@@ -72,15 +59,10 @@ class ReviewSection extends React.Component {
     return answerString;
   };
 
-  goBack = () => {
-    console.log("Submitted");
-  };
-
   render() {
     const { sdcResponse, sdcForm, submit } = this.props;
     const { name } = sdcForm;
     const { answers } = sdcResponse;
-    console.log(sdcResponse);
     return (
       <Container className="sdc-form">
         <Row>
@@ -95,7 +77,7 @@ class ReviewSection extends React.Component {
                 </div>
                 {answer.answer === "" ||
                 answer.answer === null ||
-                (Array.isArray(answer.answer) && answer.answer.length == 0) ? (
+                (Array.isArray(answer.answer) && answer.answer.length === 0) ? (
                   <div className="unanswered">Unanswered</div>
                 ) : (
                   <div className="answer">

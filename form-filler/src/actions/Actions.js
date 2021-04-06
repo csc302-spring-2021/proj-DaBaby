@@ -15,7 +15,7 @@ export const getSDCForm = (page, id) => {
       }
     })
     .catch((err) => {
-      alert(err.response ? err.response.data : "");
+      alert(err.response ? err.response.data : "Unknown Server Error!");
     });
 };
 
@@ -27,11 +27,11 @@ export const getLegacySDCForm = (page, id) => {
       if (res.data) {
         page.setState({ sdcForm: res.data.sdcFormObjects[0] });
       } else {
-        alert("GET LEGACY SDC FORM FAILED");
+        alert("Failed to get legacy SDCForm!");
       }
     })
     .catch((err) => {
-      alert(err.response.data);
+      alert(err.response ? err.response.data : "Unknown Server Error!");
     });
 };
 
@@ -43,17 +43,16 @@ export const getSDCFormResponse = (page, id) => {
       if (res.data) {
         page.setState({ sdcResponse: res.data.responseObject });
       } else {
-        alert("GET SDC FORM RESPONSE FAILED");
+        alert("Failed to get SDCForm responses!");
       }
     })
     .catch((err) => {
-      alert(err.response.data);
+      alert(err.response ? err.response.data : "Unknown Server Error!");
     });
 };
 
 /* GET all resps */
 export const getAllResponseMetadata = (page, data) => {
-  console.log(data);
   axios
     .get(
       `${SERVER_URL}/api/sdcformresponse?metadata=true&patientID=${data.patient}&diagnosticProcedureID=${data.procedure}&starttime=${data.start}&endtime=${data.end}`
@@ -62,11 +61,11 @@ export const getAllResponseMetadata = (page, data) => {
       if (res.data) {
         page.setState({ responses: res.data.sdcFormResponses });
       } else {
-        alert("GET ALL RESPS FAILED");
+        alert("Failed to fetch all responses!");
       }
     })
     .catch((err) => {
-      alert(err.response.data);
+      alert(err.response ? err.response.data : "Unknown Server Error!");
     });
 };
 
@@ -83,10 +82,10 @@ export const deleteResp = (page, id) => {
           end: "",
         });
       } else {
-        alert("DELETE RESP FAILED");
+        alert("Failed to delete the response!");
       }
     })
     .catch((err) => {
-      alert(err.response.data);
+      alert(err.response ? err.response.data : "Unknown Server Error!");
     });
 };
