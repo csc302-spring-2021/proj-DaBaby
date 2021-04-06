@@ -14,7 +14,7 @@ class Review extends React.Component {
       curr_section: 0,
       procedureID: this.props.location.state.response.diagnosticProcedureID,
       sdcResponse: this.props.location.state.response,
-      sdcForm: null
+      sdcForm: null,
     };
   }
 
@@ -64,22 +64,22 @@ class Review extends React.Component {
                   </button>
                 </div>
               </Link>
-              {!this.state.sdcResponse.outdated &&
-              <Link
-                to={{
-                  pathname: `/forms/${this.state.procedureID}`,
-                  state: {
-                    response: this.state.sdcResponse
-                  }
-                }}
-              >
-                <div className="padding">
-                  <button className="buttons" onClick={this.handleEdit}>
-                    EDIT RESPONSE
-                  </button>
-                </div>
-              </Link>
-              }
+              {!this.state.sdcResponse.outdated && (
+                <Link
+                  to={{
+                    pathname: `/forms/${this.state.procedureID}`,
+                    state: {
+                      response: this.state.sdcResponse,
+                    },
+                  }}
+                >
+                  <div className="padding">
+                    <button className="buttons" onClick={this.handleEdit}>
+                      EDIT RESPONSE
+                    </button>
+                  </div>
+                </Link>
+              )}
               <Link to={"/"}>
                 <div className="padding">
                   <button className="buttons" onClick={this.handleDelete}>
@@ -91,11 +91,7 @@ class Review extends React.Component {
           </Row>
         </Col>
       </Container>
-    ) : (
-      <div>
-        <h1>SDCForm is invalid</h1>
-      </div>
-    );
+    ) : null;
   }
 }
 

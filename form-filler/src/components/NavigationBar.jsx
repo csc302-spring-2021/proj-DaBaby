@@ -29,6 +29,18 @@ class NavigationBar extends React.Component {
         <Switch>
           <Route
             exact
+            path="/review/:procedureId"
+            render={(props) => (
+              <Review
+                sdcForm={sdcFormData}
+                sdcFormResponse={newSDCResponse}
+                {...props}
+              />
+            )}
+          />
+
+          <Route
+            exact
             path="/forms/:procedureId"
             render={(props) => (
               <Form
@@ -38,8 +50,6 @@ class NavigationBar extends React.Component {
               />
             )}
           />
-          <Route exact path="/review/:procedureId" component={Review} />
-          <Route exact path="/forms/:procedureId" component={Form} />
           <Route exact path="/responses" component={ResponseDashboard} />
         </Switch>
       </div>

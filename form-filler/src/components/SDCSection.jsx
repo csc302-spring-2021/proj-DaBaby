@@ -2,19 +2,8 @@ import "./SDCSection.scss";
 
 import React from "react";
 
-import {
-  Container,
-  Row,
-  Col,
-  Button,
-  FormGroup,
-  FormLabel,
-  FormControl,
-  FormText,
-} from "react-bootstrap";
-
-import { Link } from "react-router-dom";
-import { Form, Field } from "react-final-form";
+import { Col, Container, Row } from "react-bootstrap";
+import { Form } from "react-final-form";
 import Question from "./Question";
 import { Redirect } from "react-router";
 import {getSDCFormResponse} from "../actions/Actions";
@@ -34,14 +23,18 @@ class SDCSection extends React.Component {
     // Loop through the values object that is essentially the questionAnswer to each question and each question id
     // Then prepare them and add them to the questionAnswerObject
     for (const property in values) {
+      if (!values.hasOwnProperty(property)) {
+        return;
+      }
+
       // Creating response object that'll be sent to the backend
       const questionAnswerObject = {};
 
       let single_or_multiple_choice_question = false;
 
       // If the property is filler, then it is not an addition
-      if (property.slice(0, 6) == "filler") {
-        const questionID = property.slice(6); // Parse the question id from the property
+      if (property.slice(0, 6) === "filler") {
+        const questionID = Number(property.slice(6)); // Parse the question id from the property
         // Get the object with matching questionID
         const { section, name, section_name } = this.props;
         const questions = [];
@@ -57,16 +50,16 @@ class SDCSection extends React.Component {
         // single-choice or multiple-choice, if so then they need a section field in their questionAnswerObject
         for (let i = 0; i < questions.length; i++) {
           if (
-            questions[i]["id"] == questionID &&
-            questions[i]["type"] == "single-choice"
+            questions[i]["id"] === questionID &&
+            questions[i]["type"] === "single-choice"
           ) {
             questionAnswerObject["questionID"] = questionID;
             questionAnswerObject["answer"] = { selection: values[property] };
             single_or_multiple_choice_question = "single-choice";
           }
           if (
-            questions[i]["id"] == questionID &&
-            questions[i]["type"] == "multiple-choice"
+            questions[i]["id"] === questionID &&
+            questions[i]["type"] === "multiple-choice"
           ) {
             questionAnswerObject["questionID"] = questionID;
             single_or_multiple_choice_question = "multiple-choice";
@@ -74,20 +67,20 @@ class SDCSection extends React.Component {
         }
 
         if (!single_or_multiple_choice_question) {
-          questionAnswerObject["questionID"] = property.slice(6);
+          questionAnswerObject["questionID"] = questionID;
           questionAnswerObject["answer"] = values[property];
           questionAnswerList.push(questionAnswerObject); // Add free-text/integer/true-false questionID and answer to the list
-        } else if (single_or_multiple_choice_question == "single-choice") {
-          questionAnswerObject["questionID"] = property.slice(6);
+        } else if (single_or_multiple_choice_question === "single-choice") {
+          questionAnswerObject["questionID"] = questionID;
           questionAnswerObject["answer"]["selection"] = values[property];
           questionAnswerList.push(questionAnswerObject); // Add single-choice questionID and answer to the list
-        } else if (single_or_multiple_choice_question == "multiple-choice") {
+        } else if (single_or_multiple_choice_question === "multiple-choice") {
           // Loop through array of values gotten form values[property]
           let first = true;
           for (let i = 0; i < values[property].length; i++) {
             // If first value added to questionAnswerObject, create a new array for the answer field
             if (first) {
-              questionAnswerObject["questionID"] = property.slice(6);
+              questionAnswerObject["questionID"] = questionID;
               questionAnswerObject["answer"] = [
                 { selection: values[property][i] },
               ];
@@ -255,7 +248,7 @@ class SDCSection extends React.Component {
 
   render() {
     if (this.state.redirect) {
-      return <Redirect push to={"/"}></Redirect>;
+      return <Redirect push to={"/"} />;
     }
     const { section, name, section_name } = this.props;
     const { questions } = section;
@@ -305,7 +298,7 @@ class SDCSection extends React.Component {
                   </div>
                 </form>
               )}
-            ></Form>
+            />
           </Col>
         </Row>
       </Container>
