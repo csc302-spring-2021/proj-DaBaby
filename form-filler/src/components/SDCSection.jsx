@@ -30,7 +30,7 @@ class SDCSection extends React.Component {
       // Creating response object that'll be sent to the backend
       const questionAnswerObject = {};
 
-      let single_or_multiple_choice_question = false;
+      let single_or_multiple_choice_question;
 
       // If the property is filler, then it is not an addition
       if (property.slice(0, 6) === "filler") {
@@ -184,7 +184,7 @@ class SDCSection extends React.Component {
           // Find out whether the question is single or multiple choice
           const questions = [];
           const { sdcForm } = this.props;
-          let single_or_multiple_choice_question = null;
+          let single_or_multiple_choice_question = "";
           // Loop through all sections and add question to list of questions
           for (let i = 0; i < sdcForm["sections"].length; i++) {
             for (let j = 0; j < sdcForm["sections"][i]["questions"].length; j++)
