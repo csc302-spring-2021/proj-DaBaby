@@ -6,7 +6,7 @@ import { Col, Container, Row } from "react-bootstrap";
 import { Form } from "react-final-form";
 import Question from "./Question";
 import { Redirect } from "react-router";
-import {getSDCFormResponse} from "../actions/Actions";
+import { getSDCFormResponse } from "../actions/Actions";
 
 const SERVER_URL =
   "http://dababysdcbackendapi-env-2.eba-ybqn7as3.ca-central-1.elasticbeanstalk.com";
@@ -53,8 +53,6 @@ class SDCSection extends React.Component {
             questions[i]["id"] === questionID &&
             questions[i]["type"] === "single-choice"
           ) {
-            questionAnswerObject["questionID"] = questionID;
-            questionAnswerObject["answer"] = { selection: values[property] };
             single_or_multiple_choice_question = "single-choice";
           }
           if (
@@ -71,9 +69,23 @@ class SDCSection extends React.Component {
           questionAnswerObject["answer"] = values[property];
           questionAnswerList.push(questionAnswerObject); // Add free-text/integer/true-false questionID and answer to the list
         } else if (single_or_multiple_choice_question === "single-choice") {
-          questionAnswerObject["questionID"] = questionID;
-          questionAnswerObject["answer"]["selection"] = values[property];
-          questionAnswerList.push(questionAnswerObject); // Add single-choice questionID and answer to the list
+          // First check to see if question already exists through the form of the addition
+          const existingQuestionAnswerObject = questionAnswerList.find(
+            (obj) => {
+              return obj.questionID === questionID;
+            }
+          );
+          // If the question exists, add the selection field to it
+          if (existingQuestionAnswerObject) {
+            existingQuestionAnswerObject["answer"]["selection"] =
+              values[property]; // Add the addition field to that answer
+          }
+          // Otherwise create a new question object and add it to the list
+          else {
+            questionAnswerObject["questionID"] = questionID;
+            questionAnswerObject["answer"] = { selection: values[property] };
+            questionAnswerList.push(questionAnswerObject); // Add single-choice questionID and answer to the list
+          }
         } else if (single_or_multiple_choice_question === "multiple-choice") {
           // Loop through array of values gotten form values[property]
           let first = true;
@@ -111,7 +123,7 @@ class SDCSection extends React.Component {
         const id_length = k;
         console.log(id_length);
 
-        const questionID = property.slice(22, 22 + id_length); // Parse the question id from the property
+        const questionID = Number(property.slice(22, 22 + id_length)); // Parse the question id from the property
         const question = property.slice(22 + id_length + 1); // Parse the question from the property
 
         // Find existingQuestionAnswerObject from the questionAnswerList so we can include the addition field
@@ -119,6 +131,7 @@ class SDCSection extends React.Component {
           return obj.questionID === questionID;
         });
 
+        // If question already exists in the list, just do this and add the addition to the existing questionanswerobject
         if (existingQuestionAnswerObject) {
           // If the question we are adding the addition to is an array (meaning multiple-choice question), do this
           if (Array.isArray(existingQuestionAnswerObject["answer"])) {
@@ -139,6 +152,47 @@ class SDCSection extends React.Component {
               values[property]; // Add the addition field to that answer
           }
         }
+        // Otherwise create a new questionanswer object and add it to the list
+        else {
+          // Find out whether the question is single or multiple choice
+          const questions = [];
+          const { sdcForm } = this.props;
+          let single_or_multiple_choice_question;
+          // Loop through all sections and add question to list of questions
+          for (let i = 0; i < sdcForm["sections"].length; i++) {
+            for (let j = 0; j < sdcForm["sections"][i]["questions"].length; j++)
+              questions.push(sdcForm["sections"][i]["questions"][j]);
+          }
+
+          // Loop through questions from section to match up with the value from the form, and see if that question is
+          // single-choice or multiple-choice, if so then they need a section field in their questionAnswerObject
+          for (let i = 0; i < questions.length; i++) {
+            if (
+              questions[i]["id"] === questionID &&
+              questions[i]["type"] === "single-choice"
+            ) {
+              single_or_multiple_choice_question = "single-choice";
+            }
+            if (
+              questions[i]["id"] === questionID &&
+              questions[i]["type"] === "multiple-choice"
+            ) {
+              questionAnswerObject["questionID"] = questionID;
+              single_or_multiple_choice_question = "multiple-choice";
+            }
+          }
+
+          // If the question is multiple choice
+          if (single_or_multiple_choice_question === "multiple-choice") {
+            console.log("ruh roh addition for multiple-choice got added before the question")
+          
+          } else {
+            // If the question is single choice
+            questionAnswerObject["questionID"] = questionID;
+            questionAnswerObject["answer"] = { addition: values[property] };
+            questionAnswerList.push(questionAnswerObject);
+          }
+        }
       }
     }
     // Start building the answer response object to send to the backend
@@ -150,10 +204,12 @@ class SDCSection extends React.Component {
     answerResponseObject["patientID"] = sdcFormResponse["patientID"];
     answerResponseObject["clinicianID"] = sdcFormResponse["clinicianID"];
     answerResponseObject["timestamp"] = sdcFormResponse["timestamp"];
-    answerResponseObject["diagnosticProcedureID"] = sdcFormResponse["diagnosticProcedureID"];
+    answerResponseObject["diagnosticProcedureID"] =
+      sdcFormResponse["diagnosticProcedureID"];
     answerResponseObject["answers"] = questionAnswerList;
     answerResponseObject["sdcFormID"] = sdcFormResponse["sdcFormID"];
 
+    console.log(answerResponseObject);
 
     // Make backend call to call PUT on url
     const requestOptions = {
@@ -171,8 +227,7 @@ class SDCSection extends React.Component {
         console.log(error);
       });
 
-    getSDCFormResponse(this.props, this.props.sdcFormResponse.id)
-
+    getSDCFormResponse(this.props, this.props.sdcFormResponse.id);
   };
 
   /**
