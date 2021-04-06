@@ -63,7 +63,10 @@ class App extends React.Component {
     return (
       <BrowserRouter>
         <Container fluid className="App">
-          <NavigationBar />
+          <NavigationBar
+            sdcFormData={sdcFormData}
+            newSDCResponse={newSDCResponse}
+          />
           <Switch>
             <Route exact path="/">
               <SDCSearchComponent

@@ -4,6 +4,7 @@ import { Col, Container, Row } from "react-bootstrap";
 import SDCSidebar from "./SDCSidebar";
 import "./Form.scss";
 import { getSDCForm } from "../actions/Actions";
+import ReviewSection from "./ReviewSection.jsx";
 
 class Form extends React.Component {
   constructor(props) {
@@ -34,26 +35,39 @@ class Form extends React.Component {
         <Col>
           <Row>
             <Col md={8}>
-              <SDCSection
-                section={this.state.sdcForm.sections[curr_section]}
-                name={this.state.sdcForm.name}
-                section_name={this.state.sdcForm.sections[curr_section].name}
-                sdcForm={this.state.sdcForm}
-                sdcFormResponse={this.state.sdcResponse}
-              />
+              {curr_section === this.state.sdcForm.sections.length ? (
+                <ReviewSection
+                  sdcResponse={this.state.sdcResponse}
+                  sdcForm={this.state.sdcForm}
+                  submit={true}
+                />
+              ) : (
+                <SDCSection
+                  section={this.state.sdcForm.sections[curr_section]}
+                  name={this.state.sdcForm.name}
+                  section_name={this.state.sdcForm.sections[curr_section].name}
+                  sdcForm={this.state.sdcForm}
+                  sdcFormResponse={this.state.sdcResponse}
+                  setState={(state) => this.setState(state)}
+                />
+              )}
             </Col>
             <Col md={4}>
               <SDCSidebar
-                sdcFormResponse={this.state.sdcResponse}
                 sections={this.state.sdcForm.sections}
                 onSelection={this.handleSelection}
                 curr_section={curr_section}
+                reviewIndex={this.state.sdcForm.sections.length}
               />
             </Col>
           </Row>
         </Col>
       </Container>
-    ) : null;
+    ) : (
+      <div>
+        <h1>SDCForm is invalid</h1>
+      </div>
+    );
   }
 }
 

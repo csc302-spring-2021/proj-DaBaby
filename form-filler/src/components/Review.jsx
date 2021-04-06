@@ -1,14 +1,11 @@
 import React from "react";
-import SDCSection from "./SDCSection";
-import { Col, Container, Row, Button } from "react-bootstrap";
-import SDCSidebar from "./SDCSidebar";
+import { Col, Container, Row } from "react-bootstrap";
 import "./Form.scss";
-import { getSDCForm } from "../actions/Actions";
+import { deleteResp, getSDCForm, getLegacySDCForm } from "../actions/Actions";
 import { Link } from "react-router-dom";
 import ReviewSection from "./ReviewSection";
 import ReviewMetaData from "./ReviewMetaData";
 import "./Review.scss";
-import { deleteResp } from "../actions/Actions";
 
 class Review extends React.Component {
   constructor(props) {
@@ -23,7 +20,11 @@ class Review extends React.Component {
 
   componentDidMount() {
     if (this.props.location) {
-      getSDCForm(this, this.state.procedureID);
+      if (!this.props.location.state.response.outdated) {
+        getSDCForm(this, this.state.procedureID);
+      } else {
+        getLegacySDCForm(this, this.props.location.state.response.sdcFormID);
+      }
     }
   }
 
@@ -50,6 +51,7 @@ class Review extends React.Component {
               <ReviewSection
                 sdcResponse={this.state.sdcResponse}
                 sdcForm={this.state.sdcForm}
+                submit={false}
               />
             </Col>
             <Col md={4}>
@@ -62,20 +64,22 @@ class Review extends React.Component {
                   </button>
                 </div>
               </Link>
-              <Link
-                to={{
-                  pathname: `/forms/${this.state.procedureID}`,
-                  state: {
-                    response: this.state.sdcResponse,
-                  },
-                }}
-              >
-                <div className="padding">
-                  <button className="buttons" onClick={this.handleEdit}>
-                    EDIT RESPONSE
-                  </button>
-                </div>
-              </Link>
+              {!this.state.sdcResponse.outdated && (
+                <Link
+                  to={{
+                    pathname: `/forms/${this.state.procedureID}`,
+                    state: {
+                      response: this.state.sdcResponse,
+                    },
+                  }}
+                >
+                  <div className="padding">
+                    <button className="buttons" onClick={this.handleEdit}>
+                      EDIT RESPONSE
+                    </button>
+                  </div>
+                </Link>
+              )}
               <Link to={"/"}>
                 <div className="padding">
                   <button className="buttons" onClick={this.handleDelete}>

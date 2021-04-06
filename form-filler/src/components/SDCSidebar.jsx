@@ -1,7 +1,9 @@
 import "./SDCSidebar.scss";
 
 import React from "react";
-import { Button, Col, Container, Row } from "react-bootstrap";
+import { Row, Col, Container, Button } from "react-bootstrap";
+
+import SDCSectionLabel from "./SDCSectionLabel";
 
 class SDCSidebar extends React.Component {
   constructor(props) {
@@ -14,44 +16,7 @@ class SDCSidebar extends React.Component {
   };
 
   render() {
-    const { sections, curr_section, sdcFormResponse } = this.props;
-
-    const sectionToQuestionIds = sections.map((section) => {
-      let questionIdToCompletion = {};
-      section.questions.forEach((question) => {
-        questionIdToCompletion[question.id] = false;
-      });
-      return questionIdToCompletion;
-    });
-
-    sdcFormResponse.answers.forEach((answer) => {
-      if (
-        !(
-          answer.answer === "" ||
-          answer.answer === null ||
-          (Array.isArray(answer.answer) && answer.answer.length === 0)
-        )
-      ) {
-        sectionToQuestionIds.forEach((section) => {
-          if (section[answer.questionID] === false) {
-            section[answer.questionID] = true;
-          }
-        });
-      }
-    });
-
-    const sectionToFullCompletion = sectionToQuestionIds.map((section) => {
-      for (const key in section) {
-        if (!section.hasOwnProperty(key)) {
-          return false;
-        }
-        if (section[key] === false) {
-          return false;
-        }
-      }
-      return true;
-    });
-
+    const { sections, curr_section, reviewIndex } = this.props;
     return (
       <Container fluid>
         <Row>
@@ -59,18 +24,25 @@ class SDCSidebar extends React.Component {
             {sections.map((section, index) => (
               <Button
                 className={`sdc-btn ${
-                  curr_section === index ? "active" : ""
+                  curr_section == index ? "active" : ""
                 } sdc-container`}
                 variant="outline-dark"
                 key={section.id}
                 onClick={() => this.handleSection(index)}
               >
                 {section.name}
-                {sectionToFullCompletion[index] ? null : (
-                  <div id="completion-label">incomplete</div>
-                )}
               </Button>
             ))}
+            <Button
+              className={`sdc-btn ${
+                curr_section == reviewIndex ? "active" : ""
+              } sdc-container`}
+              variant="outline-dark"
+              key={10000000000000000}
+              onClick={() => this.handleSection(reviewIndex)}
+            >
+              Review
+            </Button>
           </Col>
         </Row>
       </Container>

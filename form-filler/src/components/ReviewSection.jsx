@@ -2,9 +2,26 @@ import "./SDCSection.scss";
 import "./ReviewSection.scss";
 import React from "react";
 
-import { Col, Container, Row } from "react-bootstrap";
+import {
+  Container,
+  Row,
+  Col,
+  Button,
+  FormGroup,
+  FormLabel,
+  FormControl,
+  FormText,
+} from "react-bootstrap";
+import { Link } from "react-router-dom";
+
+import { Form, Field } from "react-final-form";
+import Question from "./Question";
+import { Modal } from "react-bootstrap";
 
 class ReviewSection extends React.Component {
+  state = {
+    showModal: false,
+  };
   // Get the question name from the sdcForm
   getQuestionName = (questionID) => {
     const { sdcForm } = this.props;
@@ -55,8 +72,12 @@ class ReviewSection extends React.Component {
     return answerString;
   };
 
+  goBack = () => {
+    console.log("Submitted");
+  };
+
   render() {
-    const { sdcResponse, sdcForm } = this.props;
+    const { sdcResponse, sdcForm, submit } = this.props;
     const { name } = sdcForm;
     const { answers } = sdcResponse;
     console.log(sdcResponse);
@@ -74,7 +95,7 @@ class ReviewSection extends React.Component {
                 </div>
                 {answer.answer === "" ||
                 answer.answer === null ||
-                (Array.isArray(answer.answer) && answer.answer.length === 0) ? (
+                (Array.isArray(answer.answer) && answer.answer.length == 0) ? (
                   <div className="unanswered">Unanswered</div>
                 ) : (
                   <div className="answer">
@@ -84,6 +105,45 @@ class ReviewSection extends React.Component {
                 )}{" "}
               </div>
             ))}
+            {submit ? (
+              <button
+                className="sdcButton"
+                type="submit"
+                onClick={() =>
+                  this.setState({
+                    showModal: true,
+                  })
+                }
+              >
+                Submit
+              </button>
+            ) : (
+              ""
+            )}
+            <Modal
+              contentClassName="submit-modal"
+              show={this.state.showModal}
+              onHide={() => this.setState({ showModal: !this.state.showModal })}
+            >
+              <Modal.Title>
+                <h5>Your changes has been saved.</h5>
+              </Modal.Title>
+              <Modal.Footer id="submit-modal-footer">
+                <Link to="/responses" style={{ textDecoration: "none" }}>
+                  <Button variant="primary">Exit to Home</Button>
+                </Link>
+                or{" "}
+                <a
+                  id="submit-back-link"
+                  href="#"
+                  onClick={() =>
+                    this.setState({ showModal: !this.state.showModal })
+                  }
+                >
+                  Go Back
+                </a>
+              </Modal.Footer>
+            </Modal>
           </Col>
         </Row>
       </Container>
