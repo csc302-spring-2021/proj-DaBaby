@@ -13,7 +13,7 @@ def parse_xml(xmlString, sdc_form):
 
     if xml_start_index < 0:
         raise ParseError('Uploaded file is not a valid XML file!')
-
+    xmlString = xmlString[xml_start_index:]
     try:
         xml_dict = xmltodict.parse(xmlString[xml_start_index:])
     except ExpatError:
@@ -88,10 +88,13 @@ def parse_question(question_dict, section, controller=None,
     else:
         raise ParseError("Invalid XML Format! Expected <Question> to have child <ResponseField> or <ListField>.")
 
+    if "@order" in question_dict:
+        order = question_dict["@order"]
+    else:
+        order = 1
     sdc_question = SDCQuestion(type=q_type, text=text,
                                controller=controller,
-                               controller_answer_enabler=controller_answer_enabler,
-                               section=section, order=question_dict["@order"])
+                               controller_answer_enabler=controller_answer_enabler, section=section, order=order)
     models.append(sdc_question)
 
     # Answer independent controller
@@ -137,8 +140,14 @@ def parse_question(question_dict, section, controller=None,
                 text = choice_dict["@title"]
             else:
                 text = ""
+
+            if "@order" in choice_dict:
+                order = choice_dict["@order"]
+            else:
+                order = 1
+
             choice = Choice(text=text, input_type=input_type,
-                            sdcquestion=sdc_question, order=choice_dict["@order"])
+                            sdcquestion=sdc_question, order=order)
             models.append(choice)
 
             # Register option-specific dependencies:
@@ -163,7 +172,12 @@ def parse_section(section_dict, sdc_form):
     else:
         name = ""
 
-    section = Section(name=name, sdcform=sdc_form, order=section_dict["@order"])
+    if "@order" in section_dict:
+        order = section_dict["@order"]
+    else:
+        order = 1
+
+    section = Section(name=name, sdcform=sdc_form, order=order)
     models.append(section)
     try:
         question_dicts = section_dict["ChildItems"]["Question"]

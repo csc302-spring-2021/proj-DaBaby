@@ -64,7 +64,6 @@ def sdcforms(request):
         sdc_form = SDCForm(name=request.data["name"],
                            diagnostic_procedure_id=diagnostic_procedure_id)
         models_to_save.append(sdc_form)
-
         try:
             models_to_save.extend(parse_xml(request.data["xmlString"], sdc_form))
         except ParseError as parse_error:
