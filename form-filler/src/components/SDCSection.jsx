@@ -86,14 +86,13 @@ class SDCSection extends React.Component {
             questionAnswerObject["answer"] = { selection: values[property] };
             questionAnswerList.push(questionAnswerObject); // Add single-choice questionID and answer to the list
           }
-        }
+        } else if (single_or_multiple_choice_question === "multiple-choice") {
         /* If the question is multiple choice deal with these 3 cases:
-        *
-        * Case 1: the id doesn't exist
-        * Case 2: the id does exist but the selection doesn't
-        * Case 3: the id and selection already exist from the addition
-        */ 
-        else if (single_or_multiple_choice_question === "multiple-choice") {
+         *
+         * Case 1: the id doesn't exist
+         * Case 2: the id does exist but the selection doesn't
+         * Case 3: the id and selection already exist from the addition
+         */
           // Loop through array of values gotten form values[property]
           let first = true;
           for (let i = 0; i < values[property].length; i++) {
@@ -105,10 +104,9 @@ class SDCSection extends React.Component {
                 return obj.questionID === questionID;
               }
             );
-            
+
             // Case 2 & 3
             if (existingQuestionAnswerObject) {
-              
               // Check if selection already exists (Case 3)
               const existingAnswerObject = existingQuestionAnswerObject[
                 "answer"
@@ -173,11 +171,11 @@ class SDCSection extends React.Component {
               return obj.selection === question;
             });
             // If the id exists and the selection exists
-            if (existingAnswerObject) {
+            if (existingAnswerObject && values[property]) {
               existingAnswerObject["addition"] = values[property]; // Add the addition field to that answer
             }
             // If the id exists but the selection doesn't exist
-            else {
+            else if (values[property]) {
               existingQuestionAnswerObject["answer"].push({
                 selection: question,
                 addition: values[property],
@@ -224,11 +222,14 @@ class SDCSection extends React.Component {
           if (single_or_multiple_choice_question === "multiple-choice") {
             console.log(question);
             console.log("weeeddeededed");
-            questionAnswerObject["questionID"] = questionID;
-            questionAnswerObject["answer"] = [
-              { selection: question, addition: values[property] },
-            ];
-            questionAnswerList.push(questionAnswerObject); // Add multiple-choice questionID and answer to the list
+            if (values[property]) {
+              questionAnswerObject["questionID"] = questionID;
+              questionAnswerObject["answer"] = [
+                { selection: question, addition: values[property] },
+              ];
+
+              questionAnswerList.push(questionAnswerObject); // Add multiple-choice questionID and answer to the list
+            }
           } else {
             // If the question is single choice
             questionAnswerObject["questionID"] = questionID;
