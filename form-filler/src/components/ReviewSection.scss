@@ -39,3 +39,22 @@
   color: #e20404;
   padding-bottom: 20px;
 }
+
+.submit-modal {
+  padding: 2rem;
+}
+
+#submit-modal-footer {
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+  border-top: none;
+}
+
+#submit-modal-footer > .btn {
+  margin-left: inherit;
+}
+
+#submit-back-link {
+  text-decoration: underline;
+}

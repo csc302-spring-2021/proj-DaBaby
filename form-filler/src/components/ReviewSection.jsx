@@ -12,6 +12,7 @@ import {
   FormControl,
   FormText,
 } from "react-bootstrap";
+import { Link } from "react-router-dom";
 
 import { Form, Field } from "react-final-form";
 import Question from "./Question";
@@ -120,12 +121,27 @@ class ReviewSection extends React.Component {
               ""
             )}
             <Modal
+              contentClassName="submit-modal"
               show={this.state.showModal}
               onHide={() => this.setState({ showModal: !this.state.showModal })}
             >
-              <Modal.Title>Your changes has been saved.</Modal.Title>
-              <Modal.Footer>
-                <Button variant="primary">Exit to Home</Button>
+              <Modal.Title>
+                <h5>Your changes has been saved.</h5>
+              </Modal.Title>
+              <Modal.Footer id="submit-modal-footer">
+                <Link to="/responses" style={{ textDecoration: "none" }}>
+                  <Button variant="primary">Exit to Home</Button>
+                </Link>
+                or{" "}
+                <a
+                  id="submit-back-link"
+                  href="#"
+                  onClick={() =>
+                    this.setState({ showModal: !this.state.showModal })
+                  }
+                >
+                  Go Back
+                </a>
               </Modal.Footer>
             </Modal>
           </Col>
