@@ -146,13 +146,14 @@ class SDCSection extends React.Component {
 
     // Get useful form properties from prop
     const sdcFormResponse = this.props.sdcFormResponse;
-    answerResponseObject["id"] = sdcFormResponse["id"];
-    answerResponseObject["answers"] = questionAnswerList;
+    answerResponseObject["responseID"] = sdcFormResponse["id"];
     answerResponseObject["patientID"] = sdcFormResponse["patientID"];
     answerResponseObject["clinicianID"] = sdcFormResponse["clinicianID"];
+    answerResponseObject["timestamp"] = sdcFormResponse["timestamp"];
+    answerResponseObject["diagnosticProcedureID"] = sdcFormResponse["diagnosticProcedureID"];
+    answerResponseObject["answers"] = questionAnswerList;
     answerResponseObject["sdcFormID"] = sdcFormResponse["sdcFormID"];
 
-    console.log(answerResponseObject);
 
     // Make backend call to call PUT on url
     const requestOptions = {
