@@ -15,7 +15,11 @@ export const getSDCForm = (page, id) => {
       }
     })
     .catch((err) => {
-      alert(err.response ? err.response.data : "Unknown Server Error!");
+      alert(
+        err.response && err.response.data
+          ? err.response.data.message
+          : "Unknown Server Error!"
+      );
     });
 };
 
@@ -31,7 +35,11 @@ export const getLegacySDCForm = (page, id) => {
       }
     })
     .catch((err) => {
-      alert(err.response ? err.response.data : "Unknown Server Error!");
+      alert(
+        err.response && err.response.data
+          ? err.response.data.message
+          : "Unknown Server Error!"
+      );
     });
 };
 
@@ -47,7 +55,11 @@ export const getSDCFormResponse = (page, id) => {
       }
     })
     .catch((err) => {
-      alert(err.response ? err.response.data : "Unknown Server Error!");
+      alert(
+        err.response && err.response.data
+          ? err.response.data.message
+          : "Unknown Server Error!"
+      );
     });
 };
 
@@ -65,7 +77,11 @@ export const getAllResponseMetadata = (page, data) => {
       }
     })
     .catch((err) => {
-      alert(err.response ? err.response.data : "Unknown Server Error!");
+      alert(
+        err.response && err.response.data
+          ? err.response.data.message
+          : "Unknown Server Error!"
+      );
     });
 };
 
@@ -86,6 +102,10 @@ export const deleteResp = (page, id) => {
       }
     })
     .catch((err) => {
-      alert(err.response ? err.response.data : "Unknown Server Error!");
+      alert(
+        err.response && err.response.data
+          ? err.response.data.message
+          : "Unknown Server Error!"
+      );
     });
 };
