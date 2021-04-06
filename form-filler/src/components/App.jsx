@@ -1,13 +1,11 @@
 import "./App.scss";
 import React from "react";
 
-import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
 
 import NavigationBar from "./NavigationBar";
-import SDCSection from "./SDCSection";
 
-import { Col, Row, Container } from "react-bootstrap";
-import SDCSidebar from "./SDCSidebar";
+import { Container } from "react-bootstrap";
 import SDCSearchComponent from "./SDCSearchComponent";
 import { SERVER_URL } from "../utils/constants";
 
@@ -65,7 +63,10 @@ class App extends React.Component {
     return (
       <BrowserRouter>
         <Container fluid className="App">
-          <NavigationBar />
+          <NavigationBar
+            sdcFormData={sdcFormData}
+            newSDCResponse={newSDCResponse}
+          />
           <Switch>
             <Route exact path="/">
               <SDCSearchComponent
