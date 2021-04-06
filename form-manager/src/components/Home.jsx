@@ -78,7 +78,7 @@ class Home extends React.Component {
         });
       }
     };
-    reader.readAsBinaryString(this.state.newForm.file);
+    reader.readAsText(this.state.newForm.file);
   }
 
   onInputId(e) {
