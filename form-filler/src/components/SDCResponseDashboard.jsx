@@ -8,7 +8,7 @@ import NavItem from "react-bootstrap/NavItem";
 import NavLink from "react-bootstrap/NavLink";
 import "./SDCResponseDashboard.scss";
 import { Link } from "react-router-dom";
-import { deleteResp, getAllResps } from "../actions/Actions";
+import { deleteResp, getAllResponseMetadata } from "../actions/Actions";
 
 class ResponseDashboard extends React.Component {
   constructor(props) {
@@ -23,7 +23,7 @@ class ResponseDashboard extends React.Component {
   }
 
   componentDidMount() {
-    getAllResps(this, {
+    getAllResponseMetadata(this, {
       patient: "",
       procedure: "",
       start: "",
@@ -40,7 +40,7 @@ class ResponseDashboard extends React.Component {
     if (this.state.searchEndDate !== "") {
       end = new Date(this.state.searchEndDate).toISOString();
     }
-    getAllResps(this, {
+    getAllResponseMetadata(this, {
       patient: this.state.searchPatient,
       procedure: this.state.searchProcedure,
       start: start,
@@ -123,39 +123,46 @@ class ResponseDashboard extends React.Component {
               </tr>
             </thead>
             <tbody>
-              {this.state.responses.map((resp) => (
-                <tr key={resp.id}>
-                  <td>{resp.diagnosticProcedureID}</td>
-                  <td>{resp.patientID}</td>
-                  <td>{resp.timestamp}</td>
-                  <td>{resp.outdated.toString()}</td>
-                  <td>
-                    <Dropdown as={NavItem}>
-                      <Dropdown.Toggle as={NavLink}>Edit</Dropdown.Toggle>
-                      <Dropdown.Menu>
-                        <Dropdown.Item
-                          onClick={this.onDeleteResp.bind(this, resp)}
-                        >
-                          Delete
-                        </Dropdown.Item>
-                      </Dropdown.Menu>
-                    </Dropdown>
-                  </td>
-                  <td>
-                    <Link
-                      id="update-button"
-                      to={{
-                        pathname: `/review/${resp.diagnosticProcedureID}`,
-                        state: {
-                          response: resp,
-                        },
-                      }}
-                    >
-                      View
-                    </Link>
-                  </td>
-                </tr>
-              ))}
+              {this.state.responses.map((resp) => {
+                const date = new Date(resp.timestamp);
+                const readableTime = `${date.toLocaleDateString(
+                  "en-CA"
+                )} ${date.toLocaleTimeString("en-CA")}`;
+
+                return (
+                  <tr key={resp.id}>
+                    <td>{resp.diagnosticProcedureID}</td>
+                    <td>{resp.patientID}</td>
+                    <td>{readableTime}</td>
+                    <td>{resp.outdated ? "outdated" : "up-to-date"}</td>
+                    <td>
+                      <Dropdown as={NavItem}>
+                        <Dropdown.Toggle as={NavLink}>Edit</Dropdown.Toggle>
+                        <Dropdown.Menu>
+                          <Dropdown.Item
+                            onClick={this.onDeleteResp.bind(this, resp)}
+                          >
+                            Delete
+                          </Dropdown.Item>
+                        </Dropdown.Menu>
+                      </Dropdown>
+                    </td>
+                    <td>
+                      <Link
+                        id="update-button"
+                        to={{
+                          pathname: `/review/${resp.diagnosticProcedureID}`,
+                          state: {
+                            response: resp,
+                          },
+                        }}
+                      >
+                        View
+                      </Link>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </Table>
         </div>

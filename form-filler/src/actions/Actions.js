@@ -52,11 +52,11 @@ export const getSDCFormResponse = (page, id) => {
 };
 
 /* GET all resps */
-export const getAllResps = (page, data) => {
+export const getAllResponseMetadata = (page, data) => {
   console.log(data);
   axios
     .get(
-      `${SERVER_URL}/api/sdcformresponse?patientID=${data.patient}&diagnosticProcedureID=${data.procedure}&starttime=${data.start}&endtime=${data.end}`
+      `${SERVER_URL}/api/sdcformresponse?metadata=true&patientID=${data.patient}&diagnosticProcedureID=${data.procedure}&starttime=${data.start}&endtime=${data.end}`
     )
     .then((res) => {
       if (res.data) {
@@ -76,7 +76,7 @@ export const deleteResp = (page, id) => {
     .delete(`${SERVER_URL}/api/sdcformresponse/${id}/`)
     .then((res) => {
       if (res.data) {
-        getAllResps(page, {
+        getAllResponseMetadata(page, {
           patient: "",
           procedure: "",
           start: "",
