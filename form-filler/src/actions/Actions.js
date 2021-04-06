@@ -15,40 +15,40 @@ export const getSDCForm = (page, id) => {
       }
     })
     .catch((err) => {
-      alert(err.response.data);
+      alert(err.response ? err.response.data : "");
     });
 };
 
 /* GET legacy SDC form */
 export const getLegacySDCForm = (page, id) => {
-	axios
-	.get(`${SERVER_URL}/api/sdcform?historyID=${id}`)
-		.then((res) => {
-			if (res.data) {
-				page.setState({sdcForm: res.data.sdcFormObjects[0]});
-			} else {
-				alert("GET LEGACY SDC FORM FAILED");
-			}
-		})
-		.catch((err) => {
-			alert(err.response.data);
-		});
+  axios
+    .get(`${SERVER_URL}/api/sdcform?historyID=${id}`)
+    .then((res) => {
+      if (res.data) {
+        page.setState({ sdcForm: res.data.sdcFormObjects[0] });
+      } else {
+        alert("GET LEGACY SDC FORM FAILED");
+      }
+    })
+    .catch((err) => {
+      alert(err.response.data);
+    });
 };
 
 /* GET SDC form response */
 export const getSDCFormResponse = (page, id) => {
-	axios
-		.get(`${SERVER_URL}/api/sdcformresponse/${id}/`)
-		.then((res) => {
-			if (res.data) {
-				page.setState({sdcResponse: res.data.responseObject});
-			} else {
-				alert("GET SDC FORM RESPONSE FAILED");
-			}
-		})
-		.catch((err) => {
-			alert(err.response.data);
-		});
+  axios
+    .get(`${SERVER_URL}/api/sdcformresponse/${id}/`)
+    .then((res) => {
+      if (res.data) {
+        page.setState({ sdcResponse: res.data.responseObject });
+      } else {
+        alert("GET SDC FORM RESPONSE FAILED");
+      }
+    })
+    .catch((err) => {
+      alert(err.response.data);
+    });
 };
 
 /* GET all resps */
