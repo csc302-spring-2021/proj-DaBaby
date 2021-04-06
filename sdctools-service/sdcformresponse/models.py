@@ -2,8 +2,6 @@ from django.db import models
 from django.core.validators import MinLengthValidator
 from sdcform.models import SDCForm, DiagnosticProcedureID, SDCQuestion
 
-# Create your models here.
-
 
 class PatientID(models.Model):
     ohip = models.CharField(max_length=10, validators=[MinLengthValidator(10)],
