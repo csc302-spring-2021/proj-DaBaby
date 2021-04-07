@@ -3,8 +3,7 @@ from .models import *
 
 
 class ChoiceSerializer(serializers.ModelSerializer):
-    optionalFieldInputType = serializers.CharField(
-        source="input_type", read_only=True)
+    optionalFieldInputType = serializers.CharField(source="input_type", read_only=True)
 
     class Meta:
         model = Choice
@@ -12,12 +11,9 @@ class ChoiceSerializer(serializers.ModelSerializer):
 
 
 class SDCQuestionSerializer(serializers.ModelSerializer):
-    questionText = serializers.CharField(
-        source="text", read_only=True)
-    controllerID = serializers.IntegerField(
-        source="controller.id", read_only=True, allow_null=True)
-    controllerAnswerEnabler = serializers.CharField(
-        source="controller_answer_enabler", read_only=True)
+    questionText = serializers.CharField(source="text", read_only=True)
+    controllerID = serializers.IntegerField(source="controller.id", read_only=True, allow_null=True)
+    controllerAnswerEnabler = serializers.CharField(source="controller_answer_enabler", read_only=True)
     choices = ChoiceSerializer(many=True, read_only=True)
 
     class Meta:
@@ -26,12 +22,12 @@ class SDCQuestionSerializer(serializers.ModelSerializer):
                   "controllerAnswerEnabler", "choices"]
 
     def to_representation(self, obj):
-        r = super().to_representation(obj)
+        representation = super().to_representation(obj)
 
         if getattr(obj, "type") not in {"single-choice", "multiple-choice"}:
-            r.pop("choices")
+            representation.pop("choices")
 
-        return r
+        return representation
 
 
 class SectionSerializer(serializers.ModelSerializer):
@@ -49,4 +45,14 @@ class SDCFormSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = SDCForm
-        fields = ["id", "name", "timestamp", "diagnosticProcedureID", "sections"]
+        fields = ["id", "name", "timestamp", "diagnosticProcedureID",
+                  "sections"]
+
+
+class SDCFormMetadataSerializer(serializers.ModelSerializer):
+    diagnosticProcedureID = serializers.CharField(
+        source="diagnostic_procedure_id.code", read_only=True, allow_null=True)
+
+    class Meta:
+        model = SDCForm
+        fields = ["id", "name", "timestamp", "diagnosticProcedureID"]

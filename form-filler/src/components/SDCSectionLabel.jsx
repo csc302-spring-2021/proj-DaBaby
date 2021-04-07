@@ -1,7 +1,6 @@
 import "./SDCSectionLabel.scss";
 
 import React from "react";
-import { Row, Col, Container } from "react-bootstrap";
 
 class SDCSectionLabel extends React.Component {
   state = {

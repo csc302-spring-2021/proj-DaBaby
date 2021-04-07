@@ -1,20 +1,12 @@
-from django.http import HttpResponse
-
-from django.shortcuts import render, redirect
 from django.core.exceptions import ObjectDoesNotExist
 
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 
-import xmltodict
-
-from . import tools
-from .models import *
 from .serializers import *
 
-
-# Create your views here.
+from .tools import ParseError, parse_xml
 
 
 @api_view(['GET', 'POST'])
@@ -22,43 +14,48 @@ def sdcforms(request):
     if request.method == "GET":
         metadata = request.GET.get("metadata", "")
         history_id = request.GET.get("historyID", "")
-        lst = SDCForm.objects.all()
+        sdc_forms = SDCForm.objects.all()
 
         if history_id != "":
             try:
                 history_id = int(history_id)
             except ValueError:
                 return Response({
-                    "message": "Not a valid sdcform id, "
-                               "needs to be an integer"},
+                    "message": "Not a valid sdcform id, needs to be an integer"},
                     status=status.HTTP_404_NOT_FOUND)
 
             try:
                 sdc_form = SDCForm.objects.get(id=history_id)
-                lst = lst.filter(id=sdc_form.id)
+                sdc_forms = sdc_forms.filter(id=sdc_form.id)
             except SDCForm.DoesNotExist:
                 return Response({"message": "This sdcformID does not exist."},
                                 status=status.HTTP_404_NOT_FOUND)
 
-        serializer = SDCFormSerializer(lst, many=True)
-        d = serializer.data
-
         if metadata == "true":
-            for sdc_form in d:
-                del sdc_form["sections"]
+            serializer = SDCFormMetadataSerializer(sdc_forms, many=True)
+        else:
+            serializer = SDCFormSerializer(sdc_forms, many=True)
 
-        return Response({"message": "Success", "sdcFormObjects": d})
+        data = serializer.data
+
+        return Response({"message": "Success", "sdcFormObjects": data})
     else:  # FORM MANAGER
+        s = {"diagnosticProcedureID", "name", "xmlString"}
+        if not s.issubset(request.data):
+            return Response({"message": str(s) + " must be in the request body"}
+                            , status=status.HTTP_400_BAD_REQUEST)
+
+        models_to_save = []
+
         diagnostic_procedure_id = DiagnosticProcedureID(
             code=request.data["diagnosticProcedureID"])
         # will save without error always b/c only one model field, i.e., the PK:
-        diagnostic_procedure_id.save()
+        models_to_save.append(diagnostic_procedure_id)
 
         try:
-            diagnostic_procedure_id.sdcform
+            _ = diagnostic_procedure_id.sdcform
             content = {
-                'message':
-                    'DiagnosticProcedureID already used.'
+                'message': 'DiagnosticProcedureID already used.'
             }
             return Response(content, status=status.HTTP_400_BAD_REQUEST)
         except ObjectDoesNotExist:
@@ -66,22 +63,17 @@ def sdcforms(request):
 
         sdc_form = SDCForm(name=request.data["name"],
                            diagnostic_procedure_id=diagnostic_procedure_id)
-        sdc_form.save()
+        models_to_save.append(sdc_form)
+        try:
+            models_to_save.extend(parse_xml(request.data["xmlString"], sdc_form))
+        except ParseError as parse_error:
+            content = {
+                'message': str(parse_error)
+            }
+            return Response(content, status=status.HTTP_400_BAD_REQUEST)
 
-        xml_start_index = request.data["xmlString"].find("<")
-        xml_dict = xmltodict.parse(request.data["xmlString"][xml_start_index:])
-
-        if "SDCPackage" in xml_dict:
-            xml_dict = xml_dict["SDCPackage"]
-
-        if "XMLPackage" in xml_dict:
-            xml_dict = xml_dict["XMLPackage"]
-
-        section_dicts = xml_dict["FormDesign"]["Body"]["ChildItems"]["Section"]
-        if not isinstance(section_dicts, list):
-            section_dicts = [section_dicts]
-        for section_dict in section_dicts:
-            tools.parse_section(section_dict, sdc_form)
+        for model_ in models_to_save:
+            model_.save()
 
         serializer = SDCFormSerializer(instance=sdc_form)
         json = {
@@ -99,8 +91,7 @@ def sdcform(request, procedure_id):
                 code=procedure_id)
         except DiagnosticProcedureID.DoesNotExist:
             content = {
-                'message':
-                    'This procedureID does not exist.'
+                'message': 'This procedureID does not exist.'
             }
             return Response(content, status=status.HTTP_404_NOT_FOUND)
 
@@ -114,19 +105,22 @@ def sdcform(request, procedure_id):
             return Response(json)
         except ObjectDoesNotExist:
             content = {
-                'message':
-                    'There is no SDCForm associated with the provided '
-                    'procedureID.'
+                'message': 'There is no SDCForm associated with the provided procedureID.'
             }
             return Response(content, status=status.HTTP_404_NOT_FOUND)
     elif request.method == "PUT":  # FORM MANAGER
+        s = {"name", "xmlString"}
+        if not s.issubset(request.data):
+            return Response({"message": str(s) + " must be in the request body"}
+                            , status=status.HTTP_400_BAD_REQUEST)
+
+        models_to_save = []
         try:
             diagnostic_procedure_id = DiagnosticProcedureID.objects.get(
                 code=procedure_id)
         except DiagnosticProcedureID.DoesNotExist:
             content = {
-                'message':
-                    'This procedureID does not exist.'
+                'message': 'This procedureID does not exist.'
             }
             return Response(content, status=status.HTTP_404_NOT_FOUND)
 
@@ -134,33 +128,28 @@ def sdcform(request, procedure_id):
             old_sdc_form = diagnostic_procedure_id.sdcform
         except ObjectDoesNotExist:
             content = {
-                'message':
-                    'There is no SDCForm associated with the provided '
-                    'procedureID.'
+                'message': 'There is no SDCForm associated with the provided procedureID.'
             }
             return Response(content, status=status.HTTP_404_NOT_FOUND)
 
         old_sdc_form.diagnostic_procedure_id = None
-        old_sdc_form.save()
+        models_to_save.append(old_sdc_form)
 
         new_sdc_form = SDCForm(name=request.data["name"],
                                diagnostic_procedure_id=diagnostic_procedure_id)
-        new_sdc_form.save()
+        models_to_save.append(new_sdc_form)
 
-        xml_start_index = request.data["xmlString"].find("<")
-        xml_dict = xmltodict.parse(request.data["xmlString"][xml_start_index:])
+        try:
+            models_to_save.extend(parse_xml(request.data["xmlString"], new_sdc_form))
+        except ParseError as parse_error:
+            content = {
+                'message': str(parse_error)
+            }
+            return Response(content, status=status.HTTP_400_BAD_REQUEST)
 
-        if "SDCPackage" in xml_dict:
-            xml_dict = xml_dict["SDCPackage"]
+        for model_ in models_to_save:
+            model_.save()
 
-        if "XMLPackage" in xml_dict:
-            xml_dict = xml_dict["XMLPackage"]
-
-        section_dicts = xml_dict["FormDesign"]["Body"]["ChildItems"]["Section"]
-        if not isinstance(section_dicts, list):
-            section_dicts = [section_dicts]
-        for section_dict in section_dicts:
-            tools.parse_section(section_dict, new_sdc_form)
         serializer = SDCFormSerializer(instance=new_sdc_form)
         json = {
             "message": "Success",
@@ -173,8 +162,7 @@ def sdcform(request, procedure_id):
                 code=procedure_id)
         except DiagnosticProcedureID.DoesNotExist:
             content = {
-                'message':
-                    'This procedureID does not exist.'
+                'message': 'This procedureID does not exist.'
             }
             return Response(content, status=status.HTTP_404_NOT_FOUND)
 
@@ -182,9 +170,7 @@ def sdcform(request, procedure_id):
             sdc_form = diagnostic_procedure_id.sdcform
         except ObjectDoesNotExist:
             content = {
-                'message':
-                    'There is no SDCForm associated with the provided '
-                    'procedureID.'
+                'message': 'There is no SDCForm associated with the provided procedureID.'
             }
             return Response(content, status=status.HTTP_404_NOT_FOUND)
 

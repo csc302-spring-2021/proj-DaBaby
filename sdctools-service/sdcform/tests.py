@@ -35,11 +35,11 @@ class FormsTests(TestCase):
         self.assertEqual(response.status_code, 201)
         self.assertTrue('sdcFormObject' in json.loads(response.content))
 
-    # def test_upload_invalid_xml(self):
-    #     self.client = Client()
-    #     data = { "diagnosticProcedureID" : "test123", "name" : "test123", "xmlString": "not xml!"}
-    #     response = self.client.post("/api/sdcform/", data)
-    #     self.assertEqual(response.status_code, 400)
+    def test_upload_invalid_xml(self):
+        self.client = Client()
+        data = { "diagnosticProcedureID" : "test123", "name" : "test123", "xmlString": "not xml!"}
+        response = self.client.post("/api/sdcform/", data)
+        self.assertEqual(response.status_code, 400)
 
     def test_get_valid_form(self):
 
@@ -69,7 +69,7 @@ class FormsTests(TestCase):
         self.assertTrue('timestamp' in forms[0])
         self.assertTrue('sections' in forms[0])
 
-    
+
     def test_get_all_form_metadata(self):
         self.client = Client()
         upload_initial_form()
@@ -87,14 +87,14 @@ class FormsTests(TestCase):
 class ModifyFormsTests(TestCase):
 
     def test_delete_valid_form(self):
-        upload_initial_form() 
+        upload_initial_form()
         self.client = Client()
         response = self.client.delete("/api/sdcform/test123/")
         self.assertEqual(response.status_code, 200)
 
         # Ensure that form has been deleted for procedure_id = test123
         response = self.client.get("/api/sdcform/test123/")
-        self.assertEqual(response.status_code, 404) 
+        self.assertEqual(response.status_code, 404)
 
     def test_delete_nonexistant_form(self):
         self.client = Client()
@@ -107,7 +107,7 @@ class ModifyFormsTests(TestCase):
         # Get the id of the old form
         response = self.client.get("/api/sdcform/test123/")
         form = json.loads(response.content)['sdcFormObject']
-        
+
         # Update the form
         self.client = Client()
         new_data = json.dumps(get_request_with_xml_file())
@@ -127,12 +127,12 @@ class ModifyFormsTests(TestCase):
         put_response = self.client.put("/api/sdcform/foo/", new_data, content_type="application/json")
         self.assertEqual(put_response.status_code, 404)
 
-    # def test_update_form_invalid_request(self):
-    #     upload_initial_form() # Only form in db is the one with procedureID = test123
-    #     self.client = Client()
-    #     data = json.dumps({ "diagnosticProcedureID" : "test123", "name" : "test123"}) # missing body field xmlString
-    #     put_response = self.client.put("/api/sdcform/test123/", data, content_type="application/json")
-    #     self.assertEqual(put_response.status_code, 400)
+    def test_update_form_invalid_request(self):
+        upload_initial_form() # Only form in db is the one with procedureID = test123
+        self.client = Client()
+        data = json.dumps({ "diagnosticProcedureID" : "test123", "name" : "test123"}) # missing body field xmlString
+        put_response = self.client.put("/api/sdcform/test123/", data, content_type="application/json")
+        self.assertEqual(put_response.status_code, 400)
 
     def test_add_form_with_same_procedure_id(self):
         upload_initial_form() # form with diagnosticProcedureID = test123
@@ -149,13 +149,13 @@ class ModifyFormsTests(TestCase):
         self.assertEqual(form1['id'], form2['id'])
 
     def test_add_form_after_delete(self):
-        upload_initial_form() 
+        upload_initial_form()
         self.client = Client()
         get_response = self.client.get("/api/sdcform/test123/")
         form1 = json.loads(get_response.content)['sdcFormObject']
 
         self.client.delete("/api/sdcform/test123/")
-        
+
         response = upload_initial_form() # Uploading a "new" form to diagnosticPocedureID = test123
         self.assertEqual(response.status_code, 201)
 
@@ -168,13 +168,13 @@ class ModifyFormsTests(TestCase):
 def HistoricalFormTests(TestCase):
 
     def test_get_non_hist_form(self):
-        upload_initial_form() 
+        upload_initial_form()
         self.client = Client()
         response = self.client.get('/api/sdcform/', { 'historyID': '1234' })
         self.assertEqual(response.status_code, 404)
 
     def test_get_hist_form(self):
-        upload_initial_form() 
+        upload_initial_form()
         self.client = Client()
         self.client.delete("/api/sdcform/test123/")
         response = self.client.get('/api/sdcform/', { 'historyID': '1234' })

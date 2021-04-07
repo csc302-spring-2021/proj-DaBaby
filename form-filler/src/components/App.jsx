@@ -1,13 +1,12 @@
 import "./App.scss";
 import React from "react";
 
-import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
 
 import NavigationBar from "./NavigationBar";
-import SDCSection from "./SDCSection";
 
-import { Col, Row, Container } from "react-bootstrap";
-import SDCSidebar from "./SDCSidebar";
+import { Helmet } from "react-helmet";
+import { Container } from "react-bootstrap";
 import SDCSearchComponent from "./SDCSearchComponent";
 import { SERVER_URL } from "../utils/constants";
 
@@ -21,7 +20,6 @@ class App extends React.Component {
       )
       .catch((error) => {
         this.setState({ errorMessage: error.toString() });
-        console.log(error);
       });
   }
 
@@ -45,13 +43,7 @@ class App extends React.Component {
   };
 
   render() {
-    const {
-      curr_section,
-      isLoaded,
-      errorMessage,
-      newSDCResponse,
-      sdcFormData,
-    } = this.state;
+    const { isLoaded, errorMessage, newSDCResponse, sdcFormData } = this.state;
     // If there i
     if (errorMessage) {
       return <div>Error Occured: {errorMessage}</div>;
@@ -61,20 +53,27 @@ class App extends React.Component {
       return <div>Loading...</div>;
     }
     // Once data has been loaded it is okay to then gather from the sdcForm object
-    const { sections, name } = this.state.sdcForm;
     return (
-      <BrowserRouter>
-        <Container fluid className="App">
-          <NavigationBar />
-          <Switch>
-            <Route exact path="/">
-              <SDCSearchComponent
-                sdcResponseHandler={this.sdcResponseHandler}
-              />
-            </Route>
-          </Switch>
-        </Container>
-      </BrowserRouter>
+      <>
+        <Helmet>
+          <title>Form Filler</title>
+        </Helmet>
+        <BrowserRouter>
+          <Container fluid className="App">
+            <NavigationBar
+              sdcFormData={sdcFormData}
+              newSDCResponse={newSDCResponse}
+            />
+            <Switch>
+              <Route exact path="/">
+                <SDCSearchComponent
+                  sdcResponseHandler={this.sdcResponseHandler}
+                />
+              </Route>
+            </Switch>
+          </Container>
+        </BrowserRouter>
+      </>
     );
   }
 }
